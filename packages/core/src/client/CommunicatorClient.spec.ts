@@ -1,5 +1,3 @@
-import { mergeSchemas } from '../schema/schemaHelpers';
-import { testPostSchema, testUserSchema } from '@musubi/test-schemas';
 import { CommunicatorClient } from './CommunicatorClient';
 import { OperationResponse } from '../shared/OperationResponse';
 import { CommunicatorReceiver } from '../receiver/CommunicatorReceiver';
@@ -8,6 +6,8 @@ import { ReceiverLink } from '../receiver/receiver.types';
 import { filter, Subject } from 'rxjs';
 import { OperationKind, OperationName } from '../schema/schema.types';
 import { OperationRequest } from '../shared/OperationRequest';
+import { mergeSchemas } from '../schema/schemaHelpers';
+import { testPostSchema, testUserSchema } from '../test/testSchemas';
 
 const schema = mergeSchemas(testUserSchema, testPostSchema);
 

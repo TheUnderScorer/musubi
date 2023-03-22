@@ -17,8 +17,7 @@
     "baseUrl": ".",
     "paths": {
       "@musubi/core": ["packages/core/src/index.ts"],
-      "@musubi/in-memory-link": ["packages/in-memory-link/src/index.ts"],
-      "@musubi/test-schemas": ["packages/test-schemas/src/index.ts"]
+      "@musubi/in-memory-link": ["packages/in-memory-link/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

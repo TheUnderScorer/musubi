@@ -1,5 +1,5 @@
-import { command, defineSchema, event, query } from '@musubi/core';
 import { z } from 'zod';
+import { command, defineSchema, query } from '../schema/schemaHelpers';
 
 const User = z.object({
   id: z.string(),
