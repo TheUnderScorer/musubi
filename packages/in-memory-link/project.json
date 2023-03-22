@@ -41,6 +41,13 @@
           "codeCoverage": true
         }
       }
+    },
+    "semantic-release": {
+      "executor": "@theunderscorer/nx-semantic-release:semantic-release",
+      "options": {
+        "buildTarget": "in-memory-link:build",
+        "tagFormat": "in-memory-link-v${VERSION}"
+      }
     }
   },
   "tags": []
