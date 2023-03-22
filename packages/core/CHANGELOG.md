@@ -1,3 +1,10 @@
+## [0.0.4](https://github.com/TheUnderScorer/musubi/compare/core-v0.0.3...core-v0.0.4) (2023-03-22)
+
+
+### Bug Fixes
+
+* add publishConfig ([1670baf](https://github.com/TheUnderScorer/musubi/commit/1670baf7dc72861fe97885ff4197c64551055161))
+
 ## [0.0.3](https://github.com/TheUnderScorer/musubi/compare/core-v0.0.2...core-v0.0.3) (2023-03-22)
 
 
