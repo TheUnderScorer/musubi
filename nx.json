@@ -14,6 +14,11 @@
   "affected": {
     "defaultBase": "main"
   },
+  "pluginsConfig": {
+    "@nrwl/js": {
+      "analyzeSourceFiles": true
+    }
+  },
   "targetDefaults": {
     "lint": {
       "inputs": [
@@ -24,6 +29,16 @@
     },
     "test": {
       "inputs": ["default", "^default", "{workspaceRoot}/jest.preset.js"]
+    },
+    "semantic-release": {
+      "dependsOn": [
+        "^semantic-release"
+      ]
+    },
+    "build": {
+      "dependsOn": [
+        "^build"
+      ]
     }
   }
 }

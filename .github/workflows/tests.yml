@@ -1,0 +1,48 @@
+name: Tests
+on:
+  push:
+    branches:
+      - main
+      - test
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [ 16, 17, 18, 19 ]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+
+      - name: Configure CI Git User
+        run: |
+          git config --global user.name 'TheUnderScorer'
+          git config --global user.email 'przemyslawzydek@gmail.com'
+          git remote set-url origin https://TheUnderScorer:$GITHUB_TOKEN@github.com/TheUnderScorer/musubi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: 'npm'
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npx nx run-many --target=build --all --skip-nx-cache
+
+      - name: Run tests
+        run: npx nx test nx-semantic-release --runInBand --skip-nx-cache

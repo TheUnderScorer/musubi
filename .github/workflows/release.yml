@@ -1,0 +1,48 @@
+name: Release
+on:
+  push:
+    branches:
+      - master
+      - beta
+
+jobs:
+  release:
+    name: Build & Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 19
+          cache: 'npm'
+
+      - name: Configure CI Git User
+        run: |
+          git config --global user.name 'TheUnderScorer'
+          git config --global user.email 'przemyslawzydek@gmail.com'
+          git remote set-url origin https://TheUnderScorer:$GITHUB_TOKEN@github.com/TheUnderScorer/nx-semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Link package
+        run: npm run build:skip-cache && npm link dist/packages/nx-semantic-release && npm ls @theunderscorer/nx-semantic-release
+
+      - name: Print versions
+        run: |
+          echo "Node.js version: $(node -v)"
+          echo "NPM version: $(npm -v)"
+          echo "NX version: $(npx nx --version)"
+
+      - name: Release
+        run: npm run release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

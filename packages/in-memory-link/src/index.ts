@@ -1,1 +1,3 @@
-export * from './lib/in-memory-link';
+export * from './InMemoryReceiverLink';
+export * from './InMemoryClientLink';
+export * from './link';
