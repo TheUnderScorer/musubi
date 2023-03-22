@@ -1,3 +1,10 @@
+## [0.0.3](https://github.com/TheUnderScorer/musubi/compare/in-memory-link-v0.0.2...in-memory-link-v0.0.3) (2023-03-22)
+
+
+### Bug Fixes
+
+* make package public ([6bd7767](https://github.com/TheUnderScorer/musubi/commit/6bd77676abd090ccde9e4257897e6c89d7d98508))
+
 ## [0.0.2](https://github.com/TheUnderScorer/musubi/compare/in-memory-link-v0.0.1...in-memory-link-v0.0.2) (2023-03-22)
 
 
