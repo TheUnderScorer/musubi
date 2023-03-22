@@ -39,10 +39,10 @@ jobs:
         run: npm ci
 
       - name: Lint
-        run: npm run lint
+        run: npx nx run-many --target=lint --all
 
       - name: Build
         run: npx nx run-many --target=build --all --skip-nx-cache
 
       - name: Run tests
-        run: npx nx test nx-semantic-release --runInBand --skip-nx-cache
+        run: npx nx run-many --target=test --all

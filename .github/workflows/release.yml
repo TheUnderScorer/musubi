@@ -31,9 +31,6 @@ jobs:
       - name: Install npm dependencies
         run: npm ci
 
-      - name: Link package
-        run: npm run build:skip-cache && npm link dist/packages/nx-semantic-release && npm ls @theunderscorer/nx-semantic-release
-
       - name: Print versions
         run: |
           echo "Node.js version: $(node -v)"
@@ -41,7 +38,7 @@ jobs:
           echo "NX version: $(npx nx --version)"
 
       - name: Release
-        run: npm run release
+        run: npx nx run-many --target=semantic-release --all --parallel --maxParallel=1
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
