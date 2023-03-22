@@ -2,5 +2,9 @@
   "name": "@musubi/in-memory-link",
   "version": "0.0.2",
   "type": "commonjs",
-  "private": false
+  "private": false,
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
 }
