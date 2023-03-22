@@ -1,17 +1,16 @@
 import {
   command,
   CommunicatorClient,
-  defineSchema,
   CommunicatorReceiver,
+  defineSchema,
+  event,
   OperationHandler,
   query,
-  event,
-  mergeSchemas,
 } from '@musubi/core';
 import { createInMemoryLink } from './link';
 
 describe('InMemoryLink', () => {
-  const schema1 = defineSchema({
+  const schema = defineSchema({
     commands: {
       testCommand: command()
         .withPayload<{ test: string }>()
@@ -26,25 +25,14 @@ describe('InMemoryLink', () => {
       testEvent: event().withPayload<{ test: string }>(),
     },
   });
-  const schema2 = defineSchema({
-    commands: {
-      testCommand2: command()
-        .withPayload<{ test: string }>()
-        .withResult<{ test: string }>(),
-    },
-    events: {},
-    queries: {},
-  });
-
-  const fullSchema = mergeSchemas(schema1, schema2);
 
   const links = createInMemoryLink();
 
-  const client = new CommunicatorClient(fullSchema, [links.client]);
-  const receiver = new CommunicatorReceiver(fullSchema, [links.receiver]);
+  const client = new CommunicatorClient(schema, [links.client]);
+  const receiver = new CommunicatorReceiver(schema, [links.receiver]);
 
   it('should send and receive commands', async () => {
-    const impl: OperationHandler<typeof schema1.commands.testCommand> = async (
+    const impl: OperationHandler<typeof schema.commands.testCommand> = async (
       payload
     ) => {
       return payload;
@@ -63,7 +51,7 @@ describe('InMemoryLink', () => {
   });
 
   it('should send and receive queries', async () => {
-    const impl: OperationHandler<typeof schema1.queries.testQuery> = async (
+    const impl: OperationHandler<typeof schema.queries.testQuery> = async (
       payload
     ) => {
       return payload;
