@@ -8,5 +8,6 @@ export function createInMemoryLink() {
   return {
     receiver: new InMemoryReceiverLink(handlers),
     client: new InMemoryClientLink(handlers),
+    handlers,
   };
 }

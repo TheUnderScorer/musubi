@@ -1,13 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
+  OperationHandler,
   OperationName,
   OperationRequest,
   OperationResponse,
 } from '@musubi/core';
 import { Subject } from 'rxjs';
-
-export type Handler<Ctx = unknown> = <Payload, Result>(
-  request: OperationRequest<Payload, Ctx>
-) => Promise<OperationResponse<Result, OperationRequest<Payload, Ctx>>>;
 
 export type EventHandler<Ctx = unknown> = <Payload>(
   request: OperationRequest<Payload, Ctx>
@@ -15,8 +13,8 @@ export type EventHandler<Ctx = unknown> = <Payload>(
 
 export function createHandlers() {
   return {
-    commandHandlers: new Map<OperationName, Handler>(),
-    queryHandlers: new Map<OperationName, Handler>(),
+    commandHandlers: new Map<OperationName, OperationHandler<any>>(),
+    queryHandlers: new Map<OperationName, OperationHandler<any>>(),
     operation: new Subject<OperationRequest>(),
     operationResult: new Subject<OperationResponse>(),
     event: new Subject<OperationResponse>(),

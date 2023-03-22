@@ -7,6 +7,7 @@ import { OperationHandler, ReceiverLink } from './receiver.types';
 import { OperationResponse } from '../shared/OperationResponse';
 import { RootReceiverLink } from './RootReceiverLink';
 import { OperationsSchema } from '../schema/OperationsSchema';
+import { filter } from 'rxjs';
 
 export class CommunicatorReceiver<S extends OperationsSchema> {
   private readonly rootLink: RootReceiverLink;
@@ -57,8 +58,10 @@ export class CommunicatorReceiver<S extends OperationsSchema> {
     handler: (payload: Payload) => Promise<Result>,
     kind: OperationKind
   ) {
-    return this.rootLink.newRequest.subscribe(async (request) => {
-      if (request.name === name && request.kind === kind) {
+    return this.rootLink
+      .observeNewRequest(name)
+      .pipe(filter((req) => req.kind === kind))
+      .subscribe(async (request) => {
         let response: OperationResponse;
 
         try {
@@ -82,7 +85,6 @@ export class CommunicatorReceiver<S extends OperationsSchema> {
 
         // TODO Validate result
         await this.rootLink.sendResponse(response);
-      }
-    });
+      });
   }
 }

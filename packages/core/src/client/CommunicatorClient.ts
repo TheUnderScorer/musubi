@@ -9,8 +9,10 @@ import { OperationRequest } from '../shared/OperationRequest';
 import { Channel } from '../shared/communication.types';
 import { OperationResponse } from '../shared/OperationResponse';
 import { OperationsSchema } from '../schema/OperationsSchema';
-import { Observable, Subject } from 'rxjs';
+import { map, Observable, Subject, tap } from 'rxjs';
+import { isSubscription } from 'rxjs/internal/Subscription';
 
+// TODO Channels support
 export class CommunicatorClient<S extends OperationsSchema> {
   constructor(
     private readonly schema: S,
@@ -28,7 +30,7 @@ export class CommunicatorClient<S extends OperationsSchema> {
     );
   }
 
-  command<Name extends keyof S['commands']>(
+  async command<Name extends keyof S['commands']>(
     name: Name,
     payload: ExtractPayload<S['commands'][Name]>
   ): Promise<ExtractResult<S['commands'][Name]>> {
@@ -39,6 +41,9 @@ export class CommunicatorClient<S extends OperationsSchema> {
     );
   }
 
+  /**
+   * TODO Mention that is should have only one subscription
+   * */
   observeEvent<Name extends keyof S['events']>(name: Name) {
     const request = new OperationRequest(
       name as OperationName,
@@ -50,22 +55,34 @@ export class CommunicatorClient<S extends OperationsSchema> {
       OperationResponse<ExtractPayload<S['events'][Name]>>
     >();
 
-    const observable = this.links.reduceRight<
-      Observable<OperationResponse<ExtractPayload<S['events'][Name]>>>
-    >((next, link) => {
-      return link.subscribeToEvent(request, next);
-    }, rootNext.asObservable());
+    const observable = this.links
+      .filter((link) => link.subscribeToEvent)
+      .reduceRight<
+        Observable<OperationResponse<ExtractPayload<S['events'][Name]>>>
+      >((next, link) => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const result = link.subscribeToEvent!(request, next);
 
-    return new Observable<ExtractPayload<S['events'][Name]>>((observer) => {
-      observable.subscribe((event) => {
-        try {
-          // TODO Validate
-          observer.next(event.unwrap());
-        } catch (error) {
-          observer.error(error);
+        if (isSubscription(result)) {
+          return next.pipe(
+            tap({
+              finalize: () => {
+                result.unsubscribe();
+              },
+            })
+          );
         }
-      });
-    });
+
+        return result;
+      }, rootNext.asObservable());
+
+    return observable.pipe(map((event) => event.unwrap())).pipe(
+      tap({
+        finalize: () => {
+          rootNext.complete();
+        },
+      })
+    );
   }
 
   private async sendOperation<Name extends OperationName, Payload, Result>(
@@ -85,11 +102,14 @@ export class CommunicatorClient<S extends OperationsSchema> {
       );
     };
 
-    const handler = this.links.reduceRight(
-      (next, link) => async () =>
-        link.sendRequest<Payload, Result>(request, next),
-      rootNext
-    );
+    const handler = this.links
+      .filter((link) => link.sendRequest)
+      .reduceRight(
+        (next, link) => async () =>
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          link.sendRequest!<Payload, Result>(request, next),
+        rootNext
+      );
 
     const response = await handler(request).catch((error) =>
       OperationResponse.fromError(request.name, request.kind, error, request)

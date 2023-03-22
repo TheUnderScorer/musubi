@@ -3,7 +3,7 @@ import { ClientLink, OperationRequest, OperationResponse } from '@musubi/core';
 import { filter, Observable } from 'rxjs';
 
 export class InMemoryClientLink<Ctx = unknown> implements ClientLink<Ctx> {
-  constructor(private readonly handlers: Handlers) {}
+  constructor(readonly handlers: Handlers) {}
 
   subscribeToEvent<Payload, Result>(request: OperationRequest<Payload, Ctx>) {
     return this.handlers.event.pipe(

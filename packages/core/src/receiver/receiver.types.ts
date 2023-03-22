@@ -1,7 +1,11 @@
 import { OperationRequest } from '../shared/OperationRequest';
 import { OperationResponse } from '../shared/OperationResponse';
 import { Observable } from 'rxjs';
-import { ExtractPayload, ExtractResult } from '../schema/schema.types';
+import {
+  ExtractPayload,
+  ExtractResult,
+  OperationName,
+} from '../schema/schema.types';
 import { OperationDefinition } from '../schema/OperationDefinition';
 
 export type ReceiverLink<Ctx = unknown> = {
@@ -11,24 +15,21 @@ export type ReceiverLink<Ctx = unknown> = {
    * @see {ClientLink}
    * */
   receiveRequest: (
+    name: OperationName,
     next: Observable<OperationRequest<unknown, Ctx>>
   ) => Observable<OperationRequest<unknown, Ctx>>;
 
+  /**
+   * This method is responsible for sending responses to client.
+   * It handles both operation responses and events.
+   *
+   * You can use `response.kind` to distinguish between them.
+   * */
   sendResponse?: <Payload, Result>(
     response: OperationResponse<Result, OperationRequest<Payload, Ctx>>,
     next: (
       response: OperationResponse<Result, OperationRequest<Payload, Ctx>>
     ) => Promise<void>
-  ) => Promise<void>;
-
-  /**
-   * This method is responsible for sending events to client.
-   *
-   * @see {ClientLink}
-   * */
-  sendEventToClient: <Result>(
-    event: OperationResponse<Result>,
-    next: (request: OperationResponse<Result>) => Promise<void>
   ) => Promise<void>;
 };
 

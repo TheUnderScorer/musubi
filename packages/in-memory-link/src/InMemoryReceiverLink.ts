@@ -1,18 +1,15 @@
 import {
   OperationKind,
+  OperationName,
   OperationRequest,
   OperationResponse,
   ReceiverLink,
 } from '@musubi/core';
 import { Handlers } from './handlers';
-import { Observable } from 'rxjs';
+import { filter, Observable } from 'rxjs';
 
 export class InMemoryReceiverLink<Ctx = unknown> implements ReceiverLink<Ctx> {
-  constructor(private readonly handlers: Handlers) {}
-
-  async sendEventToClient<Result>(event: OperationResponse<Result>) {
-    this.handlers.event.next(event);
-  }
+  constructor(readonly handlers: Handlers) {}
 
   async sendResponse<Payload, Result>(
     response: OperationResponse<Result, OperationRequest<Payload, Ctx>>
@@ -24,9 +21,9 @@ export class InMemoryReceiverLink<Ctx = unknown> implements ReceiverLink<Ctx> {
     }
   }
 
-  receiveRequest() {
-    return this.handlers.operation.asObservable() as Observable<
-      OperationRequest<unknown, Ctx>
-    >;
+  receiveRequest(name: OperationName) {
+    return this.handlers.operation.pipe(
+      filter((req) => req.name === name)
+    ) as Observable<OperationRequest<unknown, Ctx>>;
   }
 }
