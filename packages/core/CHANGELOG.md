@@ -1,3 +1,10 @@
+## [0.0.5](https://github.com/TheUnderScorer/musubi/compare/core-v0.0.4...core-v0.0.5) (2023-03-22)
+
+
+### Bug Fixes
+
+* fix output path ([70edfcb](https://github.com/TheUnderScorer/musubi/commit/70edfcbe5ee5dcc2925749e77115ff44270046be))
+
 ## [0.0.4](https://github.com/TheUnderScorer/musubi/compare/core-v0.0.3...core-v0.0.4) (2023-03-22)
 
 
