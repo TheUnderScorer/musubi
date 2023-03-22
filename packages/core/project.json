@@ -58,7 +58,8 @@
       "executor": "@theunderscorer/nx-semantic-release:semantic-release",
       "options": {
         "buildTarget": "core:build",
-        "tagFormat": "core-v${VERSION}"
+        "tagFormat": "core-v${VERSION}",
+        "outputPath": "dist/packages/core"
       }
     }
   },
