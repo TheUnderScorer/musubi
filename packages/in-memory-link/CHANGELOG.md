@@ -1,3 +1,16 @@
+# [0.1.0](https://github.com/TheUnderScorer/musubi/compare/in-memory-link-v0.0.4...in-memory-link-v0.1.0) (2023-03-23)
+
+
+### Bug Fixes
+
+* fix broken receiver if one link doesn't receive requests ([530c583](https://github.com/TheUnderScorer/musubi/commit/530c5837b59eee5da9ad0812f0eab39d8b87decd))
+* fix output path ([70edfcb](https://github.com/TheUnderScorer/musubi/commit/70edfcbe5ee5dcc2925749e77115ff44270046be))
+
+
+### Features
+
+* support passing channel ([80e02b5](https://github.com/TheUnderScorer/musubi/commit/80e02b50f39815c164b4f62c9f9a23b382168908))
+
 ## [0.0.4](https://github.com/TheUnderScorer/musubi/compare/in-memory-link-v0.0.3...in-memory-link-v0.0.4) (2023-03-22)
 
 
