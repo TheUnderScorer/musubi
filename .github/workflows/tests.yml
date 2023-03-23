@@ -45,4 +45,4 @@ jobs:
         run: npx nx run-many --target=build --all --skip-nx-cache
 
       - name: Run tests
-        run: npx nx run-many --target=test --all
+        run: npx nx run-many --target=test --all --configuration=ci
