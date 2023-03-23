@@ -3,16 +3,16 @@ import {
   ExtractResult,
   OperationKind,
   OperationName,
+  OperationsSchema,
 } from '../schema/schema.types';
 import { ClientLink } from './client.types';
 import { OperationRequest } from '../shared/OperationRequest';
 import { Channel } from '../shared/communication.types';
 import { OperationResponse } from '../shared/OperationResponse';
-import { OperationsSchema } from '../schema/OperationsSchema';
 import { map, Observable, Subject, tap } from 'rxjs';
 import { isSubscription } from 'rxjs/internal/Subscription';
+import { validatePayload, validateResult } from '../schema/validation';
 
-// TODO Channels support
 export class CommunicatorClient<S extends OperationsSchema> {
   constructor(
     private readonly schema: S,
@@ -81,13 +81,24 @@ export class CommunicatorClient<S extends OperationsSchema> {
         return result;
       }, rootNext.asObservable());
 
-    return observable.pipe(map((event) => event.unwrap())).pipe(
-      tap({
-        finalize: () => {
-          rootNext.complete();
-        },
-      })
-    );
+    return observable
+      .pipe(
+        map((event) =>
+          validatePayload(
+            this.schema,
+            OperationKind.Event,
+            event.operationName,
+            event.unwrap()
+          )
+        )
+      )
+      .pipe(
+        tap({
+          finalize: () => {
+            rootNext.complete();
+          },
+        })
+      );
   }
 
   private async sendOperation<Name extends OperationName, Payload, Result>(
@@ -96,7 +107,12 @@ export class CommunicatorClient<S extends OperationsSchema> {
     kind: OperationKind,
     channel?: Channel
   ): Promise<Result> {
-    const request = new OperationRequest(name, kind, payload, channel);
+    const request = new OperationRequest(
+      name,
+      kind,
+      validatePayload(this.schema, kind, name, payload),
+      channel
+    );
 
     const rootNext = async (request: OperationRequest<Payload>) => {
       return OperationResponse.fromError<Result, typeof request>(
@@ -120,6 +136,11 @@ export class CommunicatorClient<S extends OperationsSchema> {
       OperationResponse.fromError(request.name, request.kind, error, request)
     );
 
-    return response.unwrap() as Result;
+    return validateResult<S, Result>(
+      this.schema,
+      kind,
+      name,
+      response.unwrap() as Result
+    );
   }
 }

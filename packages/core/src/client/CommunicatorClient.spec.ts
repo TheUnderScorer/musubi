@@ -4,6 +4,7 @@ import { CommunicatorReceiver } from '../receiver/CommunicatorReceiver';
 import { mergeSchemas } from '../schema/schemaHelpers';
 import { testPostSchema, testUserSchema } from '../test/testSchemas';
 import { createTestLink } from '../test/testLink';
+import { ZodError } from 'zod';
 
 const schema = mergeSchemas(testUserSchema, testPostSchema);
 
@@ -18,6 +19,22 @@ describe('CommunicatorClient', () => {
 
     receiverLink = link.receiverLink;
     clientLink = link.clientLink;
+  });
+
+  it('should validate payload', async () => {
+    const receiver = new CommunicatorReceiver(schema, [receiverLink]);
+
+    receiver.handleCommand('createUser', async (payload) => ({
+      name: payload.name,
+      id: '1',
+    }));
+
+    const client = new CommunicatorClient(schema, [clientLink]);
+
+    await expect(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      client.command('createUser', { invalid: 'test' } as any)
+    ).rejects.toThrow(ZodError);
   });
 
   it('should send channel in request', async () => {

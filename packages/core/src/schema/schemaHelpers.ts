@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { OperationDefinition } from './OperationDefinition';
-import { OperationsSchema } from './OperationsSchema';
+import { OperationsSchema } from './schema.types';
 
 export function defineSchema<S extends OperationsSchema>(schema: S) {
   return schema;

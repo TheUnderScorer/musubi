@@ -2,13 +2,14 @@ import {
   ExtractPayload,
   OperationKind,
   OperationName,
+  OperationsSchema,
 } from '../schema/schema.types';
 import { OperationHandler, ReceiverLink } from './receiver.types';
 import { OperationResponse } from '../shared/OperationResponse';
 import { RootReceiverLink } from './RootReceiverLink';
-import { OperationsSchema } from '../schema/OperationsSchema';
 import { filter } from 'rxjs';
 import { Channel } from '../shared/communication.types';
+import { validatePayload, validateResult } from '../schema/validation';
 
 export class CommunicatorReceiver<S extends OperationsSchema> {
   private readonly rootLink: RootReceiverLink;
@@ -48,7 +49,12 @@ export class CommunicatorReceiver<S extends OperationsSchema> {
       name as OperationName,
       OperationKind.Event,
       null,
-      payload,
+      validatePayload(
+        this.schema,
+        OperationKind.Event,
+        name as OperationName,
+        payload
+      ),
       null,
       channel
     );
@@ -68,13 +74,18 @@ export class CommunicatorReceiver<S extends OperationsSchema> {
         let response: OperationResponse;
 
         try {
-          // TODO Validate payload
-          const result = await handler(request.payload as Payload);
+          const payload = validatePayload(
+            this.schema,
+            kind,
+            name,
+            request.payload as Payload
+          );
+          const result = await handler(payload);
 
           response = OperationResponse.fromResult(
             request.name,
             request.kind,
-            result,
+            validateResult(this.schema, kind, name, result),
             request
           );
         } catch (error) {
@@ -86,7 +97,6 @@ export class CommunicatorReceiver<S extends OperationsSchema> {
           );
         }
 
-        // TODO Validate result
         await this.rootLink.sendResponse(response);
       });
   }
