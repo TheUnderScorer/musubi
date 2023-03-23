@@ -7,11 +7,17 @@ import { createTestLink } from '../test/testLink';
 
 const schema = mergeSchemas(testUserSchema, testPostSchema);
 
-const { receiverLink, clientLink } = createTestLink();
+let receiverLink: ReturnType<typeof createTestLink>['receiverLink'];
+let clientLink: ReturnType<typeof createTestLink>['clientLink'];
 
 describe('CommunicatorClient', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+
+    const link = createTestLink();
+
+    receiverLink = link.receiverLink;
+    clientLink = link.clientLink;
   });
 
   it('should send channel in request', async () => {
