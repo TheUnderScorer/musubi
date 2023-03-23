@@ -21,34 +21,39 @@ export class CommunicatorClient<S extends OperationsSchema> {
 
   async query<Name extends keyof S['queries']>(
     name: Name,
-    payload: ExtractPayload<S['queries'][Name]>
+    payload: ExtractPayload<S['queries'][Name]>,
+    channel: Channel
   ): Promise<ExtractResult<S['queries'][Name]>> {
     return this.sendOperation(
       name as OperationName,
       payload,
-      OperationKind.Query
+      OperationKind.Query,
+      channel
     );
   }
 
   async command<Name extends keyof S['commands']>(
     name: Name,
-    payload: ExtractPayload<S['commands'][Name]>
+    payload: ExtractPayload<S['commands'][Name]>,
+    channel: Channel
   ): Promise<ExtractResult<S['commands'][Name]>> {
     return this.sendOperation(
       name as OperationName,
       payload,
-      OperationKind.Command
+      OperationKind.Command,
+      channel
     );
   }
 
   /**
    * TODO Mention that is should have only one subscription
    * */
-  observeEvent<Name extends keyof S['events']>(name: Name) {
+  observeEvent<Name extends keyof S['events']>(name: Name, channel?: Channel) {
     const request = new OperationRequest(
       name as OperationName,
       OperationKind.Event,
-      {}
+      {},
+      channel
     );
 
     const rootNext = new Subject<
