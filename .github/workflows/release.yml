@@ -37,6 +37,12 @@ jobs:
           echo "NPM version: $(npm -v)"
           echo "NX version: $(npx nx --version)"
 
+      - name: Lint
+        run: npx nx run-many --target=lint --all
+
+      - name: Run tests
+        run: npx nx run-many --target=test --all
+
       - name: Release
         run: npx nx run-many --target=semantic-release --all --parallel --maxParallel=1
         env:
