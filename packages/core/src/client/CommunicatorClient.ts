@@ -22,7 +22,7 @@ export class CommunicatorClient<S extends OperationsSchema> {
   async query<Name extends keyof S['queries']>(
     name: Name,
     payload: ExtractPayload<S['queries'][Name]>,
-    channel: Channel
+    channel?: Channel
   ): Promise<ExtractResult<S['queries'][Name]>> {
     return this.sendOperation(
       name as OperationName,
@@ -35,7 +35,7 @@ export class CommunicatorClient<S extends OperationsSchema> {
   async command<Name extends keyof S['commands']>(
     name: Name,
     payload: ExtractPayload<S['commands'][Name]>,
-    channel: Channel
+    channel?: Channel
   ): Promise<ExtractResult<S['commands'][Name]>> {
     return this.sendOperation(
       name as OperationName,

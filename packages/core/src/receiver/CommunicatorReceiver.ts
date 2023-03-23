@@ -8,6 +8,7 @@ import { OperationResponse } from '../shared/OperationResponse';
 import { RootReceiverLink } from './RootReceiverLink';
 import { OperationsSchema } from '../schema/OperationsSchema';
 import { filter } from 'rxjs';
+import { Channel } from '../shared/communication.types';
 
 export class CommunicatorReceiver<S extends OperationsSchema> {
   private readonly rootLink: RootReceiverLink;
@@ -40,14 +41,16 @@ export class CommunicatorReceiver<S extends OperationsSchema> {
 
   async dispatchEvent<Name extends keyof S['events']>(
     name: Name,
-    payload: ExtractPayload<S['events'][Name]>
+    payload: ExtractPayload<S['events'][Name]>,
+    channel?: Channel
   ) {
     const response = new OperationResponse(
       name as OperationName,
       OperationKind.Event,
       null,
       payload,
-      null
+      null,
+      channel
     );
 
     await this.rootLink.sendResponse(response);

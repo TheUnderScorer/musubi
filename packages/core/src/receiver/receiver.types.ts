@@ -1,6 +1,6 @@
 import { OperationRequest } from '../shared/OperationRequest';
 import { OperationResponse } from '../shared/OperationResponse';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import {
   ExtractPayload,
   ExtractResult,
@@ -14,10 +14,10 @@ export type ReceiverLink<Ctx = unknown> = {
    *
    * @see {ClientLink}
    * */
-  receiveRequest: (
+  receiveRequest?: (
     name: OperationName,
     next: Observable<OperationRequest<unknown, Ctx>>
-  ) => Observable<OperationRequest<unknown, Ctx>>;
+  ) => Observable<OperationRequest<unknown, Ctx>> | Subscription;
 
   /**
    * This method is responsible for sending responses to client.

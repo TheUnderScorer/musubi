@@ -1,5 +1,6 @@
 import { OperationRequest } from './OperationRequest';
 import { OperationKind } from '../schema/schema.types';
+import { Channel } from './communication.types';
 
 export type OperationResponseVariant<Result> =
   | {
@@ -20,8 +21,13 @@ export class OperationResponse<
     public operationKind: OperationKind,
     public request: Request | null,
     public result: Result | null,
-    public error: Error | null
-  ) {}
+    public error: Error | null,
+    public channel?: Channel
+  ) {
+    if (!this.channel) {
+      this.channel = request?.channel;
+    }
+  }
 
   static fromResult<R, Req extends OperationRequest = OperationRequest>(
     operationName: string,

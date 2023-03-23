@@ -1,69 +1,48 @@
 import { CommunicatorClient } from './CommunicatorClient';
 import { OperationResponse } from '../shared/OperationResponse';
 import { CommunicatorReceiver } from '../receiver/CommunicatorReceiver';
-import { ClientLink } from './client.types';
-import { ReceiverLink } from '../receiver/receiver.types';
-import { filter, Subject } from 'rxjs';
-import { OperationKind, OperationName } from '../schema/schema.types';
-import { OperationRequest } from '../shared/OperationRequest';
 import { mergeSchemas } from '../schema/schemaHelpers';
 import { testPostSchema, testUserSchema } from '../test/testSchemas';
+import { createTestLink } from '../test/testLink';
 
 const schema = mergeSchemas(testUserSchema, testPostSchema);
 
-const clientLink = {
-  subscribeToEvent: jest.fn(),
-  sendRequest: jest.fn(),
-} satisfies ClientLink;
-
-const receiverLink = {
-  receiveRequest: jest.fn(),
-  sendResponse: jest.fn(),
-} satisfies ReceiverLink;
+const { receiverLink, clientLink } = createTestLink();
 
 describe('CommunicatorClient', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+  });
 
-    const newRequest = new Subject<OperationRequest>();
-    const newResponse = new Subject<OperationResponse>();
-    const newEvent = new Subject<OperationResponse>();
+  it('should send channel in request', async () => {
+    const channel = {
+      test: true,
+    };
 
-    receiverLink.receiveRequest.mockImplementation((name: OperationName) => {
-      return newRequest.pipe(filter((req) => req.name === name));
-    });
+    const receiver = new CommunicatorReceiver(schema, [receiverLink]);
 
-    receiverLink.sendResponse.mockImplementation(
-      (response: OperationResponse) => {
-        if (response.operationKind === OperationKind.Event) {
-          newEvent.next(response);
-        } else {
-          newResponse.next(response);
-        }
-      }
-    );
+    receiver.handleCommand('createUser', async (payload) => ({
+      name: payload.name,
+      id: '1',
+    }));
 
-    clientLink.subscribeToEvent.mockImplementation(
-      (request: OperationRequest) => {
-        return newEvent.pipe(
-          filter((res) => res.operationName === request.name)
-        );
-      }
-    );
+    const client = new CommunicatorClient(schema, [
+      {
+        sendRequest: async (request, next) => {
+          expect(request.channel).toBe(channel);
 
-    clientLink.sendRequest.mockImplementation((request) => {
-      return new Promise((resolve) => {
-        const sub = newResponse
-          .pipe(filter((res) => res.request?.id === request.id))
-          .subscribe((response) => {
-            sub.unsubscribe();
+          const response = await next(request);
 
-            resolve(response);
-          });
+          expect(response).toBeInstanceOf(OperationResponse);
+          expect(response.channel).toBe(channel);
 
-        newRequest.next(request);
-      });
-    });
+          return response;
+        },
+      },
+      clientLink,
+    ]);
+
+    await client.command('createUser', { name: 'test' }, channel);
   });
 
   it('should support multiple links', async () => {
