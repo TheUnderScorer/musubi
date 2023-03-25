@@ -7,7 +7,7 @@ import {
 } from '@musubi/core';
 import { Subject } from 'rxjs';
 
-export type EventHandler<Ctx = unknown> = <Payload>(
+export type EventHandler<Ctx = any> = <Payload>(
   request: OperationRequest<Payload, Ctx>
 ) => Promise<void>;
 
