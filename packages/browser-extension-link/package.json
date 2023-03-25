@@ -1,0 +1,10 @@
+{
+  "name": "@musubi/browser-extension-link",
+  "version": "0.0.1",
+  "type": "commonjs",
+  "private": false,
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}

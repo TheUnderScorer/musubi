@@ -16,6 +16,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@musubi/browser-extension-link": [
+        "packages/browser-extension-link/src/index.ts"
+      ],
       "@musubi/core": ["packages/core/src/index.ts"],
       "@musubi/in-memory-link": ["packages/in-memory-link/src/index.ts"]
     }

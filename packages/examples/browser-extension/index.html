@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <base href="/" />
+  <link href="favicon.ico" rel="icon" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Example extension</title>
+  <style>
+    main {
+      width: 500px;
+      height: 500px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    .buttons {
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    .buttons button {
+      margin-left: 0.5rem
+    }
+
+    #result {
+      width: 100%;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+<div id="root"></div>
+<script type="module" src="/src/popup/popup.tsx"></script>
+</body>
+<main>
+  <div class="buttons">
+    <button id="get_tab_ids">
+      Get tab IDs (message to background)
+    </button>
+    <button id="replace_contents">
+      Replace current page contents (message to content script in main frame)
+    </button>
+  </div>
+  <div id="result"></div>
+</main>
+</html>
