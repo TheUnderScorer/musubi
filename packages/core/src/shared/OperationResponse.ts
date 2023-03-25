@@ -1,21 +1,26 @@
 import { OperationRequest } from './OperationRequest';
 import { OperationKind } from '../schema/schema.types';
 import { Channel } from './communication.types';
+import { z } from 'zod';
 
-export type OperationResponseVariant<Result> =
-  | {
-      result: Result;
-      error: null;
-    }
-  | {
-      result: null;
-      error: Error;
-    };
+const operationResponseSchema = z.object({
+  operationName: z.string(),
+  operationKind: z.nativeEnum(OperationKind),
+  request: z.union([OperationRequest.schema, z.null()]),
+  result: z.unknown().optional(),
+  error: z.unknown().optional(),
+  channel: z.unknown().optional(),
+});
+
+type OperationResponseObject = z.infer<typeof operationResponseSchema>;
 
 export class OperationResponse<
   Result = unknown,
   Request extends OperationRequest = OperationRequest
-> {
+> implements OperationResponseObject
+{
+  static readonly schema = operationResponseSchema;
+
   constructor(
     public operationName: string,
     public operationKind: OperationKind,
@@ -27,6 +32,19 @@ export class OperationResponse<
     if (!this.channel) {
       this.channel = request?.channel;
     }
+  }
+
+  static fromObject<
+    Result,
+    Request extends OperationRequest = OperationRequest
+  >(data: OperationResponseObject) {
+    return new OperationResponse<Result, Request>(
+      data.operationName,
+      data.operationKind,
+      data.request as Request,
+      data.result as Result,
+      data.error as Error
+    );
   }
 
   static fromResult<R, Req extends OperationRequest = OperationRequest>(

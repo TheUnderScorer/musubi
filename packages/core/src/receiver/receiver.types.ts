@@ -35,5 +35,7 @@ export type ReceiverLink<Ctx = unknown> = {
 
 export type OperationHandler<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  O extends OperationDefinition<any, any, any, any>
-> = (payload: ExtractPayload<O>) => Promise<ExtractResult<O>>;
+  O extends OperationDefinition<any, any, any, any>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Ctx = any
+> = (payload: ExtractPayload<O>, ctx: Ctx) => Promise<ExtractResult<O>>;

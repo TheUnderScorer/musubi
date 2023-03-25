@@ -35,7 +35,7 @@ export function validateResult<S extends OperationsSchema, R>(
   return result;
 }
 
-function resolveSchemaKey(kind: OperationKind): keyof OperationsSchema {
+export function resolveSchemaKey(kind: OperationKind): keyof OperationsSchema {
   switch (kind) {
     case OperationKind.Command:
       return 'commands';

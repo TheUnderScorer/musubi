@@ -10,10 +10,10 @@ export interface ClientLink<Ctx = unknown> {
     ) => Promise<OperationResponse<Result, OperationRequest<Payload, Ctx>>>
   ) => Promise<OperationResponse<Result, OperationRequest<Payload, Ctx>>>;
 
-  subscribeToEvent?: <Payload, Result>(
+  subscribeToEvent?: <Payload>(
     request: OperationRequest<Payload, Ctx>,
-    next: Observable<OperationResponse<Result, OperationRequest<Payload, Ctx>>>
+    next: Observable<OperationResponse<Payload, OperationRequest<unknown, Ctx>>>
   ) =>
-    | Observable<OperationResponse<Result, OperationRequest<Payload, Ctx>>>
+    | Observable<OperationResponse<Payload, OperationRequest<unknown, Ctx>>>
     | Subscription;
 }

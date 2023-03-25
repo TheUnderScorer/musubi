@@ -10,17 +10,18 @@ import { RootReceiverLink } from './RootReceiverLink';
 import { filter } from 'rxjs';
 import { Channel } from '../shared/communication.types';
 import { validatePayload, validateResult } from '../schema/validation';
+import { OperationRequest } from '../shared/OperationRequest';
 
-export class CommunicatorReceiver<S extends OperationsSchema> {
-  private readonly rootLink: RootReceiverLink;
+export class CommunicatorReceiver<S extends OperationsSchema, Ctx = unknown> {
+  private readonly rootLink: RootReceiverLink<Ctx>;
 
-  constructor(private readonly schema: S, links: ReceiverLink[]) {
+  constructor(private readonly schema: S, links: ReceiverLink<Ctx>[]) {
     this.rootLink = new RootReceiverLink(links);
   }
 
   handleQuery<Name extends keyof S['queries']>(
     name: Name,
-    handler: OperationHandler<S['queries'][Name]>
+    handler: OperationHandler<S['queries'][Name], Ctx>
   ) {
     return this.handleOperation(
       name as OperationName,
@@ -31,7 +32,7 @@ export class CommunicatorReceiver<S extends OperationsSchema> {
 
   handleCommand<Name extends keyof S['commands']>(
     name: Name,
-    handler: OperationHandler<S['commands'][Name]>
+    handler: OperationHandler<S['commands'][Name], Ctx>
   ) {
     return this.handleOperation(
       name as OperationName,
@@ -45,7 +46,10 @@ export class CommunicatorReceiver<S extends OperationsSchema> {
     payload: ExtractPayload<S['events'][Name]>,
     channel?: Channel
   ) {
-    const response = new OperationResponse(
+    const response = new OperationResponse<
+      typeof payload,
+      OperationRequest<unknown, Ctx>
+    >(
       name as OperationName,
       OperationKind.Event,
       null,
@@ -64,14 +68,14 @@ export class CommunicatorReceiver<S extends OperationsSchema> {
 
   private handleOperation<Payload, Result>(
     name: OperationName,
-    handler: (payload: Payload) => Promise<Result>,
+    handler: (payload: Payload, ctx: Ctx) => Promise<Result>,
     kind: OperationKind
   ) {
     return this.rootLink
       .observeNewRequest(name)
       .pipe(filter((req) => req.kind === kind))
       .subscribe(async (request) => {
-        let response: OperationResponse;
+        let response: OperationResponse<Result, OperationRequest<Payload, Ctx>>;
 
         try {
           const payload = validatePayload(
@@ -80,20 +84,26 @@ export class CommunicatorReceiver<S extends OperationsSchema> {
             name,
             request.payload as Payload
           );
-          const result = await handler(payload);
+          const result = await handler(payload, request.ctx as Ctx);
 
-          response = OperationResponse.fromResult(
+          response = OperationResponse.fromResult<
+            Result,
+            OperationRequest<Payload, Ctx>
+          >(
             request.name,
             request.kind,
             validateResult(this.schema, kind, name, result),
-            request
+            request as OperationRequest<Payload, Ctx>
           );
         } catch (error) {
-          response = OperationResponse.fromError(
+          response = OperationResponse.fromError<
+            Result,
+            OperationRequest<Payload, Ctx>
+          >(
             request.name,
             request.kind,
             error,
-            request
+            request as OperationRequest<Payload, Ctx>
           );
         }
 

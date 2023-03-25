@@ -13,10 +13,11 @@ import { map, Observable, Subject, tap } from 'rxjs';
 import { isSubscription } from 'rxjs/internal/Subscription';
 import { validatePayload, validateResult } from '../schema/validation';
 
-export class CommunicatorClient<S extends OperationsSchema> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export class CommunicatorClient<S extends OperationsSchema, Ctx = any> {
   constructor(
     private readonly schema: S,
-    private readonly links: ClientLink[]
+    private readonly links: ClientLink<Ctx>[]
   ) {}
 
   async query<Name extends keyof S['queries']>(
@@ -49,7 +50,7 @@ export class CommunicatorClient<S extends OperationsSchema> {
    * TODO Mention that is should have only one subscription
    * */
   observeEvent<Name extends keyof S['events']>(name: Name, channel?: Channel) {
-    const request = new OperationRequest(
+    const request = new OperationRequest<unknown, Ctx>(
       name as OperationName,
       OperationKind.Event,
       {},
@@ -57,13 +58,21 @@ export class CommunicatorClient<S extends OperationsSchema> {
     );
 
     const rootNext = new Subject<
-      OperationResponse<ExtractPayload<S['events'][Name]>>
+      OperationResponse<
+        ExtractPayload<S['events'][Name]>,
+        OperationRequest<unknown, Ctx>
+      >
     >();
 
     const observable = this.links
       .filter((link) => link.subscribeToEvent)
       .reduceRight<
-        Observable<OperationResponse<ExtractPayload<S['events'][Name]>>>
+        Observable<
+          OperationResponse<
+            ExtractPayload<S['events'][Name]>,
+            OperationRequest<unknown, Ctx>
+          >
+        >
       >((next, link) => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const result = link.subscribeToEvent!(request, next);
@@ -78,7 +87,12 @@ export class CommunicatorClient<S extends OperationsSchema> {
           );
         }
 
-        return result;
+        return result as Observable<
+          OperationResponse<
+            ExtractPayload<S['events'][Name]>,
+            OperationRequest<unknown, Ctx>
+          >
+        >;
       }, rootNext.asObservable());
 
     return observable
@@ -107,14 +121,14 @@ export class CommunicatorClient<S extends OperationsSchema> {
     kind: OperationKind,
     channel?: Channel
   ): Promise<Result> {
-    const request = new OperationRequest(
+    const request = new OperationRequest<Payload, Ctx>(
       name,
       kind,
       validatePayload(this.schema, kind, name, payload),
       channel
     );
 
-    const rootNext = async (request: OperationRequest<Payload>) => {
+    const rootNext = async (request: OperationRequest<Payload, Ctx>) => {
       return OperationResponse.fromError<Result, typeof request>(
         request.name,
         request.kind,
