@@ -7,11 +7,17 @@ import { ZodError } from 'zod';
 
 const schema = mergeSchemas(testUserSchema, testPostSchema);
 
-const { receiverLink, clientLink } = createTestLink();
-
 describe('CommunicatorReceiver', () => {
+  let receiverLink: ReturnType<typeof createTestLink>['receiverLink'];
+  let clientLink: ReturnType<typeof createTestLink>['clientLink'];
+
   beforeEach(() => {
     jest.clearAllMocks();
+
+    const link = createTestLink();
+
+    receiverLink = link.receiverLink;
+    clientLink = link.clientLink;
   });
 
   it('should validate result', async () => {
