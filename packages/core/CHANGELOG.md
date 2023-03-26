@@ -1,3 +1,12 @@
+# [0.2.0](https://github.com/TheUnderScorer/musubi/compare/core-v0.1.0...core-v0.2.0) (2023-03-26)
+
+
+### Features
+
+* add browser extension link with example ([0828888](https://github.com/TheUnderScorer/musubi/commit/08288885018593a6d2b06aa46fd04601549e5361))
+* pass context to handlers ([b7cbd70](https://github.com/TheUnderScorer/musubi/commit/b7cbd70b481f17eb9fb5d7f25bd298b60df008f4))
+* validate payload and result using zod ([9a3183e](https://github.com/TheUnderScorer/musubi/commit/9a3183e226f920d391ae9f85d806bd3725a233e6))
+
 # [0.1.0](https://github.com/TheUnderScorer/musubi/compare/core-v0.0.5...core-v0.1.0) (2023-03-23)
 
 
