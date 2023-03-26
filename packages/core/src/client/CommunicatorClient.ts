@@ -20,6 +20,14 @@ export class CommunicatorClient<S extends OperationsSchema, Ctx = any> {
     private readonly links: ClientLink<Ctx>[]
   ) {}
 
+  /**
+   * Executes query from schema
+   *
+   * @example ```
+   *  const result = await client.query('getUsers', { filter: { name: 'John' } })
+   * ```
+   *
+   * */
   async query<Name extends keyof S['queries']>(
     name: Name,
     payload: ExtractPayload<S['queries'][Name]>,
@@ -33,6 +41,14 @@ export class CommunicatorClient<S extends OperationsSchema, Ctx = any> {
     );
   }
 
+  /**
+   * Executes command from schema
+   *
+   * @example ```
+   * const result = await client.command('createUser', { name: 'John' })
+   * ```
+   *
+   * */
   async command<Name extends keyof S['commands']>(
     name: Name,
     payload: ExtractPayload<S['commands'][Name]>,
@@ -47,7 +63,15 @@ export class CommunicatorClient<S extends OperationsSchema, Ctx = any> {
   }
 
   /**
-   * TODO Mention that is should have only one subscription
+   * Creates observer for given event
+   *
+   * @example ```
+   * const observer = client.observeEvent('userCreated')
+   *
+   * observer.subscribe((event) => {
+   *    console.log(event.payload)
+   * })
+   * ```
    * */
   observeEvent<Name extends keyof S['events']>(name: Name, channel?: Channel) {
     const request = new OperationRequest<unknown, Ctx>(

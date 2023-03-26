@@ -3,6 +3,9 @@ import { OperationResponse } from '../shared/OperationResponse';
 import { Observable, Subscription } from 'rxjs';
 
 export interface ClientLink<Ctx = unknown> {
+  /**
+   * Sends request to the server and returns a response.
+   * */
   sendRequest?: <Payload, Result>(
     request: OperationRequest<Payload, Ctx>,
     next: (
@@ -10,6 +13,9 @@ export interface ClientLink<Ctx = unknown> {
     ) => Promise<OperationResponse<Result, OperationRequest<Payload, Ctx>>>
   ) => Promise<OperationResponse<Result, OperationRequest<Payload, Ctx>>>;
 
+  /**
+   * Subscribes to the server event and returns a subscription.
+   * */
   subscribeToEvent?: <Payload>(
     request: OperationRequest<Payload, Ctx>,
     next: Observable<OperationResponse<Payload, OperationRequest<unknown, Ctx>>>
