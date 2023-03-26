@@ -1,11 +1,56 @@
-# core
 
-This library was generated with [Nx](https://nx.dev).
 
-## Building
+<div style="text-align: center">
+<h1>
+Musubi 🪢
+</h1>
+<strong>End-to-end typesafe communication. 🎉</strong>
+</div>
 
-Run `nx build core` to build the library.
+# @musubi/core
 
-## Running unit tests
+## Documentation
+Full documentation for `@musubi/core` can be found [here](https://github.com/TheUnderScorer/musubi).
 
-Run `nx test core` to execute the unit tests via [Jest](https://jestjs.io).
+## Installation
+```shell
+# npm
+npm install @musubi/core
+
+# Yarn
+yarn add @musubi/core
+```
+
+## Usage
+```ts
+import { defineSchema, CommunicatorClient } from "@musubi/core";
+import { createClientLink } from "@musubi/http-link";
+import { z } from "zod";
+
+const schema = defineSchema({
+  queries: {
+    greet: query()
+      .withPayload(
+        z.object({
+          name: z.string()
+        })
+      )
+      .withResult(z.string())
+  }
+});
+
+async function main() {
+  const httpLink = createClientLink({
+    url: "http://localhost:3000/api"
+  });
+  const client = new CommunicatorClient(schema, [httpLink]);
+
+  // Querying the greeting
+  const response = await client.query("greet", {
+    name: "John"
+  });
+
+  console.log("response", response); // Hello John
+}
+
+```

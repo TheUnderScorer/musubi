@@ -1,11 +1,61 @@
-# in-memory-link
 
-This library was generated with [Nx](https://nx.dev).
 
-## Building
+<div style="text-align: center">
+<h1>
+Musubi 🪢
+</h1>
+<strong>End-to-end typesafe communication. 🎉</strong>
+</div>
 
-Run `nx build in-memory-link` to build the library.
+# @musubi/in-memory-link
 
-## Running unit tests
+Adapter for using Musubi with in-memory communication.
 
-Run `nx test in-memory-link` to execute the unit tests via [Jest](https://jestjs.io).
+## Documentation
+Full documentation for `musubi` can be found [here](https://github.com/TheUnderScorer/musubi).
+
+## Installation
+```shell
+# npm
+npm install @musubi/in-memory-link
+
+# Yarn
+yarn add @musubi/in-memory-link
+```
+
+## Usage
+```ts
+import { defineSchema, CommunicatorClient, CommunicatorReceiver } from "@musubi/core";
+import { createInMemoryLink } from "@musubi/in-memory-link";
+import { z } from "zod";
+
+const schema = defineSchema({
+  queries: {
+    greet: query()
+      .withPayload(
+        z.object({
+          name: z.string()
+        })
+      )
+      .withResult(z.string())
+  }
+});
+
+const memoryLink = createInMemoryLink();
+
+const receiver = new CommunicatorReceiver(schema, [memoryLink.receiver]);
+
+receiver.handleQuery('greet', payload => `Hello ${payload.name}`);
+
+async function main() {
+  const client = new CommunicatorClient(schema, [memoryLink.client]);
+
+  // Querying the greeting
+  const response = await client.query("greet", {
+    name: "John"
+  });
+
+  console.log("response", response); // Hello John
+}
+
+```
