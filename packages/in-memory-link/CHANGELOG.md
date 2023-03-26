@@ -1,3 +1,17 @@
+# [0.2.0](https://github.com/TheUnderScorer/musubi/compare/in-memory-link-v0.1.0...in-memory-link-v0.2.0) (2023-03-26)
+
+
+### Bug Fixes
+
+* update subscribeToEvent return type ([68cf6ab](https://github.com/TheUnderScorer/musubi/commit/68cf6ab21e7ad236bb120706e3f789bc8a432ad6))
+
+
+### Features
+
+* add browser extension link with example ([0828888](https://github.com/TheUnderScorer/musubi/commit/08288885018593a6d2b06aa46fd04601549e5361))
+* pass context to handlers ([b7cbd70](https://github.com/TheUnderScorer/musubi/commit/b7cbd70b481f17eb9fb5d7f25bd298b60df008f4))
+* validate payload and result using zod ([9a3183e](https://github.com/TheUnderScorer/musubi/commit/9a3183e226f920d391ae9f85d806bd3725a233e6))
+
 # [0.1.0](https://github.com/TheUnderScorer/musubi/compare/in-memory-link-v0.0.4...in-memory-link-v0.1.0) (2023-03-23)
 
 
