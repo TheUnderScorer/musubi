@@ -10,7 +10,7 @@ on:
 
 jobs:
   browser-extension-e2e:
-    name: Test
+    name: Browser Extension E2E
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
