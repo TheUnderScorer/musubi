@@ -12,6 +12,27 @@ jobs:
   browser-extension-e2e:
     name: Browser Extension E2E
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Build
+        run: npx nx run examples-browser-extension:build
+
+      - name: Run tests
+        run: npx nx run examples-browser-extension-e2e:e2e
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -23,27 +44,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
-          cache: 'npm'
-
-      - name: Install npm dependencies
-        run: npm ci
-
-      - name: Build
-        run: npx nx run examples-browser-extension:build
-
-      - name: Run tests
-        run: npx nx run example-browser-extension-e2e:e2e
-
-  test:
-    name: Test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
           cache: 'npm'
 
       - name: Install npm dependencies
