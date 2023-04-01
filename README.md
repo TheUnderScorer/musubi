@@ -25,3 +25,14 @@ It is inspired by [tRPC](https://github.com/trpc/trpc), but with a focus on modu
 ## Getting started
 
 I recommend checking examples located in the [packages/examples](packages/examples) directory.
+
+You can use following links to integrate Musubi in your application:
+
+| Name              | Link                                    | Description                                                                |
+|-------------------|-----------------------------------------|----------------------------------------------------------------------------|
+| Browser extension | [Link](packages/browser-extension-link) | Allows you to use Musubi in browser extenison                              |
+| In Memory         | [Link](packages/in-memory-link)         | Simple link that allows you send messages using Musubi in the same process |
+| Electron          | TBA                                     | Allows you tu use Musubi in Electron apps                                  |
+| Socket.io         | TBA                                     | Allows you tu use pass Musubi messages using socket.io                     |
+
+## 
