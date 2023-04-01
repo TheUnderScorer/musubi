@@ -4,7 +4,6 @@ import {
 } from '@musubi/browser-extension-link';
 import { CommunicatorClient } from '@musubi/core';
 import { browserExtensionSchema, defaultChannels } from '../schema';
-import * as browser from 'webextension-polyfill';
 
 async function main() {
   const link = await createBrowserExtensionLink('popup', defaultChannels);
@@ -26,21 +25,12 @@ async function main() {
   });
 
   elements.replaceContents.addEventListener('click', async () => {
-    const [currentTab] = await browser.tabs.query({
-      active: true,
-      currentWindow: true,
-    });
-
-    console.log('replaceContents', { currentTab });
-
     await client.command('replaceContent', {
       content: 'Hello from popup!',
     });
   });
 
   elements.getTabIds.addEventListener('click', async () => {
-    console.log('getAllTabIds');
-
     const result = await client.query(
       'getAllTabIds',
       {},
