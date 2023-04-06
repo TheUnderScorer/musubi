@@ -17,7 +17,7 @@ export interface ClientLink<Ctx = unknown> {
    * Subscribes to the server event and returns a subscription.
    * */
   subscribeToEvent?: <Payload>(
-    request: OperationRequest<Payload, Ctx>,
+    request: OperationRequest<unknown, Ctx>,
     next: Observable<OperationResponse<Payload, OperationRequest<unknown, Ctx>>>
   ) =>
     | Observable<OperationResponse<Payload, OperationRequest<unknown, Ctx>>>

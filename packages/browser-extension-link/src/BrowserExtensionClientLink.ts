@@ -32,7 +32,7 @@ export class BrowserExtensionClientLink<S extends OperationsSchema>
   }
 
   subscribeToEvent<Payload>(
-    request: OperationRequest<Payload, BrowserExtensionContext>
+    request: OperationRequest<unknown, BrowserExtensionContext>
   ) {
     return observeGlobalResponses().pipe(
       filter((response) => response.operationName === request.name)

@@ -3,6 +3,7 @@
   "version": "0.2.0",
   "type": "commonjs",
   "private": false,
+  "sideEffects": false,
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"

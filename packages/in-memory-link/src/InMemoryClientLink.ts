@@ -6,7 +6,7 @@ import { filter, Observable } from 'rxjs';
 export class InMemoryClientLink<Ctx = any> implements ClientLink<Ctx> {
   constructor(readonly handlers: Handlers) {}
 
-  subscribeToEvent<Payload>(request: OperationRequest<Payload, Ctx>) {
+  subscribeToEvent<Payload>(request: OperationRequest<unknown, Ctx>) {
     return this.handlers.event.pipe(
       filter((event) => event.operationName === request.name)
     ) as Observable<OperationResponse<Payload, OperationRequest<unknown, Ctx>>>;
