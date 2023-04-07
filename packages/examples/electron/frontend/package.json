@@ -1,0 +1,8 @@
+{
+  "name": "@musubi-examples/electron-frontend",
+  "version": "0.0.0",
+  "dependencies": {
+    "@musubi/core": "file:../../../../dist/packages/core",
+    "@musubi/electron-link": "file:../../../../dist/packages/electron-link"
+  }
+}

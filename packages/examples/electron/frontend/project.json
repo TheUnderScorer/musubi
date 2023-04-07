@@ -1,0 +1,80 @@
+{
+  "name": "examples-electron-frontend",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/examples/electron/frontend/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/vite:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/packages/examples/electron/frontend"
+      },
+      "configurations": {
+        "development": {
+          "mode": "development"
+        },
+        "production": {
+          "mode": "production"
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/vite:dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "examples-electron-frontend:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "examples-electron-frontend:build:development",
+          "hmr": true
+        },
+        "production": {
+          "buildTarget": "examples-electron-frontend:build:production",
+          "hmr": false
+        }
+      }
+    },
+    "preview": {
+      "executor": "@nrwl/vite:preview-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "examples-electron-frontend:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "examples-electron-frontend:build:development"
+        },
+        "production": {
+          "buildTarget": "examples-electron-frontend:build:production"
+        }
+      }
+    },
+    "test": {
+      "executor": "@nrwl/vite:test",
+      "outputs": ["coverage/packages/examples/electron/frontend"],
+      "options": {
+        "passWithNoTests": true,
+        "reportsDirectory": "../../../../coverage/packages/examples/electron/frontend"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "packages/examples/electron/frontend/**/*.{ts,tsx,js,jsx}"
+        ]
+      }
+    },
+    "serve-static": {
+      "executor": "@nrwl/web:file-server",
+      "options": {
+        "buildTarget": "examples-electron-frontend:build"
+      }
+    }
+  },
+  "tags": []
+}

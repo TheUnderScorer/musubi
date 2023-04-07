@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "version": 2,
+  "cli": "nx",
+  "title": "Rollup executor",
+  "description": "",
+  "type": "object",
+  "properties": {
+    "rollupConfig": {
+      "type": "string",
+      "description": "Path to the rollup config file",
+      "default": "rollup.config.js"
+    },
+    "watch": {
+      "type": "boolean",
+      "description": "Watch for changes and rebuild",
+      "default": false
+    },
+    "output": {
+      "type": "string",
+      "description": "Output directory",
+      "default": "dist"
+    }
+  },
+  "required": []
+}

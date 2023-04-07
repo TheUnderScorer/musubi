@@ -20,7 +20,15 @@
         "packages/browser-extension-link/src/index.ts"
       ],
       "@musubi/core": ["packages/core/src/index.ts"],
-      "@musubi/in-memory-link": ["packages/in-memory-link/src/index.ts"]
+      "@musubi/electron-link/main": ["packages/electron-link/src/main/main.ts"],
+      "@musubi/electron-link/renderer": [
+        "packages/electron-link/src/renderer/renderer.ts"
+      ],
+      "@musubi/examples/electron/shared": [
+        "packages/examples/electron/shared/src/index.ts"
+      ],
+      "@musubi/in-memory-link": ["packages/in-memory-link/src/index.ts"],
+      "@musubi/nx-tools": ["packages/nx-tools/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
