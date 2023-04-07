@@ -1,11 +1,24 @@
-# electron-link
 
-This library was generated with [Nx](https://nx.dev).
 
-## Building
+<div style="text-align: center">
+<h1>
+Musubi 🪢
+</h1>
+<strong>End-to-end typesafe communication. 🎉</strong>
+</div>
 
-Run `nx build electron-link` to build the library.
+# @musubi/electron-link
 
-## Running unit tests
+Adapter for using Musubi in electron apps.
 
-Run `nx test electron-link` to execute the unit tests via [Jest](https://jestjs.io).
+## Documentation
+Full documentation for `musubi` can be found [here](https://github.com/TheUnderScorer/musubi).
+
+## Installation
+```shell
+# npm
+npm install @musubi/electron-link
+
+# Yarn
+yarn add @musubi/electron-link
+```

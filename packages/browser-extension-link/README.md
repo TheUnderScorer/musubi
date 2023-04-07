@@ -7,7 +7,7 @@ Musubi 🪢
 <strong>End-to-end typesafe communication. 🎉</strong>
 </div>
 
-# @musubiin-memory-link
+# @musubi/browser-extension-link
 
 Adapter for using Musubi in browser extension.
 
