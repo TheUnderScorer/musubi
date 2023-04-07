@@ -1,0 +1,8 @@
+{
+  "name": "@musubi-examples/browser-extension",
+  "version": "0.0.0",
+  "dependencies": {
+    "@musubi/core": "file:../../../dist/packages/core",
+    "@musubi/browser-extension-link": "file:../../../dist/packages/browser-extension-link"
+  }
+}
