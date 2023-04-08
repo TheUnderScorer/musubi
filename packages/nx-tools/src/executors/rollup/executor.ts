@@ -101,8 +101,6 @@ export default async function runExecutor(
       }
     }
 
-    console.log('deps', dependencies);
-
     await updatePackageJson(
       normalizedOptions,
       configArray,
