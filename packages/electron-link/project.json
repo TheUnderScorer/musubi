@@ -33,6 +33,14 @@
           "codeCoverage": true
         }
       }
+    },
+    "semantic-release": {
+      "executor": "@theunderscorer/nx-semantic-release:semantic-release",
+      "options": {
+        "buildTarget": "electron-link:build",
+        "tagFormat": "electron-link-v${VERSION}",
+        "outputPath": "dist/packages/electron-link"
+      }
     }
   },
   "tags": []
