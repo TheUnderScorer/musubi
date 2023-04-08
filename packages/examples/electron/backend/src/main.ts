@@ -35,6 +35,23 @@ async function main() {
     window?.close();
   });
 
+  receiver.handleCommand('closeApp', async () => {
+    app.exit();
+  });
+
+  receiver.handleCommand('openWindow', async (payload) => {
+    const window = new BrowserWindow({
+      width: 800,
+      height: 600,
+    });
+
+    await window.loadURL(`http://localhost:4200/#${payload.url}`);
+
+    return {
+      windowId: window.id,
+    };
+  });
+
   console.log('Hello World!');
 }
 

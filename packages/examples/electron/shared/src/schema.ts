@@ -8,6 +8,18 @@ export const electronSchema = defineSchema({
         windowId: z.union([z.number(), z.literal('current')]),
       })
     ),
+    closeApp: command(),
+    openWindow: command()
+      .withPayload(
+        z.object({
+          url: z.string(),
+        })
+      )
+      .withResult(
+        z.object({
+          windowId: z.number(),
+        })
+      ),
   },
   events: {},
   queries: {},
