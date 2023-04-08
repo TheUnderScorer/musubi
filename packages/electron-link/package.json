@@ -1,5 +1,10 @@
 {
   "name": "@musubi/electron-link",
   "version": "0.1.0",
-  "sideEffects": false
+  "sideEffects": false,
+  "private": false,
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
 }
