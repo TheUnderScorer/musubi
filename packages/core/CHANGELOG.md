@@ -1,3 +1,11 @@
+# [0.3.0](https://github.com/TheUnderScorer/musubi/compare/core-v0.2.0...core-v0.3.0) (2023-04-08)
+
+
+### Features
+
+* add electron link ([547efbf](https://github.com/TheUnderScorer/musubi/commit/547efbfe283e9a4e108cb550b574ce16eb93bff2))
+* disable sideEffects ([f05527f](https://github.com/TheUnderScorer/musubi/commit/f05527fbc0fa7dfb57d64d274bc38c47eb563133))
+
 # [0.2.0](https://github.com/TheUnderScorer/musubi/compare/core-v0.1.0...core-v0.2.0) (2023-03-26)
 
 
