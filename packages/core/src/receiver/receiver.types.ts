@@ -7,6 +7,7 @@ import {
   OperationName,
 } from '../schema/schema.types';
 import { OperationDefinition } from '../schema/OperationDefinition';
+import { MaybePromise } from '../shared/promise';
 
 export type ReceiverLink<Ctx = unknown> = {
   /**
@@ -38,4 +39,4 @@ export type OperationHandler<
   O extends OperationDefinition<any, any, any, any>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Ctx = any
-> = (payload: ExtractPayload<O>, ctx: Ctx) => Promise<ExtractResult<O>>;
+> = (payload: ExtractPayload<O>, ctx: Ctx) => MaybePromise<ExtractResult<O>>;

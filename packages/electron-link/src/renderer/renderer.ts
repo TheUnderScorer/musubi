@@ -1,18 +1,19 @@
-import { exposedMusubiLinkSchema } from './expose';
+import { ExposedMusubiLink } from '../shared/expose';
+import { IpcRendererReceiverLink } from './IpcRendererReceiverLink';
+import { IpcRendererClientLink } from './IpcRendererClientLink';
 
 export function createRendererLink() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const link = exposedMusubiLinkSchema.safeParse((window as any).musubiLink);
+  const link = (window as any).musubiLink as ExposedMusubiLink;
 
-  if (!link.success) {
-    console.error(link.error);
-
+  if (!link) {
     throw new Error(
       'Musubi link is not exposed. Did you forget to call exposeElectronLink()?'
     );
   }
 
-  return link.data;
+  return {
+    receiver: new IpcRendererReceiverLink(link),
+    client: new IpcRendererClientLink(link),
+  };
 }
-
-export { exposeElectronLink } from './expose';

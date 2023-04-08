@@ -4,7 +4,8 @@
   "license": "MIT",
   "scripts": {
     "prepare": "husky install",
-    "test": "nx run-many --target=test --all --parallel"
+    "test": "nx run-many --target=test --all --parallel",
+    "nx": "nx"
   },
   "private": true,
   "devDependencies": {

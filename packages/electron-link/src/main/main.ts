@@ -8,3 +8,5 @@ export function createMainLink() {
     client: new IpcMainClientLink(ipcMain),
   };
 }
+
+export { exposeElectronLink } from './expose';

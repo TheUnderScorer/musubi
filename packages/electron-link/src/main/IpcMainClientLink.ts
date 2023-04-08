@@ -27,6 +27,10 @@ export class IpcMainClientLink implements ClientLink<ElectronMainContext> {
           response.operationName === request.name &&
           (!window || window.webContents.id === event.sender.id)
         ) {
+          response.addCtx({
+            event,
+          } as ElectronMainContext);
+
           observer.next(response);
         }
       });
@@ -60,14 +64,15 @@ export class IpcMainClientLink implements ClientLink<ElectronMainContext> {
         }
       });
 
-      this.ipc.handle(ELECTRON_MESSAGE_CHANNEL, handler);
+      this.ipc.on(ELECTRON_MESSAGE_CHANNEL, handler);
+
+      const payload = request.toJSON();
 
       if (window) {
-        window.webContents.send(ELECTRON_MESSAGE_CHANNEL, request);
+        window.webContents.send(ELECTRON_MESSAGE_CHANNEL, payload);
       } else {
-        // TODO Aggregate responses?
         BrowserWindow.getAllWindows().forEach((window) => {
-          window.webContents.send(ELECTRON_MESSAGE_CHANNEL, request);
+          window.webContents.send(ELECTRON_MESSAGE_CHANNEL, payload);
         });
       }
     });

@@ -19,14 +19,16 @@ export class IpcMainReceiverLink implements ReceiverLink<ElectronMainContext> {
   ) {
     const window = getWindowProviderFromChannel(response.channel).get();
 
+    const payload = response.toJSON();
+
     if (window) {
-      window.webContents.send(ELECTRON_MESSAGE_CHANNEL, response);
+      window.webContents.send(ELECTRON_MESSAGE_CHANNEL, payload);
 
       return;
     }
 
     BrowserWindow.getAllWindows().forEach((window) => {
-      window.webContents.send(ELECTRON_MESSAGE_CHANNEL, response);
+      window.webContents.send(ELECTRON_MESSAGE_CHANNEL, payload);
     });
   }
 

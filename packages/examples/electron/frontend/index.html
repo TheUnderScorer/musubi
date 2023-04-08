@@ -9,7 +9,18 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <main id="root">
+      <h1>
+        Welcome to Electron example
+      </h1>
+      <div class="buttons">
+        <button id="exitApp">Exit app</button>
+        <button id="maximize">Maximize window</button>
+      </div>
+      <div id="timer">
+        Timer: <span id="timerValue">0</span>
+      </div>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

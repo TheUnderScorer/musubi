@@ -12,10 +12,18 @@
         "platform": "node",
         "outputPath": "dist/packages/examples/electron/backend",
         "format": ["cjs"],
-        "bundle": false,
+        "bundle": true,
+        "external": ["electron"],
+        "additionalEntryPoints": ["packages/examples/electron/backend/src/preload.ts"],
         "main": "packages/examples/electron/backend/src/main.ts",
         "tsConfig": "packages/examples/electron/backend/tsconfig.app.json",
-        "assets": ["packages/examples/electron/backend/src/assets"],
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "packages/examples/electron/backend/src/assets",
+            "output": "assets"
+          }
+        ],
         "generatePackageJson": true,
         "esbuildOptions": {
           "sourcemap": true,
@@ -25,7 +33,9 @@
         }
       },
       "configurations": {
-        "development": {},
+        "development": {
+          "watch": true
+        },
         "production": {
           "esbuildOptions": {
             "sourcemap": false,

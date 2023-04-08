@@ -2,6 +2,7 @@ import { OperationKind, OperationName } from '../schema/schema.types';
 import { Channel } from './communication.types';
 import { generateUUIDv4 } from '../utils/id';
 import { z } from 'zod';
+import { OperationEnvelope } from './OperationEnvelope';
 
 const operationRequestSchema = z.object({
   id: z.string(),
@@ -16,6 +17,7 @@ const operationRequestSchema = z.object({
 type OperationRequestObject = z.infer<typeof operationRequestSchema>;
 
 export class OperationRequest<Payload = unknown, Ctx = unknown>
+  extends OperationEnvelope<Ctx>
   implements OperationRequestObject
 {
   static readonly schema = operationRequestSchema;
@@ -29,22 +31,12 @@ export class OperationRequest<Payload = unknown, Ctx = unknown>
     public kind: OperationKind,
     public payload: Payload,
     public channel?: Channel,
-    public ctx?: Ctx
+    ctx?: Ctx
   ) {
+    super(ctx);
+
     this.id = generateUUIDv4();
     this.timestamp = Date.now();
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  addCtx<T extends Record<string, any>>(values: T) {
-    Object.assign(this, {
-      ctx: {
-        ...this.ctx,
-        ...values,
-      },
-    });
-
-    return this as unknown as OperationRequest<Payload, Ctx & T>;
   }
 
   static fromObject<Payload, Ctx>(data: OperationRequestObject) {

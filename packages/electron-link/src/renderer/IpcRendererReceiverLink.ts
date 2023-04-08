@@ -4,16 +4,16 @@ import {
   OperationResponse,
   ReceiverLink,
 } from '@musubi/core';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { makeRequestHandler } from '../shared/request';
-import { IpcRenderer, IpcRendererEvent } from 'electron';
-import { ELECTRON_MESSAGE_CHANNEL } from '../shared/channel';
+import { IpcRendererEvent } from 'electron';
 import { ElectronClientContext } from './context';
+import { ExposedMusubiLink } from '../shared/expose';
 
 export class IpcRendererReceiverLink
   implements ReceiverLink<ElectronClientContext>
 {
-  constructor(private readonly ipc: IpcRenderer) {}
+  constructor(private readonly ipc: ExposedMusubiLink) {}
 
   receiveRequest(
     name: OperationName
@@ -29,11 +29,9 @@ export class IpcRendererReceiverLink
         }
       });
 
-      this.ipc.on(ELECTRON_MESSAGE_CHANNEL, handler);
-
-      return () => {
-        this.ipc.off(ELECTRON_MESSAGE_CHANNEL, handler);
-      };
+      return new Subscription(this.ipc.receive(handler)).add(() => {
+        observer.complete();
+      });
     });
   }
 
@@ -43,6 +41,8 @@ export class IpcRendererReceiverLink
       OperationRequest<Payload, ElectronClientContext>
     >
   ) {
-    await this.ipc.send(ELECTRON_MESSAGE_CHANNEL, response);
+    const payload = response.toJSON();
+
+    await this.ipc.send(payload);
   }
 }

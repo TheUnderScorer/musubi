@@ -11,6 +11,7 @@ import { filter } from 'rxjs';
 import { Channel } from '../shared/communication.types';
 import { validatePayload, validateResult } from '../schema/validation';
 import { OperationRequest } from '../shared/OperationRequest';
+import { MaybePromise } from '../shared/promise';
 
 export class CommunicatorReceiver<S extends OperationsSchema, Ctx = unknown> {
   private readonly rootLink: RootReceiverLink<Ctx>;
@@ -43,7 +44,7 @@ export class CommunicatorReceiver<S extends OperationsSchema, Ctx = unknown> {
 
   async dispatchEvent<Name extends keyof S['events']>(
     name: Name,
-    payload: ExtractPayload<S['events'][Name]>,
+    payload?: ExtractPayload<S['events'][Name]>,
     channel?: Channel
   ) {
     const response = new OperationResponse<
@@ -68,7 +69,7 @@ export class CommunicatorReceiver<S extends OperationsSchema, Ctx = unknown> {
 
   private handleOperation<Payload, Result>(
     name: OperationName,
-    handler: (payload: Payload, ctx: Ctx) => Promise<Result>,
+    handler: (payload: Payload, ctx: Ctx) => MaybePromise<Result>,
     kind: OperationKind
   ) {
     return this.rootLink

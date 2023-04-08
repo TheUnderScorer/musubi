@@ -5,7 +5,7 @@ import {
   OperationName,
   OperationsSchema,
 } from '../schema/schema.types';
-import { ClientLink } from './client.types';
+import { ClientLink, OperationEvent } from './client.types';
 import { OperationRequest } from '../shared/OperationRequest';
 import { Channel } from '../shared/communication.types';
 import { OperationResponse } from '../shared/OperationResponse';
@@ -30,7 +30,7 @@ export class CommunicatorClient<S extends OperationsSchema, Ctx = any> {
    * */
   async query<Name extends keyof S['queries']>(
     name: Name,
-    payload: ExtractPayload<S['queries'][Name]>,
+    payload?: ExtractPayload<S['queries'][Name]>,
     channel?: Channel
   ): Promise<ExtractResult<S['queries'][Name]>> {
     return this.sendOperation(
@@ -51,7 +51,7 @@ export class CommunicatorClient<S extends OperationsSchema, Ctx = any> {
    * */
   async command<Name extends keyof S['commands']>(
     name: Name,
-    payload: ExtractPayload<S['commands'][Name]>,
+    payload?: ExtractPayload<S['commands'][Name]>,
     channel?: Channel
   ): Promise<ExtractResult<S['commands'][Name]>> {
     return this.sendOperation(
@@ -73,7 +73,10 @@ export class CommunicatorClient<S extends OperationsSchema, Ctx = any> {
    * })
    * ```
    * */
-  observeEvent<Name extends keyof S['events']>(name: Name, channel?: Channel) {
+  observeEvent<Name extends keyof S['events']>(
+    name: Name,
+    channel?: Channel
+  ): Observable<OperationEvent<ExtractPayload<S['events'][Name]>, Ctx>> {
     const request = new OperationRequest<unknown, Ctx>(
       name as OperationName,
       OperationKind.Event,
@@ -121,14 +124,15 @@ export class CommunicatorClient<S extends OperationsSchema, Ctx = any> {
 
     return observable
       .pipe(
-        map((event) =>
-          validatePayload(
+        map((event) => ({
+          payload: validatePayload(
             this.schema,
             OperationKind.Event,
             event.operationName,
             event.unwrap()
-          )
-        )
+          ),
+          ctx: event.ctx as Ctx,
+        }))
       )
       .pipe(
         tap({

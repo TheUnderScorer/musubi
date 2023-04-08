@@ -1,14 +1,14 @@
 import { ClientLink, OperationRequest, OperationResponse } from '@musubi/core';
-import { IpcRenderer, IpcRendererEvent } from 'electron';
-import { ELECTRON_MESSAGE_CHANNEL } from '../shared/channel';
-import { Observable } from 'rxjs';
+import { IpcRendererEvent } from 'electron';
+import { Observable, Subscription } from 'rxjs';
 import { makeResponseHandler } from '../shared/response';
 import { ElectronClientContext } from './context';
+import { ExposedMusubiLink } from '../shared/expose';
 
 export class IpcRendererClientLink
   implements ClientLink<ElectronClientContext>
 {
-  constructor(private readonly ipc: IpcRenderer) {}
+  constructor(private readonly ipc: ExposedMusubiLink) {}
 
   // TODO Check if it is disposed correctly
   subscribeToEvent<Payload>(
@@ -31,11 +31,9 @@ export class IpcRendererClientLink
         }
       });
 
-      this.ipc.on(ELECTRON_MESSAGE_CHANNEL, handler);
-
-      return () => {
-        this.ipc.off(ELECTRON_MESSAGE_CHANNEL, handler);
-      };
+      return new Subscription(this.ipc.receive(handler)).add(() => {
+        observer.complete();
+      });
     });
   }
 
@@ -45,6 +43,9 @@ export class IpcRendererClientLink
     OperationResponse<Result, OperationRequest<Payload, ElectronClientContext>>
   > {
     return new Promise((resolve) => {
+      // eslint-disable-next-line prefer-const
+      let subscription: Subscription | undefined;
+
       const handler = makeResponseHandler<
         IpcRendererEvent,
         Payload,
@@ -52,14 +53,14 @@ export class IpcRendererClientLink
         ElectronClientContext
       >((event, response) => {
         if (response.request?.id === request.id) {
-          this.ipc.off(ELECTRON_MESSAGE_CHANNEL, handler);
+          subscription?.unsubscribe?.();
           resolve(response);
         }
       });
 
-      this.ipc.on(ELECTRON_MESSAGE_CHANNEL, handler);
+      subscription = new Subscription(this.ipc.receive(handler));
 
-      this.ipc.send(ELECTRON_MESSAGE_CHANNEL, request);
+      this.ipc.send(request.toJSON());
     });
   }
 }

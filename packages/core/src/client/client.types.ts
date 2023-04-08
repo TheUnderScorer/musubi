@@ -23,3 +23,8 @@ export interface ClientLink<Ctx = unknown> {
     | Observable<OperationResponse<Payload, OperationRequest<unknown, Ctx>>>
     | Subscription;
 }
+
+export interface OperationEvent<Payload, Ctx> {
+  payload: Payload;
+  ctx: Ctx;
+}
