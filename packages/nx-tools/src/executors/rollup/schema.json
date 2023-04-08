@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/schema",
+  "$schema": "https://json-schema.org/schema",
   "version": 2,
   "cli": "nx",
   "title": "Rollup executor",
@@ -16,10 +16,18 @@
       "description": "Watch for changes and rebuild",
       "default": false
     },
-    "output": {
+    "outputPath": {
       "type": "string",
       "description": "Output directory",
       "default": "dist"
+    },
+    "additionalPeerDeps": {
+      "type": "array",
+      "description": "Additional peer dependencies to include in the bundle",
+      "items": {
+        "type": "string"
+      },
+      "default": []
     }
   },
   "required": []

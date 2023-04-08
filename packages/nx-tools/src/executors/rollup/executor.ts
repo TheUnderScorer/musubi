@@ -4,13 +4,16 @@ import invariant from 'tiny-invariant';
 import { calculateProjectDependencies } from '@nrwl/js/src/utils/buildable-libs-utils';
 import * as path from 'path';
 import * as fs from 'fs';
-import { normalizeRollupExecutorOptions } from '@nrwl/rollup/src/executors/rollup/lib/normalize';
-import { RollupExecutorOptions } from '@nrwl/rollup/src/executors/rollup/schema';
+import {
+  NormalizedRollupExecutorOptions,
+  normalizeRollupExecutorOptions,
+} from '@nrwl/rollup/src/executors/rollup/lib/normalize';
 import { updatePackageJson } from './packageJson';
 import { makeExternal } from './external';
+import { RollupExecutorSchema } from './schema';
 
 async function resolveConfig(
-  options: RollupExecutorOptions,
+  options: RollupExecutorSchema,
   context: ExecutorContext
 ): Promise<RollupOptions[]> {
   const rollupConfig = Array.isArray(options.rollupConfig)
@@ -29,7 +32,7 @@ async function resolveConfig(
 }
 
 export default async function runExecutor(
-  options: RollupExecutorOptions,
+  options: RollupExecutorSchema,
   context: ExecutorContext
 ) {
   const projectGraph = context.projectGraph?.nodes?.[context.projectName ?? ''];
@@ -39,7 +42,7 @@ export default async function runExecutor(
     options,
     context.root,
     projectGraph.data.sourceRoot ?? ''
-  );
+  ) as NormalizedRollupExecutorOptions & RollupExecutorSchema;
 
   const configArray = await resolveConfig(normalizedOptions, context);
 
@@ -98,8 +101,10 @@ export default async function runExecutor(
       }
     }
 
+    console.log('deps', dependencies);
+
     await updatePackageJson(
-      options.outputPath,
+      normalizedOptions,
       configArray,
       packageJson,
       rootPackageJson,

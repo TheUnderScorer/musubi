@@ -32,7 +32,7 @@ You can use following links to integrate Musubi in your application:
 |-------------------|-----------------------------------------|----------------------------------------------------------------------------|
 | Browser extension | [Link](packages/browser-extension-link) | Allows you to use Musubi in browser extenison                              |
 | In Memory         | [Link](packages/in-memory-link)         | Simple link that allows you send messages using Musubi in the same process |
-| Electron          | TBA                                     | Allows you tu use Musubi in Electron apps                                  |
+| Electron          | [Link](packages/electron-link)          | Allows you tu use Musubi in Electron apps                                  |
 | Socket.io         | TBA                                     | Allows you tu use pass Musubi messages using socket.io                     |
 
 ## 

@@ -1,5 +1,5 @@
-export interface RollupExecutorSchema {
-  watch: boolean;
-  rollupConfig: string;
-  outputPath: string;
+import { RollupExecutorOptions } from '@nrwl/rollup/src/executors/rollup/schema';
+
+export interface RollupExecutorSchema extends RollupExecutorOptions {
+  additionalPeerDeps?: string[];
 }

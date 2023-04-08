@@ -6,6 +6,7 @@ import * as path from 'path';
 import { isDevDependency } from './deps';
 import * as fs from 'fs';
 import { logger } from 'nx/src/utils/logger';
+import { RollupExecutorSchema } from './schema';
 
 function resolveExportsFormat(format: ModuleFormat, fileName?: string) {
   switch (format) {
@@ -35,7 +36,7 @@ interface PackageExportsMetadata {
 }
 
 export async function updatePackageJson(
-  outDir: string,
+  options: RollupExecutorSchema,
   rollupOptions: RollupOptions[],
   projectPackageJson: PackageJson,
   rootPackageJson: PackageJson,
@@ -62,7 +63,7 @@ export async function updatePackageJson(
 
       outputs.forEach((output) => {
         if (output && output.file && output.format) {
-          const relativePath = path.relative(outDir, output.file);
+          const relativePath = path.relative(options.outputPath, output.file);
           const parsedPath = path.parse(relativePath);
 
           const mappedExports = outputs.reduce((acc, output) => {
@@ -106,7 +107,12 @@ export async function updatePackageJson(
           continue;
         }
 
-        result.dependencies[dep.name] = dep.node.data.version;
+        if (options.additionalPeerDeps?.includes(dep.name)) {
+          result.peerDependencies[dep.name] = `^${dep.node.data.version}`;
+          continue;
+        }
+
+        result.dependencies[dep.name] = `^${dep.node.data.version}`;
         break;
 
       case 'lib': {
@@ -123,12 +129,12 @@ export async function updatePackageJson(
           continue;
         }
 
-        result.peerDependencies[dep.name] = libPackageJson.version;
+        result.peerDependencies[dep.name] = `^${libPackageJson.version}`;
       }
     }
   }
 
-  const packageJsonPath = path.join(outDir, 'package.json');
+  const packageJsonPath = path.join(options.outputPath, 'package.json');
 
   logger.info(`Writing package.json to ${packageJsonPath}...`);
 
