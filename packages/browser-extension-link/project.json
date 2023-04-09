@@ -41,6 +41,14 @@
           "codeCoverage": true
         }
       }
+    },
+    "semantic-release": {
+      "executor": "@theunderscorer/nx-semantic-release:semantic-release",
+      "options": {
+        "buildTarget": "browser-extension-link:build",
+        "tagFormat": "browser-extension-link-v${VERSION}",
+        "outputPath": "dist/packages/browser-extension-link"
+      }
     }
   },
   "tags": []
