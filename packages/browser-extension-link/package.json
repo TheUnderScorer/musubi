@@ -1,6 +1,6 @@
 {
   "name": "@musubi/browser-extension-link",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "type": "commonjs",
   "private": false,
   "sideEffects": false,
