@@ -11,7 +11,6 @@ import copy from 'rollup-plugin-copy';
 
 const dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
-// TODO Copy changelog and readme
 export default ({ outputPath }) => {
   const inputFiles = [
     path.join(dirname, 'src/main/main.ts'),
