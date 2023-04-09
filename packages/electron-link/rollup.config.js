@@ -7,6 +7,7 @@ import commonjs from 'rollup-plugin-commonjs';
 import path from 'path';
 import pkg from './package.json' assert { type: 'json' };
 import url from 'url';
+import copy from 'rollup-plugin-copy';
 
 const dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
@@ -39,11 +40,32 @@ export default ({ outputPath }) => {
   };
 
   return [
-    ...inputFiles.flatMap((file) => {
+    ...inputFiles.flatMap((file, index) => {
       const fileName = path.parse(file).name;
+
+      const plugins = [...commonInput.plugins];
+
+      if (index === 0) {
+        plugins.push(
+          copy({
+            overwrite: true,
+            targets: [
+              {
+                src: path.join(__dirname, 'README.md'),
+                dest: outputPath,
+              },
+              {
+                src: path.join(__dirname, 'CHANGELOG.md'),
+                dest: outputPath,
+              },
+            ],
+          })
+        );
+      }
 
       const input = {
         ...commonInput,
+        plugins,
         input: file,
         external: Object.keys(pkg.dependencies ?? {}),
       };
