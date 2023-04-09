@@ -1,6 +1,6 @@
 import { app, BrowserWindow, WebPreferences } from 'electron';
 import { createMainLink } from '@musubi/electron-link/main';
-import { CommunicatorClient, CommunicatorReceiver } from '@musubi/core';
+import { createMusubi } from '@musubi/core';
 import { electronSchema } from '@musubi/examples/electron/shared';
 import * as path from 'path';
 
@@ -13,8 +13,11 @@ async function main() {
 
   const link = createMainLink();
 
-  const receiver = new CommunicatorReceiver(electronSchema, [link.receiver]);
-  const client = new CommunicatorClient(electronSchema, [link.client]);
+  const { client, receiver } = createMusubi({
+    clientLinks: [link.client],
+    receiverLinks: [link.receiver],
+    schema: electronSchema,
+  });
 
   const window = new BrowserWindow({
     width: 800,

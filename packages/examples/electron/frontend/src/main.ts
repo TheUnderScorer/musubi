@@ -1,11 +1,14 @@
 import { createRendererLink } from '@musubi/electron-link/renderer';
 import { electronSchema } from '@musubi/examples/electron/shared';
-import { CommunicatorClient, CommunicatorReceiver } from '@musubi/core';
+import { createMusubi } from '@musubi/core';
 
 const link = createRendererLink();
 
-const receiver = new CommunicatorReceiver(electronSchema, [link.receiver]);
-const client = new CommunicatorClient(electronSchema, [link.client]);
+const { receiver, client } = createMusubi({
+  clientLinks: [link.client],
+  receiverLinks: [link.receiver],
+  schema: electronSchema,
+});
 
 function initButtons() {
   receiver.handleQuery('getWindowTimerValue', () => {

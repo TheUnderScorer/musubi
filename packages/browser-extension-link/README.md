@@ -1,6 +1,6 @@
 
 
-<div style="text-align: center">
+<div style="text-align: center;width:100%">
 <h1>
 Musubi 🪢
 </h1>
