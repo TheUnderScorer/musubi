@@ -1,3 +1,5 @@
+## [0.1.2](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.1.1...electron-link-v0.1.2) (2023-04-09)
+
 ## [0.1.1](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.1.0...electron-link-v0.1.1) (2023-04-09)
 
 
