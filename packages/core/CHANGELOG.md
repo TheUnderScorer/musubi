@@ -1,3 +1,10 @@
+# [0.5.0](https://github.com/TheUnderScorer/musubi/compare/core-v0.4.1...core-v0.5.0) (2023-04-11)
+
+
+### Features
+
+* support passing metadata to schema and extending it ([b80c085](https://github.com/TheUnderScorer/musubi/commit/b80c085ab33c69bddba5676bb600eebe0c2e0247))
+
 ## [0.4.1](https://github.com/TheUnderScorer/musubi/compare/core-v0.4.0...core-v0.4.1) (2023-04-11)
 
 
