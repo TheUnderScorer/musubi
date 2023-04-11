@@ -179,6 +179,7 @@ describe('CommunicatorClient', () => {
     expect(onEvent).toHaveBeenCalledTimes(3);
     expect(onEvent).toHaveBeenCalledWith({
       payload,
+      ctx: {},
     });
 
     subscription.unsubscribe();
@@ -190,6 +191,6 @@ describe('CommunicatorClient', () => {
     expect(onTeardown).toHaveBeenCalledTimes(2);
     expect(onClientEvent).toHaveBeenCalledTimes(6);
     expect(onEvent).toHaveBeenCalledTimes(3);
-    expect(onEvent).toHaveBeenCalledWith({ payload });
+    expect(onEvent).toHaveBeenCalledWith({ payload, ctx: {} });
   });
 });

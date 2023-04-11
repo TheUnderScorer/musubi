@@ -83,7 +83,7 @@ describe('InMemoryLink', () => {
     });
 
     expect(handler).toBeCalledTimes(2);
-    expect(handler).toBeCalledWith({ payload: { test: 'test' } });
-    expect(handler).toBeCalledWith({ payload: { test: 'test1' } });
+    expect(handler).toBeCalledWith({ payload: { test: 'test' }, ctx: {} });
+    expect(handler).toBeCalledWith({ payload: { test: 'test1' }, ctx: {} });
   });
 });
