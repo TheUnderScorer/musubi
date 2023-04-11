@@ -1,3 +1,10 @@
+## [0.2.1](https://github.com/TheUnderScorer/musubi/compare/browser-extension-link-v0.2.0...browser-extension-link-v0.2.1) (2023-04-11)
+
+
+### Bug Fixes
+
+* allow omitting payload if it is set to undefined in schema ([e0bbae3](https://github.com/TheUnderScorer/musubi/commit/e0bbae3a142d31faccc40c710af5b7e7d807c718))
+
 # [0.2.0](https://github.com/TheUnderScorer/musubi/compare/browser-extension-link-v0.1.0...browser-extension-link-v0.2.0) (2023-04-11)
 
 
