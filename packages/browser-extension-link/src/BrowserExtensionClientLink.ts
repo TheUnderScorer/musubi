@@ -12,7 +12,6 @@ import {
 import { sendMessage } from './send';
 import { observeGlobalResponses } from './globalListener';
 import { filter, Observable } from 'rxjs';
-import { DefaultChannels } from './defaultChannel';
 import { ChannelResolver } from './ChannelResolver';
 
 export class BrowserExtensionClientLink<S extends OperationsSchema>
@@ -22,13 +21,9 @@ export class BrowserExtensionClientLink<S extends OperationsSchema>
 
   constructor(
     private readonly currentChannel: BrowserExtensionChannel,
-    private readonly defaultChannels: DefaultChannels<S> = {
-      commands: {},
-      events: {},
-      queries: {},
-    }
+    schema: S
   ) {
-    this.channelResolver = new ChannelResolver(currentChannel, defaultChannels);
+    this.channelResolver = new ChannelResolver(currentChannel, schema);
   }
 
   subscribeToEvent<Payload>(

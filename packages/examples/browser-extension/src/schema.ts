@@ -1,15 +1,24 @@
-import { command, defineSchema, event, query } from '@musubi/core';
+import {
+  command,
+  defineSchema,
+  event,
+  extendSchema,
+  query,
+} from '@musubi/core';
 import { z } from 'zod';
 import {
+  BrowserExtensionLinkMeta,
   ChannelResolver,
-  defineDefaultChannels,
 } from '@musubi/browser-extension-link';
 
 const replaceContentSchema = z.object({
   content: z.string(),
 });
 
-export const browserExtensionSchema = defineSchema({
+/**
+ * As an example, baseSchema doesn't contain meta from browser extension link
+ * */
+const baseSchema = defineSchema({
   commands: {
     replaceContent: command()
       .withPayload(replaceContentSchema)
@@ -38,18 +47,27 @@ const forCurrentTab: ChannelResolver = (currentChannel, currentTab) => {
     : currentChannel;
 };
 
-export const defaultChannels = defineDefaultChannels<
-  typeof browserExtensionSchema
->({
-  queries: {
-    getAllTabIds: {
-      type: 'background',
-    },
-  },
+// Extended base schema which adds metadata used by browser extension link
+export const browserExtensionSchema = extendSchema(baseSchema, {
   commands: {
-    replaceContent: forCurrentTab,
-    closeRightTab: {
-      type: 'background',
-    },
+    replaceContent: (def) =>
+      def.withMeta<BrowserExtensionLinkMeta>({
+        browserExtensionChannel: forCurrentTab,
+      }),
+
+    closeRightTab: (def) =>
+      def.withMeta<BrowserExtensionLinkMeta>({
+        browserExtensionChannel: {
+          type: 'background',
+        },
+      }),
+  },
+  queries: {
+    getAllTabIds: (def) =>
+      def.withMeta<BrowserExtensionLinkMeta>({
+        browserExtensionChannel: {
+          type: 'background',
+        },
+      }),
   },
 });

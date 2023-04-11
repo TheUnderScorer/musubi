@@ -1,4 +1,4 @@
-import { OperationsSchema } from '@musubi/core';
+import { OperationDefinition, OperationsSchema } from '@musubi/core';
 import { Tabs } from 'webextension-polyfill';
 import { BrowserExtensionChannel } from './channel';
 
@@ -6,6 +6,13 @@ export type ChannelResolver = (
   currentChannel: BrowserExtensionChannel,
   currentTab?: Tabs.Tab
 ) => BrowserExtensionChannel;
+
+export interface BrowserExtensionLinkMeta {
+  /**
+   * Provides default channel that will be used by given schema operation
+   * */
+  browserExtensionChannel?: ChannelResolver | BrowserExtensionChannel;
+}
 
 export interface DefaultChannels<S extends OperationsSchema> {
   commands?: {
@@ -19,32 +26,20 @@ export interface DefaultChannels<S extends OperationsSchema> {
   };
 }
 
-export function defineDefaultChannels<S extends OperationsSchema>(
-  channels: DefaultChannels<S>
-) {
-  return channels;
-}
-
 export function getDefaultChannel<
   S extends OperationsSchema,
-  Kind extends keyof DefaultChannels<S>
+  Kind extends keyof S
 >(
-  defaultChannels: DefaultChannels<S>,
+  schema: S,
   kind: Kind,
   operation: keyof S[Kind],
   currentChannel: BrowserExtensionChannel,
   currentTab?: Tabs.Tab
 ): BrowserExtensionChannel {
-  const resolver = defaultChannels?.[kind]?.[operation];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const meta = (schema?.[kind]?.[operation] as OperationDefinition<any>)?.meta;
 
-  console.log('getDefaultChannel', {
-    defaultChannels,
-    kind,
-    operation,
-    resolver,
-    currentChannel,
-    currentTab,
-  });
+  const resolver = (meta as BrowserExtensionLinkMeta)?.browserExtensionChannel;
 
   if (resolver) {
     return typeof resolver === 'function'

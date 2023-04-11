@@ -1,5 +1,5 @@
 import { BrowserExtensionChannel } from './channel';
-import { DefaultChannels, getDefaultChannel } from './defaultChannel';
+import { getDefaultChannel } from './defaultChannel';
 import {
   OperationKind,
   OperationName,
@@ -11,11 +11,7 @@ import { getCurrentTab } from './tabs';
 export class ChannelResolver<S extends OperationsSchema> {
   constructor(
     private readonly currentChannel: BrowserExtensionChannel,
-    private readonly defaultChannels: DefaultChannels<S> = {
-      commands: {},
-      events: {},
-      queries: {},
-    }
+    private readonly schema: S
   ) {}
 
   async resolve(
@@ -30,7 +26,7 @@ export class ChannelResolver<S extends OperationsSchema> {
     const currentTab = await getCurrentTab();
 
     const result = getDefaultChannel(
-      this.defaultChannels,
+      this.schema,
       resolveSchemaKey(kind),
       name,
       this.currentChannel,

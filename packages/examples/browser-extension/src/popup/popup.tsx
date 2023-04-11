@@ -3,10 +3,10 @@ import {
   createBrowserExtensionLink,
 } from '@musubi/browser-extension-link';
 import { CommunicatorClient } from '@musubi/core';
-import { browserExtensionSchema, defaultChannels } from '../schema';
+import { browserExtensionSchema } from '../schema';
 
 async function main() {
-  const link = createBrowserExtensionLink('popup', defaultChannels);
+  const link = createBrowserExtensionLink('popup', browserExtensionSchema);
 
   const client = new CommunicatorClient(browserExtensionSchema, [link.client]);
 
@@ -33,7 +33,7 @@ async function main() {
   elements.getTabIds.addEventListener('click', async () => {
     const result = await client.query(
       'getAllTabIds',
-      {},
+      undefined,
       browserExtensionChannel({
         type: 'background',
       })

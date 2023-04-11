@@ -4,7 +4,7 @@ import { browserExtensionSchema } from '../schema';
 import * as browser from 'webextension-polyfill';
 
 async function main() {
-  const link = createBrowserExtensionLink('background');
+  const link = createBrowserExtensionLink('background', browserExtensionSchema);
   const receiver = new CommunicatorReceiver(browserExtensionSchema, [
     link.receiver,
   ]);
