@@ -41,7 +41,7 @@ export type ExtractResult<P extends OperationDefinition<any, any>> =
 export type OperationName = string;
 
 // TODO move back to types
-export interface OperationsSchema<
+export class OperationsSchema<
   Queries extends DefinitionsRecord<
     QueryDefinition<any, any, any>
   > = DefinitionsRecord<QueryDefinition<any, any, any>>,
@@ -52,7 +52,9 @@ export interface OperationsSchema<
     EventDefinition<any, any>
   > = DefinitionsRecord<EventDefinition<any, any>>
 > {
-  queries: Queries;
-  commands: Commands;
-  events: Events;
+  constructor(
+    public queries: Queries,
+    public commands: Commands,
+    public events: Events
+  ) {}
 }

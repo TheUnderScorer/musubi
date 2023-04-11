@@ -1,6 +1,7 @@
 {
   "name": "@musubi-examples/electron-frontend",
   "version": "0.0.0",
+  "license": "MIT",
   "dependencies": {
     "@musubi/core": "file:../../../../dist/packages/core",
     "@musubi/electron-link": "file:../../../../dist/packages/electron-link"

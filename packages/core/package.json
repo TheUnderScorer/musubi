@@ -4,6 +4,7 @@
   "type": "commonjs",
   "private": false,
   "sideEffects": false,
+  "license": "MIT",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"

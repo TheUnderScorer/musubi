@@ -2,8 +2,10 @@
 import { OperationDefinition } from './OperationDefinition';
 import { OperationsSchema } from './schema.types';
 
-export function defineSchema<S extends OperationsSchema>(schema: S) {
-  return schema;
+export function defineSchema<S extends OperationsSchema>(
+  schema: Pick<S, 'commands' | 'queries' | 'events'>
+) {
+  return new OperationsSchema(schema.commands, schema.queries, schema.events);
 }
 
 export function query() {

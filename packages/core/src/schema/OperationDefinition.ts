@@ -6,13 +6,16 @@ export class OperationDefinition<
   Kind extends OperationKind,
   Name extends OperationName = OperationName,
   Payload = undefined,
-  Result = any
+  Result = any,
+  Meta = any
 > {
   payload!: Payload;
 
   result!: Result;
 
   name!: Name;
+
+  meta!: Meta;
 
   constructor(public kind: OperationKind) {}
 
@@ -68,12 +71,30 @@ export class OperationDefinition<
     return this as unknown as OperationDefinition<Kind, Name, Payload, R>;
   }
 
+  withMeta<M extends object>(meta: M | ((definition: this) => M)) {
+    Object.assign(this, {
+      meta: {
+        ...this.meta,
+        ...(typeof meta === 'function' ? meta(this) : meta),
+      },
+    });
+
+    return this as unknown as OperationDefinition<
+      Kind,
+      Name,
+      Payload,
+      Result,
+      Meta & M
+    >;
+  }
+
   toDefinition() {
     return {
       name: this.name,
       kind: this.kind,
       payload: this.payload as Payload,
       result: this.result as Result,
-    } as OperationDefinition<Kind, Name, Payload, Result>;
+      meta: this.meta as Meta,
+    } as OperationDefinition<Kind, Name, Payload, Result, Meta>;
   }
 }
