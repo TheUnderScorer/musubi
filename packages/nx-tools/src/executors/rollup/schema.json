@@ -6,6 +6,14 @@
   "description": "",
   "type": "object",
   "properties": {
+    "inputFiles": {
+      "type": "array",
+      "description": "Input files",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
     "rollupConfig": {
       "type": "string",
       "description": "Path to the rollup config file",
@@ -30,5 +38,5 @@
       "default": []
     }
   },
-  "required": []
+  "required": ["inputFiles"]
 }

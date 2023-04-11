@@ -5,21 +5,14 @@
   "projectType": "library",
   "targets": {
     "build": {
-      "executor": "@nrwl/js:tsc",
+      "executor": "@musubi/nx-tools:rollup",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/browser-extension-link",
-        "main": "packages/browser-extension-link/src/index.ts",
-        "tsConfig": "packages/browser-extension-link/tsconfig.lib.json",
-        "assets": ["packages/browser-extension-link/*.md"]
+        "inputFiles": [
+          "index.ts"
+        ]
       }
-    },
-    "publish": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "node tools/scripts/publish.mjs browser-extension-link {args.ver} {args.tag}"
-      },
-      "dependsOn": ["build"]
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",

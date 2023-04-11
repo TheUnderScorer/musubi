@@ -5,13 +5,11 @@
   "projectType": "library",
   "targets": {
     "build": {
-      "executor": "@nrwl/js:tsc",
+      "executor": "@musubi/nx-tools:rollup",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/in-memory-link",
-        "main": "packages/in-memory-link/src/index.ts",
-        "tsConfig": "packages/in-memory-link/tsconfig.lib.json",
-        "assets": ["packages/in-memory-link/*.md"]
+        "inputFiles": ["index.ts"]
       }
     },
     "publish": {

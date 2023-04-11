@@ -1,4 +1,4 @@
-import { rollup, RollupBuild, RollupOptions } from 'rollup';
+import { rollup, RollupBuild } from 'rollup';
 import { ExecutorContext } from 'nx/src/config/misc-interfaces';
 import invariant from 'tiny-invariant';
 import { calculateProjectDependencies } from '@nrwl/js/src/utils/buildable-libs-utils';
@@ -11,25 +11,7 @@ import {
 import { updatePackageJson } from './packageJson';
 import { makeExternal } from './external';
 import { RollupExecutorSchema } from './schema';
-
-async function resolveConfig(
-  options: RollupExecutorSchema,
-  context: ExecutorContext
-): Promise<RollupOptions[]> {
-  const rollupConfig = Array.isArray(options.rollupConfig)
-    ? options.rollupConfig[0]
-    : options.rollupConfig;
-  let config = await import(rollupConfig as string).then((mod) => mod.default);
-
-  if (typeof config === 'function') {
-    config = config({
-      projectGraph: context.projectGraph,
-      outputPath: options.outputPath,
-    });
-  }
-
-  return Array.isArray(config) ? config : [config];
-}
+import { buildRollupConfig } from './rollupConfig';
 
 export default async function runExecutor(
   options: RollupExecutorSchema,
@@ -44,8 +26,6 @@ export default async function runExecutor(
     projectGraph.data.sourceRoot ?? ''
   ) as NormalizedRollupExecutorOptions & RollupExecutorSchema;
 
-  const configArray = await resolveConfig(normalizedOptions, context);
-
   let error: Error | undefined;
 
   const bundles: RollupBuild[] = [];
@@ -59,6 +39,7 @@ export default async function runExecutor(
   invariant(context.projectGraph, 'Project graph is required');
   invariant(context.projectName, 'Project name is required');
   invariant(context.targetName, 'Target name is required');
+  invariant(projectGraph.data.sourceRoot, 'Source root is required');
 
   const { dependencies } = calculateProjectDependencies(
     context.projectGraph,
@@ -74,8 +55,21 @@ export default async function runExecutor(
     .filter((d) => d.target.startsWith('npm:'))
     .map((d) => d.target.slice(4));
 
+  const rollupConfig = buildRollupConfig(
+    normalizedOptions,
+    context,
+    projectGraph.data.sourceRoot,
+    projectGraph.data.root,
+    options.outputPath,
+    packageJson
+  );
+
+  if (fs.existsSync(options.outputPath)) {
+    fs.rmSync(options.outputPath, { recursive: true });
+  }
+
   try {
-    for (const configItem of configArray) {
+    for (const configItem of rollupConfig) {
       const updatedConfig = {
         ...configItem,
         external: makeExternal(
@@ -103,7 +97,7 @@ export default async function runExecutor(
 
     await updatePackageJson(
       normalizedOptions,
-      configArray,
+      rollupConfig,
       packageJson,
       rootPackageJson,
       context,

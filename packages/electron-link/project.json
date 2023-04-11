@@ -8,9 +8,12 @@
       "executor": "@musubi/nx-tools:rollup",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "rollupConfig": "packages/electron-link/rollup.config.js",
         "outputPath": "dist/packages/electron-link",
-        "additionalPeerDeps": ["electron"]
+        "additionalPeerDeps": ["electron"],
+        "inputFiles": [
+          "main/main.ts",
+          "renderer/renderer.ts"
+        ]
       }
     },
     "lint": {

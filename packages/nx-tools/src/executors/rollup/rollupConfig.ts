@@ -1,23 +1,30 @@
+import { RollupExecutorSchema } from './schema';
+import { ExecutorContext } from 'nx/src/config/misc-interfaces';
 import typescript from 'rollup-plugin-typescript2';
 import jsonPlugin from '@rollup/plugin-json';
 import external from 'rollup-plugin-peer-deps-external';
 import dtsPlugin from 'rollup-plugin-dts';
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
-import path from 'path';
-import pkg from './package.json' assert { type: 'json' };
-import url from 'url';
+import * as path from 'path';
 import copy from 'rollup-plugin-copy';
+import { RollupOptions } from 'rollup';
+import { PackageJson } from 'nx/src/utils/package-json';
+import { NormalizedRollupExecutorOptions } from '@nrwl/rollup/src/executors/rollup/lib/normalize';
 
-const dirname = url.fileURLToPath(new URL('.', import.meta.url));
+export function buildRollupConfig(
+  options: NormalizedRollupExecutorOptions & RollupExecutorSchema,
+  context: ExecutorContext,
+  sourceRoot: string,
+  projectRoot: string,
+  outputPath: string,
+  packageJson: PackageJson
+): RollupOptions[] {
+  const inputFiles = options.inputFiles.map((file) =>
+    path.join(sourceRoot, file)
+  );
 
-export default ({ outputPath }) => {
-  const inputFiles = [
-    path.join(dirname, 'src/main/main.ts'),
-    path.join(dirname, 'src/renderer/renderer.ts'),
-  ];
-
-  const tsconfig = path.resolve(dirname, 'tsconfig.lib.json');
+  const tsconfig = path.resolve(projectRoot, 'tsconfig.lib.json');
 
   const commonInput = {
     plugins: [
@@ -25,7 +32,7 @@ export default ({ outputPath }) => {
         tsconfig,
       }),
       external({
-        packageJsonPath: path.resolve(dirname, 'package.json'),
+        packageJsonPath: path.resolve(sourceRoot, 'package.json'),
       }),
       resolve(),
       commonjs(),
@@ -33,10 +40,7 @@ export default ({ outputPath }) => {
     ],
   };
 
-  const commonOutput = {
-    exports: 'named',
-    sourcemap: true,
-  };
+  const commonOutput = {};
 
   return [
     ...inputFiles.flatMap((file, index) => {
@@ -47,14 +51,14 @@ export default ({ outputPath }) => {
       if (index === 0) {
         plugins.push(
           copy({
-            overwrite: true,
+            copyOnce: true,
             targets: [
               {
-                src: path.join(__dirname, 'README.md'),
+                src: path.join(projectRoot, 'README.md'),
                 dest: outputPath,
               },
               {
-                src: path.join(__dirname, 'CHANGELOG.md'),
+                src: path.join(projectRoot, 'CHANGELOG.md'),
                 dest: outputPath,
               },
             ],
@@ -66,7 +70,7 @@ export default ({ outputPath }) => {
         ...commonInput,
         plugins,
         input: file,
-        external: Object.keys(pkg.dependencies ?? {}),
+        external: Object.keys(packageJson.dependencies ?? {}),
       };
 
       return [
@@ -100,7 +104,7 @@ export default ({ outputPath }) => {
             format: 'es',
           },
         },
-      ];
+      ] as RollupOptions[];
     }),
   ];
-};
+}
