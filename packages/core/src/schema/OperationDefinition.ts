@@ -5,7 +5,7 @@ import { ZodSchema } from 'zod';
 export class OperationDefinition<
   Kind extends OperationKind,
   Name extends OperationName = OperationName,
-  Payload = any,
+  Payload = undefined,
   Result = any
 > {
   payload!: Payload;

@@ -13,7 +13,7 @@ async function main() {
   receiver.handleCommand('replaceContent', async (payload) => {
     document.body.textContent = payload.content;
 
-    await receiver.dispatchEvent('contentReplaced', {});
+    await receiver.dispatchEvent('contentReplaced');
   });
 
   addButtons(client);
@@ -26,7 +26,7 @@ function addButtons(client: CommunicatorClient<typeof browserExtensionSchema>) {
   btn.textContent = 'Close right tab (sends message to background)';
 
   btn.addEventListener('click', async () => {
-    await client.command('closeRightTab', {});
+    await client.command('closeRightTab');
   });
 
   document.body.appendChild(btn);

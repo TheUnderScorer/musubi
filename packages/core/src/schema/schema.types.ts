@@ -30,6 +30,8 @@ export enum OperationKind {
   Event = 'event',
 }
 
+export type OptionalPayload<T> = T extends undefined | null ? true : false;
+
 export type ExtractPayload<P extends OperationDefinition<any, any>> =
   P['payload'] extends ZodSchema<infer T> ? T : P['payload'];
 

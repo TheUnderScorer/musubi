@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
+    "build-all": "nx run-many --target=build --all --parallel",
     "prepare": "husky install",
     "test": "nx run-many --target=test --all --parallel",
     "nx": "nx"

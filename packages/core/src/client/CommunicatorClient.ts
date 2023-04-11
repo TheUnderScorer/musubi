@@ -4,6 +4,7 @@ import {
   OperationKind,
   OperationName,
   OperationsSchema,
+  OptionalPayload,
 } from '../schema/schema.types';
 import { ClientLink, OperationEvent } from './client.types';
 import { OperationRequest } from '../shared/OperationRequest';
@@ -30,9 +31,12 @@ export class CommunicatorClient<S extends OperationsSchema, Ctx = any> {
    * */
   async query<Name extends keyof S['queries']>(
     name: Name,
-    payload?: ExtractPayload<S['queries'][Name]>,
-    channel?: Channel
+    ...params: OptionalPayload<ExtractPayload<S['queries'][Name]>> extends true
+      ? [payload?: ExtractPayload<S['queries'][Name]>, channel?: Channel]
+      : [payload: ExtractPayload<S['queries'][Name]>, channel?: Channel]
   ): Promise<ExtractResult<S['queries'][Name]>> {
+    const [payload, channel] = params;
+
     return this.sendOperation(
       name as OperationName,
       payload,
@@ -51,9 +55,11 @@ export class CommunicatorClient<S extends OperationsSchema, Ctx = any> {
    * */
   async command<Name extends keyof S['commands']>(
     name: Name,
-    payload?: ExtractPayload<S['commands'][Name]>,
-    channel?: Channel
+    ...params: OptionalPayload<ExtractPayload<S['commands'][Name]>> extends true
+      ? [payload?: ExtractPayload<S['commands'][Name]>, channel?: Channel]
+      : [payload: ExtractPayload<S['commands'][Name]>, channel?: Channel]
   ): Promise<ExtractResult<S['commands'][Name]>> {
+    const [payload, channel] = params;
     return this.sendOperation(
       name as OperationName,
       payload,
