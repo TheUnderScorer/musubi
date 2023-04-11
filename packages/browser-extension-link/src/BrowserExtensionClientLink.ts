@@ -67,9 +67,12 @@ export class BrowserExtensionClientLink<S extends OperationsSchema>
       );
     }
 
-    request.addCtx({
-      sentFromChannel: this.currentChannel,
-    } as BrowserExtensionContext);
+    request.addCtx<BrowserExtensionContext>({
+      sentFromChannel: {
+        isSerializable: true,
+        value: this.currentChannel,
+      },
+    });
 
     return new Promise<
       OperationResponse<

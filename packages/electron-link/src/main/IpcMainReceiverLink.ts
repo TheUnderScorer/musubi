@@ -47,7 +47,12 @@ export class IpcMainReceiverLink implements ReceiverLink<ElectronMainContext> {
           (request.name === name && !request.channel) ||
           request.channel === window?.id
         ) {
-          request.addCtx({ event });
+          request.addCtx({
+            event: {
+              value: event,
+              isSerializable: false,
+            },
+          });
           observer.next(request);
         }
       });

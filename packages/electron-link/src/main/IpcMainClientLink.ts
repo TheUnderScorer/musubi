@@ -27,9 +27,12 @@ export class IpcMainClientLink implements ClientLink<ElectronMainContext> {
           response.operationName === request.name &&
           (!window || window.webContents.id === event.sender.id)
         ) {
-          response.addCtx({
-            event,
-          } as ElectronMainContext);
+          response.addCtx<ElectronMainContext>({
+            event: {
+              value: event,
+              isSerializable: false,
+            },
+          });
 
           observer.next(response);
         }

@@ -15,7 +15,10 @@ export function observeGlobalRequests<Ctx = unknown>() {
       const request = OperationRequest.fromObject<unknown, Ctx>(parsed.data);
 
       request.addCtx<BrowserExtensionContext>({
-        senderTabId: sender.tab?.id,
+        senderTabId: {
+          value: sender.tab?.id,
+          isSerializable: true,
+        },
       });
 
       newRequest.next(request);
