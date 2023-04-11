@@ -1,3 +1,11 @@
+# [0.4.0](https://github.com/TheUnderScorer/musubi/compare/core-v0.3.1...core-v0.4.0) (2023-04-11)
+
+
+### Features
+
+* add esm build ([5fad98d](https://github.com/TheUnderScorer/musubi/commit/5fad98d1d21e19c3c4da5415257f2d40160b3fb8))
+* support passing context as non-serializable ([1261218](https://github.com/TheUnderScorer/musubi/commit/126121807c394a67f1adedb4f60e12c37051ee8d))
+
 ## [0.3.1](https://github.com/TheUnderScorer/musubi/compare/core-v0.3.0...core-v0.3.1) (2023-04-09)
 
 # [0.3.0](https://github.com/TheUnderScorer/musubi/compare/core-v0.2.0...core-v0.3.0) (2023-04-08)
