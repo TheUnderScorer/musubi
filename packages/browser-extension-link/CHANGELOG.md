@@ -1,3 +1,10 @@
+# [0.3.0](https://github.com/TheUnderScorer/musubi/compare/browser-extension-link-v0.2.1...browser-extension-link-v0.3.0) (2023-04-11)
+
+
+### Features
+
+* support passing metadata to schema and extending it ([b80c085](https://github.com/TheUnderScorer/musubi/commit/b80c085ab33c69bddba5676bb600eebe0c2e0247))
+
 ## [0.2.1](https://github.com/TheUnderScorer/musubi/compare/browser-extension-link-v0.2.0...browser-extension-link-v0.2.1) (2023-04-11)
 
 
