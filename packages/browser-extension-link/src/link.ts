@@ -7,7 +7,7 @@ import { BrowserExtensionClientLink } from './BrowserExtensionClientLink';
 import { OperationsSchema } from '@musubi/core';
 import { DefaultChannels } from './defaultChannel';
 
-export async function createBrowserExtensionLink<S extends OperationsSchema>(
+export function createBrowserExtensionLink<S extends OperationsSchema>(
   currentChannel: BrowserExtensionChannelType,
   defaultChannels?: DefaultChannels<S>
 ) {

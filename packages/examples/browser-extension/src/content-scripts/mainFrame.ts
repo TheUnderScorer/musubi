@@ -3,7 +3,7 @@ import { CommunicatorClient, CommunicatorReceiver } from '@musubi/core';
 import { browserExtensionSchema, defaultChannels } from '../schema';
 
 async function main() {
-  const link = await createBrowserExtensionLink('tab', defaultChannels);
+  const link = createBrowserExtensionLink('tab', defaultChannels);
 
   const client = new CommunicatorClient(browserExtensionSchema, [link.client]);
   const receiver = new CommunicatorReceiver(browserExtensionSchema, [

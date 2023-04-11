@@ -33,7 +33,7 @@ import { schema } from '../schema';
 import * as browser from 'webextension-polyfill';
 
 async function main() {
-  const link = await createBrowserExtensionLink('background');
+  const link = createBrowserExtensionLink('background');
   const receiver = new CommunicatorReceiver(schema, [
     link.receiver,
   ]);
