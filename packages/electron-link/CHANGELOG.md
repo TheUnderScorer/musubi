@@ -1,3 +1,10 @@
+# [0.4.0](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.3.0...electron-link-v0.4.0) (2023-04-12)
+
+
+### Features
+
+* support passing links as factory functions ([d61debf](https://github.com/TheUnderScorer/musubi/commit/d61debf5631943506b681c23379e62ce13469c26))
+
 # [0.3.0](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.2.1...electron-link-v0.3.0) (2023-04-11)
 
 
