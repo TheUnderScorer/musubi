@@ -6,7 +6,7 @@ import { CommunicatorClient } from '@musubi/core';
 import { browserExtensionSchema } from '../schema';
 
 async function main() {
-  const link = createBrowserExtensionLink('popup', browserExtensionSchema);
+  const link = createBrowserExtensionLink('popup');
 
   const client = new CommunicatorClient(browserExtensionSchema, [link.client]);
 

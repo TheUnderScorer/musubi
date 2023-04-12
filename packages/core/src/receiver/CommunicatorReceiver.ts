@@ -12,12 +12,17 @@ import { Channel } from '../shared/communication.types';
 import { validatePayload, validateResult } from '../schema/validation';
 import { OperationRequest } from '../shared/OperationRequest';
 import { MaybePromise } from '../shared/promise';
+import { LinkParam } from '../shared/link.types';
+import { createLinks } from '../shared/link';
 
 export class CommunicatorReceiver<S extends OperationsSchema, Ctx = unknown> {
   private readonly rootLink: RootReceiverLink<Ctx>;
 
-  constructor(private readonly schema: S, links: ReceiverLink<Ctx>[]) {
-    this.rootLink = new RootReceiverLink(links);
+  constructor(
+    private readonly schema: S,
+    links: LinkParam<ReceiverLink<Ctx>>[]
+  ) {
+    this.rootLink = new RootReceiverLink(createLinks(links, schema));
   }
 
   handleQuery<Name extends keyof S['queries']>(

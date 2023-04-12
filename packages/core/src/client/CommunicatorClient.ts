@@ -13,13 +13,16 @@ import { OperationResponse } from '../shared/OperationResponse';
 import { map, Observable, Subject, tap } from 'rxjs';
 import { isSubscription } from 'rxjs/internal/Subscription';
 import { validatePayload, validateResult } from '../schema/validation';
+import { LinkParam } from '../shared/link.types';
+import { createLinks } from '../shared/link';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class CommunicatorClient<S extends OperationsSchema, Ctx = any> {
-  constructor(
-    private readonly schema: S,
-    private readonly links: ClientLink<Ctx>[]
-  ) {}
+  private links: ClientLink<Ctx>[];
+
+  constructor(private readonly schema: S, links: LinkParam<ClientLink<Ctx>>[]) {
+    this.links = createLinks(links, schema);
+  }
 
   /**
    * Executes query from schema

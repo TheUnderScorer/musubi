@@ -4,11 +4,10 @@ import {
 } from './channel';
 import { BrowserExtensionReceiverLink } from './BrowserExtensionReceiverLink';
 import { BrowserExtensionClientLink } from './BrowserExtensionClientLink';
-import { OperationsSchema } from '@musubi/core';
+import { LinkFnParams } from '@musubi/core';
 
-export function createBrowserExtensionLink<S extends OperationsSchema>(
-  currentChannel: BrowserExtensionChannelType,
-  schema: S
+export function createBrowserExtensionLink(
+  currentChannel: BrowserExtensionChannelType
 ) {
   let channel: BrowserExtensionChannel;
 
@@ -26,6 +25,7 @@ export function createBrowserExtensionLink<S extends OperationsSchema>(
 
   return {
     receiver: new BrowserExtensionReceiverLink(channel),
-    client: new BrowserExtensionClientLink(channel, schema),
+    client: ({ schema }: LinkFnParams) =>
+      new BrowserExtensionClientLink(channel, schema),
   };
 }
