@@ -1,3 +1,10 @@
+# [0.6.0](https://github.com/TheUnderScorer/musubi/compare/in-memory-link-v0.5.0...in-memory-link-v0.6.0) (2023-04-12)
+
+
+### Features
+
+* support passing links as factory functions ([d61debf](https://github.com/TheUnderScorer/musubi/commit/d61debf5631943506b681c23379e62ce13469c26))
+
 # [0.5.0](https://github.com/TheUnderScorer/musubi/compare/in-memory-link-v0.4.1...in-memory-link-v0.5.0) (2023-04-11)
 
 
