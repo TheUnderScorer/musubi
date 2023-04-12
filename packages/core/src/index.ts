@@ -10,3 +10,6 @@ export * from './shared/OperationResponse';
 export * from './shared/communication.types';
 export { resolveSchemaKey } from './schema/validation';
 export * from './musubi';
+export { extendSchema } from './schema/extendSchema';
+export { ExtendedSchema } from './schema/extendSchema';
+export { SchemaExtender } from './schema/extendSchema';
