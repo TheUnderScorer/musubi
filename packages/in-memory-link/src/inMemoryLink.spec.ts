@@ -1,7 +1,7 @@
 import {
   command,
-  CommunicatorClient,
-  CommunicatorReceiver,
+  MusubiClient,
+  MusubiReceiver,
   defineSchema,
   event,
   OperationHandler,
@@ -28,8 +28,8 @@ describe('InMemoryLink', () => {
 
   const links = createInMemoryLink();
 
-  const client = new CommunicatorClient(schema, [links.client]);
-  const receiver = new CommunicatorReceiver(schema, [links.receiver]);
+  const client = new MusubiClient(schema, [links.client]);
+  const receiver = new MusubiReceiver(schema, [links.receiver]);
 
   it('should send and receive commands', async () => {
     const impl: OperationHandler<typeof schema.commands.testCommand> = async (

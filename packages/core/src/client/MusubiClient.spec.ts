@@ -1,6 +1,6 @@
-import { CommunicatorClient } from './CommunicatorClient';
+import { MusubiClient } from './MusubiClient';
 import { OperationResponse } from '../shared/OperationResponse';
-import { CommunicatorReceiver } from '../receiver/CommunicatorReceiver';
+import { MusubiReceiver } from '../receiver/MusubiReceiver';
 import { mergeSchemas } from '../schema/schemaHelpers';
 import { testPostSchema, testUserSchema } from '../test/testSchemas';
 import { createTestLink } from '../test/testLink';
@@ -11,7 +11,7 @@ const schema = mergeSchemas(testUserSchema, testPostSchema);
 let receiverLink: ReturnType<typeof createTestLink>['receiverLink'];
 let clientLink: ReturnType<typeof createTestLink>['clientLink'];
 
-describe('CommunicatorClient', () => {
+describe('MusubiClient', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
@@ -22,14 +22,14 @@ describe('CommunicatorClient', () => {
   });
 
   it('should validate payload', async () => {
-    const receiver = new CommunicatorReceiver(schema, [receiverLink]);
+    const receiver = new MusubiReceiver(schema, [receiverLink]);
 
     receiver.handleCommand('createUser', async (payload) => ({
       name: payload.name,
       id: '1',
     }));
 
-    const client = new CommunicatorClient(schema, [clientLink]);
+    const client = new MusubiClient(schema, [clientLink]);
 
     await expect(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -42,14 +42,14 @@ describe('CommunicatorClient', () => {
       test: true,
     };
 
-    const receiver = new CommunicatorReceiver(schema, [receiverLink]);
+    const receiver = new MusubiReceiver(schema, [receiverLink]);
 
     receiver.handleCommand('createUser', async (payload) => ({
       name: payload.name,
       id: '1',
     }));
 
-    const client = new CommunicatorClient(schema, [
+    const client = new MusubiClient(schema, [
       {
         sendRequest: async (request, next) => {
           expect(request.channel).toBe(channel);
@@ -69,14 +69,14 @@ describe('CommunicatorClient', () => {
   });
 
   it('should support multiple links', async () => {
-    const receiver = new CommunicatorReceiver(schema, [receiverLink]);
+    const receiver = new MusubiReceiver(schema, [receiverLink]);
 
     receiver.handleCommand('createUser', async (payload) => ({
       name: payload.name,
       id: '1',
     }));
 
-    const client = new CommunicatorClient(schema, [
+    const client = new MusubiClient(schema, [
       {
         sendRequest: async (request, next) => {
           const response = await next(request);
@@ -96,13 +96,13 @@ describe('CommunicatorClient', () => {
 
   it('should support multiple links on error', async () => {
     const error = new Error('test');
-    const receiver = new CommunicatorReceiver(schema, [receiverLink]);
+    const receiver = new MusubiReceiver(schema, [receiverLink]);
 
     receiver.handleCommand('createUser', async () => {
       throw error;
     });
 
-    const client = new CommunicatorClient(schema, [
+    const client = new MusubiClient(schema, [
       {
         sendRequest: async (request, next) => {
           const response = await next(request);
@@ -130,9 +130,9 @@ describe('CommunicatorClient', () => {
 
     const onTeardown = jest.fn();
 
-    const receiver = new CommunicatorReceiver(schema, [receiverLink]);
+    const receiver = new MusubiReceiver(schema, [receiverLink]);
 
-    const client = new CommunicatorClient(schema, [
+    const client = new MusubiClient(schema, [
       {
         subscribeToEvent: (request, next) => {
           const sub = next.subscribe((event) => {

@@ -33,10 +33,13 @@ export enum OperationKind {
 export type OptionalPayload<T> = T extends undefined | null ? true : false;
 
 export type ExtractPayload<P extends OperationDefinition<any, any>> =
-  P['payload'] extends ZodSchema<infer T> ? T : P['payload'];
+  ExtractZod<P['payload']>;
 
-export type ExtractResult<P extends OperationDefinition<any, any>> =
-  P['result'] extends ZodSchema<infer T> ? T : P['result'];
+export type ExtractResult<P extends OperationDefinition<any, any>> = ExtractZod<
+  P['result']
+>;
+
+export type ExtractZod<T> = T extends ZodSchema<infer U> ? U : T;
 
 export type OperationName = string;
 
@@ -55,3 +58,8 @@ export interface OperationsSchema<
   commands: Commands;
   events: Events;
 }
+
+export type OperationSchemaOperations<S extends OperationsSchema> =
+  | keyof S['queries']
+  | keyof S['commands']
+  | keyof S['events'];

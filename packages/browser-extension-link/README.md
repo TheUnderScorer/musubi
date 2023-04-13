@@ -28,13 +28,13 @@ yarn add @musubi/browser-extension-link
 ```ts
 // Background/service worker script
 import { createBrowserExtensionLink } from '@musubi/browser-extension-link';
-import { CommunicatorReceiver } from '@musubi/core';
+import { MusubiReceiver } from '@musubi/core';
 import { schema } from '../schema';
 import * as browser from 'webextension-polyfill';
 
 async function main() {
   const link = createBrowserExtensionLink('background');
-  const receiver = new CommunicatorReceiver(schema, [
+  const receiver = new MusubiReceiver(schema, [
     link.receiver,
   ]);
 

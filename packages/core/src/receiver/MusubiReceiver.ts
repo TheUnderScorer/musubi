@@ -15,7 +15,7 @@ import { MaybePromise } from '../shared/promise';
 import { LinkParam } from '../shared/link.types';
 import { createLinks } from '../shared/link';
 
-export class CommunicatorReceiver<S extends OperationsSchema, Ctx = unknown> {
+export class MusubiReceiver<S extends OperationsSchema, Ctx = unknown> {
   private readonly rootLink: RootReceiverLink<Ctx>;
 
   constructor(

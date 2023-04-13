@@ -25,7 +25,7 @@ yarn add @musubi/in-memory-link
 
 ## Usage
 ```ts
-import { defineSchema, CommunicatorClient, CommunicatorReceiver } from "@musubi/core";
+import { defineSchema, CommunicatorClient, MusubiReceiver } from "@musubi/core";
 import { createInMemoryLink } from "@musubi/in-memory-link";
 import { z } from "zod";
 
@@ -43,7 +43,7 @@ const schema = defineSchema({
 
 const memoryLink = createInMemoryLink();
 
-const receiver = new CommunicatorReceiver(schema, [memoryLink.receiver]);
+const receiver = new MusubiReceiver(schema, [memoryLink.receiver]);
 
 receiver.handleQuery('greet', payload => `Hello ${payload.name}`);
 

@@ -1,13 +1,11 @@
 import { createBrowserExtensionLink } from '@musubi/browser-extension-link';
-import { CommunicatorReceiver } from '@musubi/core';
+import { MusubiReceiver } from '@musubi/core';
 import { browserExtensionSchema } from '../schema';
 import * as browser from 'webextension-polyfill';
 
 async function main() {
   const link = createBrowserExtensionLink('background');
-  const receiver = new CommunicatorReceiver(browserExtensionSchema, [
-    link.receiver,
-  ]);
+  const receiver = new MusubiReceiver(browserExtensionSchema, [link.receiver]);
 
   receiver.handleCommand('closeRightTab', async (_, ctx) => {
     if (!ctx.senderTabId) {

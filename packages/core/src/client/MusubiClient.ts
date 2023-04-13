@@ -17,7 +17,7 @@ import { LinkParam } from '../shared/link.types';
 import { createLinks } from '../shared/link';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export class CommunicatorClient<S extends OperationsSchema, Ctx = any> {
+export class MusubiClient<S extends OperationsSchema, Ctx = any> {
   private links: ClientLink<Ctx>[];
 
   constructor(private readonly schema: S, links: LinkParam<ClientLink<Ctx>>[]) {

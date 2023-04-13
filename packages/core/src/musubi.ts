@@ -1,7 +1,7 @@
 import { OperationsSchema } from './schema/schema.types';
 import { ClientLink } from './client/client.types';
-import { CommunicatorClient } from './client/CommunicatorClient';
-import { CommunicatorReceiver } from './receiver/CommunicatorReceiver';
+import { MusubiClient } from './client/MusubiClient';
+import { MusubiReceiver } from './receiver/MusubiReceiver';
 import { ReceiverLink } from './receiver/receiver.types';
 
 export interface MusubiParams<
@@ -24,7 +24,7 @@ export function createMusubi<
   schema,
 }: MusubiParams<S, ClientContext, ReceiverContext>) {
   return {
-    client: new CommunicatorClient(schema, clientLinks),
-    receiver: new CommunicatorReceiver(schema, receiverLinks),
+    client: new MusubiClient(schema, clientLinks),
+    receiver: new MusubiReceiver(schema, receiverLinks),
   };
 }

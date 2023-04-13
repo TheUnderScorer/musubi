@@ -1,13 +1,13 @@
 import { mergeSchemas } from '../schema/schemaHelpers';
 import { testPostSchema, testUserSchema } from '../test/testSchemas';
 import { createTestLink } from '../test/testLink';
-import { CommunicatorReceiver } from './CommunicatorReceiver';
-import { CommunicatorClient } from '../client/CommunicatorClient';
+import { MusubiReceiver } from './MusubiReceiver';
+import { MusubiClient } from '../client/MusubiClient';
 import { ZodError } from 'zod';
 
 const schema = mergeSchemas(testUserSchema, testPostSchema);
 
-describe('CommunicatorReceiver', () => {
+describe('MusubiReceiver', () => {
   let receiverLink: ReturnType<typeof createTestLink>['receiverLink'];
   let clientLink: ReturnType<typeof createTestLink>['clientLink'];
 
@@ -21,7 +21,7 @@ describe('CommunicatorReceiver', () => {
   });
 
   it('should validate result', async () => {
-    const receiver = new CommunicatorReceiver(schema, [receiverLink]);
+    const receiver = new MusubiReceiver(schema, [receiverLink]);
 
     receiver.handleCommand(
       'createUser',
@@ -33,7 +33,7 @@ describe('CommunicatorReceiver', () => {
         } as any)
     );
 
-    const client = new CommunicatorClient(schema, [clientLink]);
+    const client = new MusubiClient(schema, [clientLink]);
 
     await expect(
       client.command('createUser', { name: 'test' })
@@ -45,7 +45,7 @@ describe('CommunicatorReceiver', () => {
       test: true,
     };
 
-    const receiver = new CommunicatorReceiver(schema, [
+    const receiver = new MusubiReceiver(schema, [
       {
         receiveRequest: (name, next) => {
           return next.subscribe((request) => {
@@ -61,7 +61,7 @@ describe('CommunicatorReceiver', () => {
       id: '1',
     }));
 
-    const client = new CommunicatorClient(schema, [clientLink]);
+    const client = new MusubiClient(schema, [clientLink]);
 
     await client.command('createUser', { name: 'test' }, channel);
   });
@@ -69,7 +69,7 @@ describe('CommunicatorReceiver', () => {
   it('should support multiple links for sending response', async () => {
     const onSend = jest.fn();
 
-    const receiver = new CommunicatorReceiver(schema, [
+    const receiver = new MusubiReceiver(schema, [
       {
         sendResponse: async (response, next) => {
           onSend(response.unwrap());
@@ -85,7 +85,7 @@ describe('CommunicatorReceiver', () => {
       id: '1',
     }));
 
-    const client = new CommunicatorClient(schema, [clientLink]);
+    const client = new MusubiClient(schema, [clientLink]);
 
     const result = await client.command('createUser', { name: 'test' });
 

@@ -2,13 +2,13 @@ import {
   browserExtensionChannel,
   createBrowserExtensionLink,
 } from '@musubi/browser-extension-link';
-import { CommunicatorClient } from '@musubi/core';
+import { MusubiClient } from '@musubi/core';
 import { browserExtensionSchema } from '../schema';
 
 async function main() {
   const link = createBrowserExtensionLink('popup');
 
-  const client = new CommunicatorClient(browserExtensionSchema, [link.client]);
+  const client = new MusubiClient(browserExtensionSchema, [link.client]);
 
   const elements = {
     result: document.getElementById('result') as HTMLDivElement,
