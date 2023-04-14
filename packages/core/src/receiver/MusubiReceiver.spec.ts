@@ -1,6 +1,9 @@
 import { mergeSchemas } from '../schema/schemaHelpers';
-import { testPostSchema, testUserSchema } from '../test/testSchemas';
-import { createTestLink } from '../test/testLink';
+import {
+  testPostSchema,
+  testUserSchema,
+} from '../../../../tools/test/testSchemas';
+import { createTestLink } from '../../../../tools/test/testLink';
 import { MusubiReceiver } from './MusubiReceiver';
 import { MusubiClient } from '../client/MusubiClient';
 import { ZodError } from 'zod';

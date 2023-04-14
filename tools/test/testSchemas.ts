@@ -1,12 +1,17 @@
 import { z } from 'zod';
-import { command, defineSchema, event, query } from "../schema/schemaHelpers";
+import {
+  command,
+  defineSchema,
+  event,
+  query,
+} from '../../packages/core/src/schema/schemaHelpers';
 
-const User = z.object({
+export const User = z.object({
   id: z.string(),
   name: z.string(),
 });
 
-const Post = z.object({
+export const Post = z.object({
   id: z.string(),
   title: z.string(),
 });
@@ -31,7 +36,7 @@ export const testUserSchema = defineSchema({
           id: z.string(),
         })
       )
-      .withResult(User),
+      .withResult(User.optional()),
   },
 });
 

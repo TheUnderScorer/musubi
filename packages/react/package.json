@@ -1,6 +1,6 @@
 {
-  "name": "@musubi/in-memory-link",
-  "version": "0.6.0",
+  "name": "@musubi/react",
+  "version": "0.0.1",
   "private": false,
   "sideEffects": false,
   "license": "MIT",

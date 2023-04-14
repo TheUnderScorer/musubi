@@ -23,6 +23,8 @@ export class OperationResponse<
   extends OperationEnvelope<Ctx>
   implements OperationResponseObject
 {
+  timestamp = Date.now();
+
   static readonly schema = operationResponseSchema;
 
   constructor(

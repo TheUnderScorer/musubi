@@ -1,9 +1,12 @@
-import { ClientLink } from '../client/client.types';
-import { ReceiverLink } from '../receiver/receiver.types';
+import { ClientLink } from '../../packages/core/src/client/client.types';
+import { ReceiverLink } from '../../packages/core/src/receiver/receiver.types';
 import { filter, Subject } from 'rxjs';
-import { OperationRequest } from '../shared/OperationRequest';
-import { OperationResponse } from '../shared/OperationResponse';
-import { OperationKind, OperationName } from '../schema/schema.types';
+import { OperationRequest } from '../../packages/core/src/shared/OperationRequest';
+import { OperationResponse } from '../../packages/core/src/shared/OperationResponse';
+import {
+  OperationKind,
+  OperationName,
+} from '../../packages/core/src/schema/schema.types';
 
 export function createTestLink() {
   const clientLink = {

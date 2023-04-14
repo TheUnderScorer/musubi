@@ -40,7 +40,7 @@
   "generators": {
     "@nrwl/react": {
       "application": {
-        "style": "@emotion/styled",
+        "style": "css",
         "linter": "eslint",
         "bundler": "vite",
         "babel": true
@@ -50,7 +50,8 @@
       },
       "library": {
         "style": "@emotion/styled",
-        "linter": "eslint"
+        "linter": "eslint",
+        "unitTestRunner": "jest"
       }
     }
   }

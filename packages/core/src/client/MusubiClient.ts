@@ -131,25 +131,22 @@ export class MusubiClient<S extends OperationsSchema, Ctx = any> {
         >;
       }, rootNext.asObservable());
 
-    return observable
-      .pipe(
-        map((event) => ({
-          payload: validatePayload(
-            this.schema,
-            OperationKind.Event,
-            event.operationName,
-            event.unwrap()
-          ),
-          ctx: event.ctx as Ctx,
-        }))
-      )
-      .pipe(
-        tap({
-          finalize: () => {
-            rootNext.complete();
-          },
-        })
-      );
+    return observable.pipe(
+      map((event) => ({
+        payload: validatePayload(
+          this.schema,
+          OperationKind.Event,
+          event.operationName,
+          event.unwrap()
+        ),
+        ctx: event.ctx as Ctx,
+      })),
+      tap({
+        finalize: () => {
+          rootNext.complete();
+        },
+      })
+    );
   }
 
   private async sendOperation<Name extends OperationName, Payload, Result>(
