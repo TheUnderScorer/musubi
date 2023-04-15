@@ -1,3 +1,10 @@
+## [0.7.1](https://github.com/TheUnderScorer/musubi/compare/core-v0.7.0...core-v0.7.1) (2023-04-15)
+
+
+### Bug Fixes
+
+* **OperationReceiverBuilder:** ensure that error thrown from middleware is propagated ([9ec9ff7](https://github.com/TheUnderScorer/musubi/commit/9ec9ff7b29a49d36ed8590c2ec7de46cddbf8cdc))
+
 # [0.7.0](https://github.com/TheUnderScorer/musubi/compare/core-v0.6.0...core-v0.7.0) (2023-04-15)
 
 
