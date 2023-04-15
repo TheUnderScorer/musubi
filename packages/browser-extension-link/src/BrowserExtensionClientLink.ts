@@ -14,8 +14,9 @@ import { observeGlobalResponses } from './globalListener';
 import { filter, Observable } from 'rxjs';
 import { ChannelResolver } from './ChannelResolver';
 
-export class BrowserExtensionClientLink<S extends OperationsSchema>
-  implements ClientLink<BrowserExtensionContext>
+export class BrowserExtensionClientLink<
+  S extends OperationsSchema = OperationsSchema
+> implements ClientLink<BrowserExtensionContext>
 {
   private readonly channelResolver: ChannelResolver<S>;
 
