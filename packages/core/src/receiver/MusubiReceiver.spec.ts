@@ -133,6 +133,46 @@ describe('MusubiReceiver', () => {
       });
     });
 
+    it('should pass error from middleware before', async () => {
+      const client = new MusubiClient(schema, [clientLink]);
+
+      const receiver = new MusubiReceiver<typeof schema, { fromLink: true }>(
+        schema,
+        [receiverLink]
+      );
+
+      const runAfter = jest.fn();
+      const nextMiddleware = jest.fn();
+      const handler = jest.fn();
+
+      receiver
+        .handleQueryBuilder('getPost')
+        .runBefore(() => {
+          throw new Error('Middleware thrown error');
+        })
+        .runBefore(nextMiddleware)
+        .runAfter(({ data, operation }) => {
+          expect(operation).toEqual(schema.queries.getPost);
+          expect(data.error).toBeTruthy();
+
+          if (data.error) {
+            expect(data.error.message).toBe('Middleware thrown error');
+          }
+
+          runAfter();
+        })
+        .withHandler(handler)
+        .register();
+
+      await expect(client.query('getPost', { id: '1' })).rejects.toThrow(
+        'Middleware thrown error'
+      );
+
+      expect(handler).toHaveBeenCalledTimes(0);
+      expect(runAfter).toHaveBeenCalledTimes(1);
+      expect(nextMiddleware).toHaveBeenCalledTimes(0);
+    });
+
     it('should pass error to middleware after if handler throws', async () => {
       const client = new MusubiClient(schema, [clientLink]);
 

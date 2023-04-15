@@ -10,7 +10,7 @@ import {
 import { MusubiReceiver } from './MusubiReceiver';
 
 export interface OperationBeforeMiddlewareParams<
-  Operation extends OperationDefinition<OperationKind>,
+  Operation extends OperationDefinition,
   Payload,
   Ctx
 > {
@@ -20,7 +20,7 @@ export interface OperationBeforeMiddlewareParams<
 }
 
 export interface OperationAfterMiddlewareParams<
-  Operation extends OperationDefinition<OperationKind>,
+  Operation extends OperationDefinition,
   Payload,
   Ctx,
   Result
@@ -29,7 +29,7 @@ export interface OperationAfterMiddlewareParams<
 }
 
 export type OperationBeforeMiddleware<
-  Operation extends OperationDefinition<OperationKind>,
+  Operation extends OperationDefinition,
   Ctx,
   Result
 > = (
@@ -45,7 +45,7 @@ export type OperationAfterResult<Result> =
   | { error: null; result: Result };
 
 export type OperationAfterMiddleware<
-  Operation extends OperationDefinition<OperationKind>,
+  Operation extends OperationDefinition,
   Ctx
 > = (
   params: OperationAfterMiddlewareParams<
@@ -84,6 +84,24 @@ export class OperationReceiverBuilder<
 
   /**
    * Appends middleware to be executed before operation handler.
+   *
+   * @example
+   * ```ts
+   *       receiver
+   *         .handleQueryBuilder('getPost')
+   *         .runBefore(({ payload, operation, ctx }) => {
+   *           const user = await getUser(ctx);
+   *
+   *           // Return new ctx
+   *           return {
+   *             ...ctx,
+   *             user
+   *           }
+   *         })
+   *         .withHandler((payload, ctx) => {
+   *            // Typescript knows that ctx has user property
+   *           console.log(ctx.user);
+   *         })
    * */
   runBefore<MiddlewareReturn>(
     middleware: OperationBeforeMiddleware<Operation, Ctx, MiddlewareReturn>
@@ -102,6 +120,19 @@ export class OperationReceiverBuilder<
 
   /**
    * Appends middleware to be executed after operation handler.
+   *
+   * @example
+   * ```ts
+   *       receiver
+   *         .handleQueryBuilder('getPost')
+   *         .runAfter(({ data, operation }) => {
+   *           if (data.error) {
+   *             console.log("Operation ${operation.name} failed!")
+   *           } else {
+   *             console.log("Operation ${operation.name} succeeded!")
+   *           }
+   *         })
+   * ```
    * */
   runAfter(middleware: OperationAfterMiddleware<Operation, Ctx>) {
     this.middlewareAfter.push(middleware);
@@ -125,48 +156,76 @@ export class OperationReceiverBuilder<
         ...ctx,
       };
 
-      for (const middleware of this.middlewareBefore) {
-        const result = await middleware({
-          operation: this.operation,
-          ctx: rootCtx,
-          payload,
-        });
+      let operationResult: any | Error;
 
-        if (result) {
-          Object.assign(rootCtx as object, {
-            ...rootCtx,
-            ...result,
+      for (const middleware of this.middlewareBefore) {
+        try {
+          const result = await middleware({
+            operation: this.operation,
+            ctx: rootCtx,
+            payload,
           });
+
+          if (result) {
+            Object.assign(rootCtx as object, {
+              ...rootCtx,
+              ...result,
+            });
+          }
+        } catch (error) {
+          operationResult = error;
+          break;
         }
       }
 
-      const asyncHandler = async () => this.rootHandler?.(payload, rootCtx);
+      if (!operationResult) {
+        const asyncHandler = async () => this.rootHandler?.(payload, rootCtx);
 
-      const result = await asyncHandler().catch((error) => error);
-      const isError = result instanceof Error;
+        operationResult = await asyncHandler().catch((error) => error);
+      }
+
+      const isError = operationResult instanceof Error;
+
+      const data = {
+        error: isError ? operationResult : null,
+        result: operationResult,
+      } as OperationAfterResult<Awaited<ExtractResult<Operation>>>;
 
       for (const middleware of this.middlewareAfter) {
         await middleware({
           operation: this.operation,
           payload,
           ctx: rootCtx,
-          data: {
-            error: isError ? result : null,
-            result,
-          } as OperationAfterResult<Awaited<ExtractResult<Operation>>>,
+          data,
         });
       }
 
       if (isError) {
-        throw result;
+        throw operationResult;
       }
 
-      return result;
+      return operationResult;
     };
   }
 
   /**
    * Registers handler into receiver
+   *
+   * @example
+   * ```ts
+   *       receiver
+   *         .handleQueryBuilder('getPost')
+   *         .runBefore(({ data, operation, ctx }) => {
+   *           // Run before handler
+   *         })
+   *         .runAfter(({ data, operation, ctx }) => {
+   *            // Run after handler
+   *         })
+   *         .withHandler((payload, ctx) => {
+   *            // Implement handler
+   *         })
+   *         .register();
+   * ``
    * */
   register() {
     const handler = this.toHandler();
