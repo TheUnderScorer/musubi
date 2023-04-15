@@ -1,3 +1,10 @@
+## [0.1.1](https://github.com/TheUnderScorer/musubi/compare/react-v0.1.0...react-v0.1.1) (2023-04-15)
+
+
+### Bug Fixes
+
+* **OperationReceiverBuilder:** ensure that error thrown from middleware is propagated ([9ec9ff7](https://github.com/TheUnderScorer/musubi/commit/9ec9ff7b29a49d36ed8590c2ec7de46cddbf8cdc))
+
 # [0.1.0](https://github.com/TheUnderScorer/musubi/compare/react-v0.0.1...react-v0.1.0) (2023-04-15)
 
 
