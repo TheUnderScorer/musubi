@@ -20,7 +20,12 @@ export class RootReceiverLink<Ctx = unknown> {
       >(
         (next, link) => {
           return async (
-            response: OperationResponse<unknown, OperationRequest<unknown, Ctx>>
+            response: OperationResponse<
+              unknown,
+              OperationRequest<unknown, Ctx>,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              any
+            >
           ) => {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             await link.sendResponse!(response, next);

@@ -4,7 +4,7 @@ import { Observable, Subscription } from 'rxjs';
 
 export interface ClientLink<Ctx = unknown> {
   /**
-   * Sends request to the server and returns a response.
+   * Sends request to the receiver and returns a response.
    * */
   sendRequest?: <Payload, Result>(
     request: OperationRequest<Payload, Ctx>,
@@ -14,7 +14,7 @@ export interface ClientLink<Ctx = unknown> {
   ) => Promise<OperationResponse<Result, OperationRequest<Payload, Ctx>>>;
 
   /**
-   * Subscribes to the server event and returns a subscription.
+   * Subscribes to the receiver event and returns a subscription.
    * */
   subscribeToEvent?: <Payload>(
     request: OperationRequest<unknown, Ctx>,

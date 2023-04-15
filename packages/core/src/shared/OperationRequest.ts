@@ -14,7 +14,7 @@ const operationRequestSchema = z.object({
   ctx: z.unknown().optional(),
 });
 
-type OperationRequestObject = z.infer<typeof operationRequestSchema>;
+export type OperationRequestObject = z.infer<typeof operationRequestSchema>;
 
 export class OperationRequest<Payload = unknown, Ctx = unknown>
   extends OperationEnvelope<Ctx>

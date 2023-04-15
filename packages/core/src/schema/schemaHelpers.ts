@@ -1,7 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/no-non-null-assertion */
 import { OperationDefinition } from './OperationDefinition';
-import { OperationsSchema } from './schema.types';
+import { OperationSchemaOperations, OperationsSchema } from './schema.types';
 import { mapObject } from '../utils/map';
+
+export function getOperationFromSchema<
+  S extends OperationsSchema,
+  Key extends OperationSchemaOperations<S>
+>(schema: S, key: Key): OperationDefinition {
+  const k = key as any;
+
+  const operation = schema.commands[k] || schema.queries[k] || schema.events[k];
+
+  if (!operation) {
+    throw new TypeError(`Operation ${k} not found in schema`);
+  }
+
+  return operation;
+}
 
 export function defineSchema<S extends OperationsSchema>(schema: S) {
   const addName = (key: keyof Pick<S, 'queries' | 'events' | 'commands'>) =>

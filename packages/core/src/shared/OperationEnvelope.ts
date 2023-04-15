@@ -2,7 +2,7 @@ import { serializeContext } from './serializeContext';
 import { EnvelopeContext, EnvelopeContextEntry } from './context';
 
 export abstract class OperationEnvelope<Ctx> {
-  private readonly internalCtx?: EnvelopeContext<Ctx>;
+  internalCtx?: EnvelopeContext<Ctx>;
 
   protected constructor(ctx?: Ctx) {
     this.internalCtx = ctx
@@ -46,8 +46,12 @@ export abstract class OperationEnvelope<Ctx> {
   }
 
   toJSON() {
+    const self = { ...this };
+
+    delete self.internalCtx;
+
     return {
-      ...this,
+      ...self,
       ctx: serializeContext(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         this.internalCtx as Record<string, EnvelopeContextEntry<any>>

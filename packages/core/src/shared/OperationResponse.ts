@@ -3,6 +3,7 @@ import { OperationKind } from '../schema/schema.types';
 import { Channel } from './communication.types';
 import { z } from 'zod';
 import { OperationEnvelope } from './OperationEnvelope';
+import { EnvelopeContext } from './context';
 
 const operationResponseSchema = z.object({
   operationName: z.string(),
@@ -13,7 +14,7 @@ const operationResponseSchema = z.object({
   channel: z.unknown().optional(),
 });
 
-type OperationResponseObject = z.infer<typeof operationResponseSchema>;
+export type OperationResponseObject = z.infer<typeof operationResponseSchema>;
 
 export class OperationResponse<
     Result = unknown,
@@ -39,6 +40,10 @@ export class OperationResponse<
     const ctx = _ctx ?? request?.ctx;
 
     super(ctx as Ctx);
+
+    if (request?.internalCtx) {
+      this.internalCtx = request.internalCtx as EnvelopeContext<Ctx>;
+    }
 
     if (!this.channel) {
       this.channel = request?.channel;
@@ -119,6 +124,6 @@ export class OperationResponse<
     return {
       ...super.toJSON(),
       request: this.request?.toJSON(),
-    };
+    } satisfies OperationResponseObject;
   }
 }

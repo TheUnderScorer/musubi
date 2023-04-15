@@ -24,7 +24,7 @@ yarn add @musubi/core
 ## Usage
 ```ts
 import { defineSchema, CommunicatorClient } from "@musubi/core";
-import { createClientLink } from "@musubi/http-link";
+import { createHttpClientLink } from "@musubi/http-link";
 import { z } from "zod";
 
 const schema = defineSchema({
@@ -40,7 +40,7 @@ const schema = defineSchema({
 });
 
 async function main() {
-  const httpLink = createClientLink({
+  const httpLink = createHttpClientLink({
     url: "http://localhost:3000/api"
   });
   const client = new CommunicatorClient(schema, [httpLink]);

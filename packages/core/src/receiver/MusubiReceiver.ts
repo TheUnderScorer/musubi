@@ -17,7 +17,8 @@ import { createLinks } from '../shared/link';
 import { OperationReceiverBuilder } from './OperationReceiverBuilder';
 import { OperationDefinition } from '../schema/OperationDefinition';
 
-export class MusubiReceiver<S extends OperationsSchema, Ctx = unknown> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export class MusubiReceiver<S extends OperationsSchema, Ctx = any> {
   private readonly rootLink: RootReceiverLink<Ctx>;
 
   constructor(

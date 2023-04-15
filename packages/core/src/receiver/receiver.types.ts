@@ -27,9 +27,9 @@ export type ReceiverLink<Ctx = unknown> = {
    * You can use `response.kind` to distinguish between them.
    * */
   sendResponse?: <Payload, Result>(
-    response: OperationResponse<Result, OperationRequest<Payload, Ctx>>,
+    response: OperationResponse<Result, OperationRequest<Payload, Ctx>, Ctx>,
     next: (
-      response: OperationResponse<Result, OperationRequest<Payload, Ctx>>
+      response: OperationResponse<Result, OperationRequest<Payload, Ctx>, Ctx>
     ) => Promise<void>
   ) => Promise<void>;
 };
