@@ -1,3 +1,19 @@
+# [0.7.0](https://github.com/TheUnderScorer/musubi/compare/in-memory-link-v0.6.0...in-memory-link-v0.7.0) (2023-04-15)
+
+
+### Bug Fixes
+
+* remove test export ([4f39a29](https://github.com/TheUnderScorer/musubi/commit/4f39a29bfde1b771317d8cfd2484bb9b0259d8e7))
+* when defining schema, add name to all operation definitions ([08df112](https://github.com/TheUnderScorer/musubi/commit/08df112caffe6a2d4c13e65416c81178d4c1acb7))
+
+
+### Features
+
+* add react integration ([3d34065](https://github.com/TheUnderScorer/musubi/commit/3d34065c360633bbc5915779d4f2da26caadcfa0))
+* introduce operation receiver builder ([9402832](https://github.com/TheUnderScorer/musubi/commit/9402832f88505f119397a5f310764e92162069b0))
+* pass operation to receiver builder ([4126d87](https://github.com/TheUnderScorer/musubi/commit/4126d87e11be4064ef01731431e9024355fdf0a3))
+* rename client and receiver ([3f44e4d](https://github.com/TheUnderScorer/musubi/commit/3f44e4dd124ae69a79525b8bd68f04f164358c31))
+
 # [0.6.0](https://github.com/TheUnderScorer/musubi/compare/in-memory-link-v0.5.0...in-memory-link-v0.6.0) (2023-04-12)
 
 
