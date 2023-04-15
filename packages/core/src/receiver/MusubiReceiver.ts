@@ -14,6 +14,8 @@ import { OperationRequest } from '../shared/OperationRequest';
 import { MaybePromise } from '../shared/promise';
 import { LinkParam } from '../shared/link.types';
 import { createLinks } from '../shared/link';
+import { OperationReceiverBuilder } from './OperationReceiverBuilder';
+import { OperationDefinition } from '../schema/OperationDefinition';
 
 export class MusubiReceiver<S extends OperationsSchema, Ctx = unknown> {
   private readonly rootLink: RootReceiverLink<Ctx>;
@@ -70,6 +72,32 @@ export class MusubiReceiver<S extends OperationsSchema, Ctx = unknown> {
     );
 
     await this.rootLink.sendResponse(response);
+  }
+
+  handleQueryBuilder<Key extends keyof S['queries'], OpCtx>(name: Key) {
+    return this.createBuilder<S['queries'][Key], OpCtx>(
+      name,
+      OperationKind.Query
+    );
+  }
+
+  handleCommandBuilder<Key extends keyof S['commands'], OpCtx>(name: Key) {
+    return this.createBuilder<S['commands'][Key], OpCtx>(
+      name,
+      OperationKind.Command
+    );
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private createBuilder<Operation extends OperationDefinition<any>, OpCtx>(
+    name: Operation['name'],
+    kind: Operation['kind']
+  ): OperationReceiverBuilder<Operation, Ctx & OpCtx> {
+    return new OperationReceiverBuilder<Operation, Ctx & OpCtx>(
+      this as MusubiReceiver<S, Ctx & OpCtx>,
+      name,
+      kind
+    );
   }
 
   private handleOperation<Payload, Result>(

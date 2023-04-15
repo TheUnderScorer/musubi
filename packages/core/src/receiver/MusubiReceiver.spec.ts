@@ -7,6 +7,7 @@ import { createTestLink } from '../../../../tools/test/testLink';
 import { MusubiReceiver } from './MusubiReceiver';
 import { MusubiClient } from '../client/MusubiClient';
 import { ZodError } from 'zod';
+import { OperationBeforeMiddleware } from './OperationReceiverBuilder';
 
 const schema = mergeSchemas(testUserSchema, testPostSchema);
 
@@ -94,5 +95,137 @@ describe('MusubiReceiver', () => {
 
     expect(onSend).toHaveBeenCalledTimes(1);
     expect(onSend).toHaveBeenCalledWith(result);
+  });
+
+  describe('Operation Builder', () => {
+    it('should pass result to middleware after', async () => {
+      const client = new MusubiClient(schema, [clientLink]);
+
+      const receiver = new MusubiReceiver<typeof schema, { fromLink: true }>(
+        schema,
+        [receiverLink]
+      );
+
+      receiver
+        .handleQueryBuilder('getPost')
+        .runAfter((name, payload, ctx, data) => {
+          expect(data.error).toBeNull();
+
+          if (!data.error) {
+            expect(data.result.id).toBe('1');
+            expect(data.result.title).toBe('test');
+          }
+        })
+        .withHandler((payload) => {
+          return {
+            id: payload.id,
+            title: 'test',
+          };
+        })
+        .register();
+
+      const result = await client.query('getPost', { id: '1' });
+
+      expect(result).toEqual({
+        id: '1',
+        title: 'test',
+      });
+    });
+
+    it('should pass error to middleware after if handler throws', async () => {
+      const client = new MusubiClient(schema, [clientLink]);
+
+      const receiver = new MusubiReceiver<typeof schema, { fromLink: true }>(
+        schema,
+        [receiverLink]
+      );
+
+      receiver
+        .handleQueryBuilder('getPost')
+        .runAfter((name, payload, ctx, data) => {
+          expect(data.error).toBeTruthy();
+
+          if (data.error) {
+            expect(data.error.message).toBe('Post not found');
+          }
+        })
+        .withHandler(() => {
+          throw new Error('Post not found');
+        })
+        .register();
+
+      await expect(client.query('getPost', { id: '1' })).rejects.toThrow(
+        'Post not found'
+      );
+    });
+
+    it('should support altering context for middleware before', async () => {
+      const client = new MusubiClient(schema, [clientLink]);
+
+      const receiver = new MusubiReceiver<typeof schema, { fromLink: true }>(
+        schema,
+        [
+          {
+            receiveRequest: (name, next) => {
+              return next.subscribe((request) => {
+                request.addCtx({
+                  fromLink: {
+                    isSerializable: true,
+                    value: true,
+                  },
+                });
+              });
+            },
+          },
+          receiverLink,
+        ]
+      );
+
+      const middleware =
+        <Payload, Ctx>(): OperationBeforeMiddleware<
+          Payload,
+          Ctx,
+          Ctx & { fromMiddleware: true }
+        > =>
+        (name, payload, ctx) => {
+          return {
+            ...ctx,
+            fromMiddleware: true,
+          };
+        };
+
+      receiver
+        .handleCommandBuilder('createUser')
+        .runBefore(middleware())
+        .runBefore((name, payload, ctx) => {
+          expect(ctx.fromLink).toBe(true);
+          expect(ctx.fromMiddleware).toBe(true);
+
+          return {
+            ...ctx,
+            fromSecondMiddleware: true,
+          };
+        })
+        .withHandler(async (payload, ctx) => {
+          expect(ctx.fromLink).toBe(true);
+          expect(ctx.fromMiddleware).toBe(true);
+          expect(ctx.fromSecondMiddleware).toBe(true);
+
+          return {
+            id: '1',
+            name: payload.name,
+          };
+        })
+        .register();
+
+      const user = await client.command('createUser', {
+        name: 'test',
+      });
+
+      expect(user).toEqual({
+        id: '1',
+        name: 'test',
+      });
+    });
   });
 });
