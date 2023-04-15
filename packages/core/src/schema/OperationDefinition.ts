@@ -3,7 +3,7 @@ import { OperationKind, OperationName } from './schema.types';
 import { ZodSchema } from 'zod';
 
 export class OperationDefinition<
-  Kind extends OperationKind,
+  Kind extends OperationKind = OperationKind,
   Name extends OperationName = OperationName,
   Payload = undefined,
   Result = any,

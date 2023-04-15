@@ -8,6 +8,7 @@ import { MusubiReceiver } from './MusubiReceiver';
 import { MusubiClient } from '../client/MusubiClient';
 import { ZodError } from 'zod';
 import { OperationBeforeMiddleware } from './OperationReceiverBuilder';
+import { OperationDefinition } from '../schema/OperationDefinition';
 
 const schema = mergeSchemas(testUserSchema, testPostSchema);
 
@@ -108,7 +109,7 @@ describe('MusubiReceiver', () => {
 
       receiver
         .handleQueryBuilder('getPost')
-        .runAfter((name, payload, ctx, data) => {
+        .runAfter(({ data }) => {
           expect(data.error).toBeNull();
 
           if (!data.error) {
@@ -142,7 +143,8 @@ describe('MusubiReceiver', () => {
 
       receiver
         .handleQueryBuilder('getPost')
-        .runAfter((name, payload, ctx, data) => {
+        .runAfter(({ data, operation }) => {
+          expect(operation).toEqual(schema.queries.getPost);
           expect(data.error).toBeTruthy();
 
           if (data.error) {
@@ -182,12 +184,17 @@ describe('MusubiReceiver', () => {
       );
 
       const middleware =
-        <Payload, Ctx>(): OperationBeforeMiddleware<
-          Payload,
+        <
+          Operation extends OperationDefinition,
+          Ctx
+        >(): OperationBeforeMiddleware<
+          Operation,
           Ctx,
           Ctx & { fromMiddleware: true }
         > =>
-        (name, payload, ctx) => {
+        ({ ctx, operation }) => {
+          expect(operation).toEqual(schema.commands.createUser);
+
           return {
             ...ctx,
             fromMiddleware: true,
@@ -197,7 +204,7 @@ describe('MusubiReceiver', () => {
       receiver
         .handleCommandBuilder('createUser')
         .runBefore(middleware())
-        .runBefore((name, payload, ctx) => {
+        .runBefore(({ ctx }) => {
           expect(ctx.fromLink).toBe(true);
           expect(ctx.fromMiddleware).toBe(true);
 

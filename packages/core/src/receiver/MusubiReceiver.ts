@@ -75,28 +75,24 @@ export class MusubiReceiver<S extends OperationsSchema, Ctx = unknown> {
   }
 
   handleQueryBuilder<Key extends keyof S['queries'], OpCtx>(name: Key) {
-    return this.createBuilder<S['queries'][Key], OpCtx>(
-      name,
-      OperationKind.Query
-    );
+    const definition = this.schema.queries[name as OperationName];
+
+    return this.createBuilder<typeof definition, OpCtx>(definition);
   }
 
   handleCommandBuilder<Key extends keyof S['commands'], OpCtx>(name: Key) {
-    return this.createBuilder<S['commands'][Key], OpCtx>(
-      name,
-      OperationKind.Command
-    );
+    const definition = this.schema.commands[name as OperationName];
+
+    return this.createBuilder<typeof definition, OpCtx>(definition);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private createBuilder<Operation extends OperationDefinition<any>, OpCtx>(
-    name: Operation['name'],
-    kind: Operation['kind']
+    operation: Operation
   ): OperationReceiverBuilder<Operation, Ctx & OpCtx> {
     return new OperationReceiverBuilder<Operation, Ctx & OpCtx>(
       this as MusubiReceiver<S, Ctx & OpCtx>,
-      name,
-      kind
+      operation
     );
   }
 

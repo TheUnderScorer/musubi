@@ -6,7 +6,7 @@ type MappedValues<T, U> = {
 
 export function mapObject<T extends object, U>(
   obj: T,
-  callback: (value: T[keyof T], key: keyof T) => U
+  callback: <Key extends keyof T>(value: T[Key], key: Key) => U
 ): MappedValues<T, U> {
   const result = {} as MappedValues<T, U>;
 

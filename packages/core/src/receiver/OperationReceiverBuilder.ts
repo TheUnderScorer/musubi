@@ -1,31 +1,59 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { MaybePromise } from '../shared/promise';
-import { ReadonlyDeep } from 'type-fest';
 import { OperationHandler } from './receiver.types';
 import { OperationDefinition } from '../schema/OperationDefinition';
 import {
   ExtractPayload,
   ExtractResult,
   OperationKind,
-  OperationName,
 } from '../schema/schema.types';
 import { MusubiReceiver } from './MusubiReceiver';
 
-export type OperationBeforeMiddleware<Payload, Ctx, Result> = (
-  name: OperationName,
-  payload: Payload,
-  ctx: Ctx
+export interface OperationBeforeMiddlewareParams<
+  Operation extends OperationDefinition<OperationKind>,
+  Payload,
+  Ctx
+> {
+  operation: Operation;
+  payload: Payload;
+  ctx: Ctx;
+}
+
+export interface OperationAfterMiddlewareParams<
+  Operation extends OperationDefinition<OperationKind>,
+  Payload,
+  Ctx,
+  Result
+> extends OperationBeforeMiddlewareParams<Operation, Payload, Ctx> {
+  data: OperationAfterResult<Result>;
+}
+
+export type OperationBeforeMiddleware<
+  Operation extends OperationDefinition<OperationKind>,
+  Ctx,
+  Result
+> = (
+  params: OperationBeforeMiddlewareParams<
+    Operation,
+    ExtractPayload<Operation>,
+    Ctx
+  >
 ) => MaybePromise<Result>;
 
 export type OperationAfterResult<Result> =
   | { error: Error; result: null }
   | { error: null; result: Result };
 
-export type OperationAfterMiddleware<Payload, OperationResult, Ctx> = (
-  name: OperationName,
-  payload: ReadonlyDeep<Payload>,
-  ctx: Ctx,
-  data: OperationAfterResult<Awaited<OperationResult>>
+export type OperationAfterMiddleware<
+  Operation extends OperationDefinition<OperationKind>,
+  Ctx
+> = (
+  params: OperationAfterMiddlewareParams<
+    Operation,
+    ExtractPayload<Operation>,
+    Ctx,
+    ExtractResult<Operation>
+  >
 ) => MaybePromise<void>;
 
 export class OperationReceiverBuilder<
@@ -35,21 +63,17 @@ export class OperationReceiverBuilder<
   private rootHandler?: OperationHandler<Operation, Ctx>;
 
   private readonly middlewareBefore: OperationBeforeMiddleware<
-    ExtractPayload<Operation>,
+    Operation,
     Ctx,
     unknown
   >[] = [];
 
-  private readonly middlewareAfter: OperationAfterMiddleware<
-    ExtractPayload<Operation>,
-    ExtractResult<Operation>,
-    Ctx
-  >[] = [];
+  private readonly middlewareAfter: OperationAfterMiddleware<Operation, Ctx>[] =
+    [];
 
   constructor(
     private readonly receiver: MusubiReceiver<any, Ctx>,
-    private readonly name: OperationName,
-    private readonly kind: OperationKind
+    private readonly operation: Operation
   ) {}
 
   withHandler(handler: OperationHandler<Operation, Ctx>) {
@@ -62,11 +86,7 @@ export class OperationReceiverBuilder<
    * Appends middleware to be executed before operation handler.
    * */
   runBefore<MiddlewareReturn>(
-    middleware: OperationBeforeMiddleware<
-      ExtractPayload<Operation>,
-      Ctx,
-      MiddlewareReturn
-    >
+    middleware: OperationBeforeMiddleware<Operation, Ctx, MiddlewareReturn>
   ) {
     this.middlewareBefore.push(middleware);
 
@@ -83,13 +103,7 @@ export class OperationReceiverBuilder<
   /**
    * Appends middleware to be executed after operation handler.
    * */
-  runAfter(
-    middleware: OperationAfterMiddleware<
-      ExtractPayload<Operation>,
-      ExtractResult<Operation>,
-      Ctx
-    >
-  ) {
+  runAfter(middleware: OperationAfterMiddleware<Operation, Ctx>) {
     this.middlewareAfter.push(middleware);
 
     return this as unknown as OperationReceiverBuilder<Operation, Ctx>;
@@ -112,8 +126,10 @@ export class OperationReceiverBuilder<
       };
 
       for (const middleware of this.middlewareBefore) {
-        const result = await middleware(this.name, payload, {
-          ...rootCtx,
+        const result = await middleware({
+          operation: this.operation,
+          ctx: rootCtx,
+          payload,
         });
 
         if (result) {
@@ -130,15 +146,15 @@ export class OperationReceiverBuilder<
       const isError = result instanceof Error;
 
       for (const middleware of this.middlewareAfter) {
-        await middleware(
-          this.name,
-          payload as ReadonlyDeep<ExtractPayload<Operation>>,
-          rootCtx,
-          {
+        await middleware({
+          operation: this.operation,
+          payload,
+          ctx: rootCtx,
+          data: {
             error: isError ? result : null,
             result,
-          } as OperationAfterResult<Awaited<ExtractResult<Operation>>>
-        );
+          } as OperationAfterResult<Awaited<ExtractResult<Operation>>>,
+        });
       }
 
       if (isError) {
@@ -155,15 +171,15 @@ export class OperationReceiverBuilder<
   register() {
     const handler = this.toHandler();
 
-    switch (this.kind) {
+    switch (this.operation.kind) {
       case OperationKind.Command:
-        return this.receiver.handleCommand(this.name, handler);
+        return this.receiver.handleCommand(this.operation.name, handler);
 
       case OperationKind.Query:
-        return this.receiver.handleQuery(this.name, handler);
+        return this.receiver.handleQuery(this.operation.name, handler);
 
       default:
-        throw new Error(`Unknown operation kind: ${this.kind}`);
+        throw new Error(`Unknown operation kind: ${this.operation.kind}`);
     }
   }
 }
