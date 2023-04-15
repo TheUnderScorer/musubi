@@ -1,9 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/no-non-null-assertion */
 import { OperationDefinition } from './OperationDefinition';
 import { OperationsSchema } from './schema.types';
+import { mapObject } from '../utils/map';
 
 export function defineSchema<S extends OperationsSchema>(schema: S) {
-  return schema;
+  const addName = (key: keyof Pick<S, 'queries' | 'events' | 'commands'>) =>
+    mapObject(schema[key], (value, key) => {
+      return value.withName(key.toString());
+    });
+
+  return {
+    commands: addName('commands'),
+    queries: addName('queries'),
+    events: addName('events'),
+  } as S;
 }
 
 export function query() {
