@@ -37,6 +37,19 @@ export class OperationDefinition<
   withPayload<P extends ZodSchema>(
     zod: P
   ): OperationDefinition<Kind, Name, P, Result, Meta>;
+
+  /**
+   * Defines operation payload.
+   * If you pass zod schema, it will be used to validate the payload in client and receiver
+   *
+   * @example
+   * ```ts
+   * // Using zod
+   * definition.withPayload(z.object({ id: z.number() }))
+   *
+   * // Using typescript
+   * definition.withPayload<{ id: number }>()
+   * */
   withPayload<P extends ZodSchema>(zodSchema?: P) {
     if (zodSchema) {
       Object.assign(this, {
@@ -47,6 +60,11 @@ export class OperationDefinition<
     return this as unknown as OperationDefinition<Kind, Name, P, Result, Meta>;
   }
 
+  /**
+   * Sets operation name.
+   *
+   * Note: it is not required to call it manually. Name will be automatically set by `defineSchema` function.
+   * */
   withName<N extends OperationName>(name: N) {
     Object.assign(this, {
       name,
@@ -65,6 +83,19 @@ export class OperationDefinition<
   withResult<R>(
     zod: ZodSchema<R>
   ): OperationDefinition<Kind, Name, Payload, R, Meta>;
+
+  /**
+   * Defines operation result.
+   * If you pass zod schema, it will be used to validate the result in client and receiver
+   *
+   * @example
+   * ```ts
+   * // Using zod
+   * definition.withResult(z.object({ id: z.number() }))
+   *
+   * // Using typescript
+   * definition.withResult<{ id: number }>()
+   * */
   withResult<R extends ZodSchema>(zodSchema?: R) {
     if (this.kind === OperationKind.Event) {
       throw new TypeError('Events cannot have a result');
@@ -79,6 +110,28 @@ export class OperationDefinition<
     return this as unknown as OperationDefinition<Kind, Name, Payload, R, Meta>;
   }
 
+  /**
+   * Adds metadata to definition that can be used later, for example in links.
+   *
+   * @example
+   *
+   * ```ts
+   * import { defineSchema, command, getOperationFromSchema } from '@musubi/core'
+   *
+   * const schema = defineSchema({
+   *   commands: {
+   *     createPost: command().withMeta({ auth: true })
+   *   }
+   * });
+   *
+   * console.log(
+   *  getOperationFromSchema(schema, 'createPost').meta.auth // true
+   * );
+   *
+   * console.log(
+   *  schema.commands.createPost.meta.auth // true
+   * );
+   * */
   withMeta<M extends Record<string, any>>(meta: M | ((definition: this) => M)) {
     Object.assign(this, {
       meta: {

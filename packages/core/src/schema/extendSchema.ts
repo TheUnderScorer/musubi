@@ -20,7 +20,62 @@ type ExtendedSchema<
   };
 };
 
-// TODO Simplify
+/**
+ * Extends schema operations
+ *
+ * @example
+ * ```ts
+ * import { defineSchema, extendSchema, command, event, query } from '@musubi/core';
+ *
+ * const baseSchema = defineSchema({
+ *   commands: {
+ *     replaceContent: command()
+ *       .withPayload(replaceContentSchema)
+ *       .withResult<void>(),
+ *     closeRightTab: command(),
+ *   },
+ *   events: {
+ *     tabCreated: event().withPayload(
+ *       z.object({
+ *         id: z.number(),
+ *       })
+ *     ),
+ *     contentReplaced: event(),
+ *   },
+ *   queries: {
+ *     getAllTabIds: query().withResult(z.array(z.number())),
+ *   },
+ * });
+ *
+ *
+ * // Extended base schema which adds metadata used by browser extension link
+ * export const browserExtensionSchema = extendSchema(baseSchema, {
+ *   commands: {
+ *     replaceContent: (def) =>
+ *       def.withMeta<BrowserExtensionLinkMeta>({
+ *         browserExtensionChannel: {
+ *           type: 'background',
+ *         },,
+ *       }),
+ *
+ *     closeRightTab: (def) =>
+ *       def.withMeta<BrowserExtensionLinkMeta>({
+ *         browserExtensionChannel: {
+ *           type: 'background',
+ *         },
+ *       }),
+ *   },
+ *   queries: {
+ *     getAllTabIds: (def) =>
+ *       def.withMeta<BrowserExtensionLinkMeta>({
+ *         browserExtensionChannel: {
+ *           type: 'background',
+ *         },
+ *       }),
+ *   },
+ * });
+ * ```
+ * */
 export function extendSchema<
   BaseSchema extends OperationsSchema,
   Extender extends SchemaExtender<BaseSchema>
