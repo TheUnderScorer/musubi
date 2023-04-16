@@ -30,7 +30,8 @@
       "@musubi/http-link": ["packages/http-link/src/index.ts"],
       "@musubi/in-memory-link": ["packages/in-memory-link/src/index.ts"],
       "@musubi/nx-tools": ["packages/nx-tools/src/index.ts"],
-      "@musubi/react": ["packages/react/src/index.ts"]
+      "@musubi/react": ["packages/react/src/index.ts"],
+      "@musubi/socket-io-link": ["packages/socket-io-link/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

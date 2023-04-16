@@ -1,0 +1,11 @@
+{
+  "name": "@musubi/socket-io-link",
+  "version": "0.0.1",
+  "sideEffects": false,
+  "private": false,
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}
