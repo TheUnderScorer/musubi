@@ -4,10 +4,11 @@ import {
   setupTestUserHandlers,
   testSchema,
 } from '../../../../../tools/test/testMusubi';
-import express, { Application } from 'express';
+import express, { Application, Request } from 'express';
 import { ServerContext } from '../server.types';
 import { createExpressHttpLink } from './express-adapter';
 import * as http from 'http';
+import { MusubiHeaders } from '../../shared/http';
 
 const port = 8080;
 
@@ -29,10 +30,13 @@ let requests: {
   body?: unknown;
   method: string;
   searchParams?: URLSearchParams;
+  headers: Request['headers'];
 }[];
 
 describe('Express adapter', () => {
   beforeEach(() => {
+    jest.resetAllMocks();
+
     requests = [];
 
     app = express();
@@ -45,6 +49,7 @@ describe('Express adapter', () => {
         searchParams: new URLSearchParams(req.url.split('?')[1]),
         body: req.body,
         method: req.method,
+        headers: req.headers,
       });
 
       next();
@@ -74,6 +79,10 @@ describe('Express adapter', () => {
   });
 
   it('should receive queries and commands', async () => {
+    const now = Date.now();
+
+    jest.spyOn(Date, 'now').mockReturnValue(now);
+
     const commandResult = await client.command('createUser', {
       name: 'John',
     });
@@ -93,5 +102,10 @@ describe('Express adapter', () => {
     expect(user).toEqual(commandResult);
     expect(secondRequest.url).toContain('/api/musubi/getUser?input=');
     expect(secondRequest.method).toEqual('GET');
+    expect(secondRequest.headers[MusubiHeaders.X_MUSUBI_ID]).toBeTruthy();
+    expect(secondRequest.headers[MusubiHeaders.X_MUSUBI_CTX]).toEqual('{}');
+    expect(secondRequest.headers[MusubiHeaders.X_MUSUBI_TIMESTAMP]).toEqual(
+      now.toString()
+    );
   });
 });

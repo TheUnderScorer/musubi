@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 import { LinkParam } from '@musubi/core';
 import { HttpServerReceiverLink } from '../HttpServerReceiverLink';
 import { z } from 'zod';
+import { extractRequestDataFromGetRequest } from '../http';
 
 const querySchema = z.object({
   input: z.string(),
@@ -27,7 +28,10 @@ class ExpressAdapter implements MusubiServerAdapter {
       this.app[httpMethod](path, (req, res) => {
         const payload =
           method === MusubiHttpMethod.GET
-            ? JSON.parse(querySchema.parse(req.query).input)
+            ? extractRequestDataFromGetRequest(
+                querySchema.parse(req.query).input,
+                req.headers as MusubiHttpHeaders
+              )
             : req.body;
 
         const request: MusubiHttpRequest = {
