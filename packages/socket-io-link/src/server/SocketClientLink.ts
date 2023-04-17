@@ -1,18 +1,19 @@
 import { ClientLink, OperationRequest, OperationResponse } from '@musubi/core';
 import { Server } from 'socket.io';
-import { Observable } from 'rxjs';
+import { filter, map, Observable } from 'rxjs';
 import { createValidatedSocketHandler } from '../shared/handlers';
 import { resolveSocketChannel } from './channel';
-import { SocketContext } from '../shared/context';
 import { SOCKET_MESSAGE_CHANNEL } from '../shared/channel';
+import { SocketServerContext } from './context';
+import { PacketObservable } from './packetObservable';
 
-export class SocketClientLink implements ClientLink<SocketContext> {
-  constructor(private server: Server) {}
+export class SocketClientLink implements ClientLink<SocketServerContext> {
+  constructor(private server: Server, private packet$: PacketObservable) {}
 
   sendRequest<Payload, Result>(
-    request: OperationRequest<Payload, SocketContext>
+    request: OperationRequest<Payload, SocketServerContext>
   ): Promise<
-    OperationResponse<Result, OperationRequest<Payload, SocketContext>>
+    OperationResponse<Result, OperationRequest<Payload, SocketServerContext>>
   > {
     const channel = resolveSocketChannel(
       this.server,
@@ -29,7 +30,7 @@ export class SocketClientLink implements ClientLink<SocketContext> {
         OperationResponse.schema,
         (data) => {
           if (data.request?.id === request.id) {
-            channel.off('response', handler);
+            channel.off(SOCKET_MESSAGE_CHANNEL, handler);
 
             resolve(OperationResponse.fromObject(data));
           }
@@ -37,29 +38,51 @@ export class SocketClientLink implements ClientLink<SocketContext> {
       );
 
       channel.emit(SOCKET_MESSAGE_CHANNEL, request.toJSON());
+      channel.on(SOCKET_MESSAGE_CHANNEL, handler);
     });
   }
 
   subscribeToEvent<Payload>(
-    request: OperationRequest<unknown, SocketContext>
+    request: OperationRequest<unknown, SocketServerContext>
   ): Observable<
-    OperationResponse<Payload, OperationRequest<unknown, SocketContext>>
+    OperationResponse<
+      Payload,
+      OperationRequest<unknown, SocketServerContext>,
+      SocketServerContext
+    >
   > {
-    return new Observable((observer) => {
-      const handler = createValidatedSocketHandler(
-        OperationResponse.schema,
-        (data) => {
-          if (data.request?.id === request.id) {
-            observer.next(OperationResponse.fromObject(data));
-          }
+    return this.packet$.pipe(
+      map((data) => ({
+        ...data,
+        payload: OperationResponse.schema.safeParse(data.payload),
+      })),
+      filter(
+        (result) =>
+          result.payload.success &&
+          result.payload.data.operationName === request.name
+      ),
+      map((data) => {
+        if (!data.payload.success) {
+          throw new Error();
         }
-      );
 
-      this.server.on(SOCKET_MESSAGE_CHANNEL, handler);
-
-      return () => {
-        this.server.off(SOCKET_MESSAGE_CHANNEL, handler);
-      };
-    });
+        return OperationResponse.fromObject(
+          data.payload.data
+        ).addCtx<SocketServerContext>({
+          socketId: {
+            value: data.socket.id,
+            isSerializable: true,
+          },
+          socket: {
+            value: data.socket,
+            isSerializable: false,
+          },
+        }) as OperationResponse<
+          Payload,
+          OperationRequest<unknown, SocketServerContext>,
+          SocketServerContext
+        >;
+      })
+    );
   }
 }

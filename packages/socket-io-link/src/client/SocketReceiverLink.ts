@@ -1,4 +1,5 @@
 import {
+  OperationKind,
   OperationName,
   OperationRequest,
   OperationResponse,
@@ -49,6 +50,15 @@ export class SocketReceiverLink implements ReceiverLink<SocketContext> {
   async sendResponse<Payload, Result>(
     response: OperationResponse<Result, OperationRequest<Payload>, unknown>
   ): Promise<void> {
+    if (response.operationKind === OperationKind.Event) {
+      response.addCtx<SocketContext>({
+        socketId: {
+          value: this.socketId,
+          isSerializable: true,
+        },
+      });
+    }
+
     this.socket.emit(SOCKET_MESSAGE_CHANNEL, response.toJSON());
   }
 }

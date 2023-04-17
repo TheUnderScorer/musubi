@@ -3,6 +3,7 @@ import { ClientLink } from './client/client.types';
 import { MusubiClient } from './client/MusubiClient';
 import { MusubiReceiver } from './receiver/MusubiReceiver';
 import { ReceiverLink } from './receiver/receiver.types';
+import { LinkParam } from './shared/link.types';
 
 export interface MusubiParams<
   S extends OperationsSchema,
@@ -10,8 +11,17 @@ export interface MusubiParams<
   ReceiverContext = unknown
 > {
   schema: S;
-  clientLinks: ClientLink<ClientContext>[];
-  receiverLinks: ReceiverLink<ReceiverContext>[];
+  clientLinks: LinkParam<ClientLink<ClientContext>>[];
+  receiverLinks: LinkParam<ReceiverLink<ReceiverContext>>[];
+}
+
+export interface Musubi<
+  S extends OperationsSchema = OperationsSchema,
+  ClientContext = unknown,
+  ReceiverContext = unknown
+> {
+  client: MusubiClient<S, ClientContext>;
+  receiver: MusubiReceiver<S, ReceiverContext>;
 }
 
 export function createMusubi<
@@ -26,5 +36,5 @@ export function createMusubi<
   return {
     client: new MusubiClient(schema, clientLinks),
     receiver: new MusubiReceiver(schema, receiverLinks),
-  };
+  } satisfies Musubi<S, ClientContext, ReceiverContext>;
 }

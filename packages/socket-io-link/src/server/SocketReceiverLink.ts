@@ -1,53 +1,72 @@
 import {
+  OperationKind,
   OperationName,
   OperationRequest,
   OperationResponse,
   ReceiverLink,
 } from '@musubi/core';
-import { SocketContext } from '../shared/context';
 import { Server } from 'socket.io';
-import { Observable } from 'rxjs';
+import { filter, map, Observable } from 'rxjs';
 import { SOCKET_MESSAGE_CHANNEL } from '../shared/channel';
-import { createValidatedSocketHandler } from '../shared/handlers';
 import { resolveSocketChannel } from './channel';
+import { PacketObservable } from './packetObservable';
+import { SocketServerContext } from './context';
 
-export class SocketReceiverLink implements ReceiverLink<SocketContext> {
-  constructor(private server: Server) {}
+export class SocketReceiverLink implements ReceiverLink<SocketServerContext> {
+  constructor(private server: Server, private packet$: PacketObservable) {}
 
   receiveRequest(
     name: OperationName
-  ): Observable<OperationRequest<unknown, SocketContext>> {
-    return new Observable((observer) => {
-      const handler = createValidatedSocketHandler(
-        OperationRequest.schema,
-        (data) => {
-          if (data.name === name) {
-            observer.next(OperationRequest.fromObject(data));
-          }
+  ): Observable<OperationRequest<unknown, SocketServerContext>> {
+    return this.packet$.pipe(
+      map((v) => ({
+        ...v,
+        payload: OperationRequest.schema.safeParse(v.payload),
+      })),
+      filter((v) => v.payload.success && v.payload.data.name === name),
+      map((v) => {
+        if (!v.payload.success) {
+          // Should NOT happen, just for correct types :D
+          throw new Error();
         }
-      );
 
-      this.server.on(SOCKET_MESSAGE_CHANNEL, handler);
+        const request = OperationRequest.fromObject(v.payload.data);
 
-      return () => {
-        this.server.off(SOCKET_MESSAGE_CHANNEL, handler);
-      };
-    });
+        return request.addCtx<SocketServerContext>({
+          socketId: {
+            value: v.socket.id,
+            isSerializable: true,
+          },
+          socket: {
+            value: v.socket,
+            isSerializable: false,
+          },
+        });
+      })
+    );
   }
 
   async sendResponse<Payload, Result>(
     response: OperationResponse<
       Result,
-      OperationRequest<Payload, SocketContext>,
-      SocketContext
+      OperationRequest<Payload, SocketServerContext>,
+      SocketServerContext
     >
   ): Promise<void> {
-    const channel = resolveSocketChannel(
-      this.server,
-      response.request?.ctx?.socketId,
-      response.channel
-    );
+    if (response.operationKind !== OperationKind.Event) {
+      if (!response.ctx.socket) {
+        throw new Error('Cannot send response without socket');
+      }
 
-    channel.emit(SOCKET_MESSAGE_CHANNEL, response);
+      response.ctx.socket.emit(SOCKET_MESSAGE_CHANNEL, response.toJSON());
+    } else {
+      const channel = resolveSocketChannel(
+        this.server,
+        response.request?.ctx?.socketId,
+        response.channel
+      );
+
+      channel.emit(SOCKET_MESSAGE_CHANNEL, response.toJSON());
+    }
   }
 }
