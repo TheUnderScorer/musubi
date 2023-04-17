@@ -3,6 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/browser-extension-link/src",
   "projectType": "library",
+  "implicitDependencies": ["nx-tools"],
   "targets": {
     "build": {
       "executor": "@musubi/nx-tools:rollup",

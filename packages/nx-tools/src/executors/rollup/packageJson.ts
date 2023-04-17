@@ -83,7 +83,7 @@ export async function updatePackageJson(
             };
           }, {} as PackageExportsMetadata);
 
-          const key = `./${inputPath.name}`;
+          const key = inputPath.name === 'index' ? '.' : `./${inputPath.name}`;
 
           if (exports[key]) {
             exports[key] = {
