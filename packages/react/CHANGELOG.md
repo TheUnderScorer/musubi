@@ -1,3 +1,11 @@
+# [0.2.0](https://github.com/TheUnderScorer/musubi/compare/react-v0.1.1...react-v0.2.0) (2023-04-16)
+
+
+### Features
+
+* introduce http link with express adapter ([37bf31a](https://github.com/TheUnderScorer/musubi/commit/37bf31ac14229944233ec18f55e3df3deb41596e))
+* introduce LinkPair type ([1f8cf1d](https://github.com/TheUnderScorer/musubi/commit/1f8cf1d65c533f17eee7de905a23629f3731f0ec))
+
 ## [0.1.1](https://github.com/TheUnderScorer/musubi/compare/react-v0.1.0...react-v0.1.1) (2023-04-15)
 
 

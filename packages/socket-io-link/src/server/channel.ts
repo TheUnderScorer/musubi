@@ -27,10 +27,10 @@ export interface ServerSocketOperationMeta<
   /**
    * Returns channel that will be used for this operation.
    *
-   * When sending messages from client, it will determine to which channel the response will be sent.
    * When sending message from server, it will determine to which channel the message will be sent.
-   *
    * For events - it will determine to which channel the event will be sent.
+   *
+   * Note: When sending messages from client, this function will NOT be called, because it will always be returned to socket from which the message was sent.
    */
   getChannel?: (
     params: GetChannelParams<Definition, Ctx>
