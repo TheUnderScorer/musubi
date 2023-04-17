@@ -31,6 +31,7 @@ export class SocketClientLink implements ClientLink<SocketServerContext> {
       ctx: request.ctx,
       server: this.server,
       payload: request.payload,
+      socketId: request.ctx?.socketId,
     });
 
     if (!('off' in channel)) {

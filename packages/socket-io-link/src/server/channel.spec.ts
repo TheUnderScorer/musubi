@@ -1,10 +1,4 @@
-import {
-  command,
-  createMusubi,
-  defineSchema,
-  event,
-  Musubi,
-} from '@musubi/core';
+import { createMusubi, defineSchema, operation, Musubi } from '@musubi/core';
 import { z } from 'zod';
 import {
   defineServerSocketMeta,
@@ -25,7 +19,7 @@ const getChannelHandler = jest.fn();
 
 const schema = defineSchema({
   queries: {
-    queryToSocket: command()
+    queryToSocket: operation.command
       .withPayload(testObjectSchema)
       .withResult(testObjectSchema)
       .withMeta(
@@ -36,13 +30,11 @@ const schema = defineSchema({
   },
   commands: {},
   events: {
-    eventToSocket: event()
-      .withPayload(testObjectSchema)
-      .withMeta(
-        defineServerSocketMeta({
-          getChannel: getChannelHandler,
-        })
-      ),
+    eventToSocket: operation.event.withPayload(testObjectSchema).withMeta(
+      defineServerSocketMeta({
+        getChannel: getChannelHandler,
+      })
+    ),
   },
 });
 

@@ -66,6 +66,7 @@ interface ResolveSocketChannelParams {
   ctx: SocketServerContext;
   server: Server;
   channel?: any;
+  socketId?: string;
 }
 
 export function resolveSocketChannel({
@@ -82,16 +83,25 @@ export function resolveSocketChannel({
     ...params.channel,
   };
 
+  let resolvedFromMeta = false;
+
   if (!params.channel) {
     channel = (operation.meta as ServerSocketOperationMeta)?.getChannel?.({
       ctx,
       payload,
       server,
     });
+
+    resolvedFromMeta = true;
   }
 
-  if (typeof channel === 'object' && !channel.socketId && ctx.socketId) {
-    channel.socketId = ctx.socketId;
+  if (
+    typeof channel === 'object' &&
+    !channel.socketId &&
+    params.socketId &&
+    !resolvedFromMeta
+  ) {
+    channel.socketId = params.socketId;
   }
 
   const parsedChannel = socketServerChannelSchema.safeParse(channel);
