@@ -1,3 +1,15 @@
+# [0.7.0](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.6.0...electron-link-v0.7.0) (2023-04-17)
+
+
+### Bug Fixes
+
+* fix invalid exports field for single export packages ([9c9079b](https://github.com/TheUnderScorer/musubi/commit/9c9079b6a31b840307e67ba1ea21a9142b778470))
+
+
+### Features
+
+* **core:** export operation helper ([fc3a053](https://github.com/TheUnderScorer/musubi/commit/fc3a0531bcf212c1f675c23e309777dc6fb14f16))
+
 # [0.6.0](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.5.1...electron-link-v0.6.0) (2023-04-16)
 
 
