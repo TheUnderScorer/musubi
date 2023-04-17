@@ -1,4 +1,10 @@
-import { command, createMusubi, defineSchema, Musubi } from '@musubi/core';
+import {
+  command,
+  createMusubi,
+  defineSchema,
+  event,
+  Musubi,
+} from '@musubi/core';
 import { z } from 'zod';
 import {
   defineServerSocketMeta,
@@ -9,6 +15,7 @@ import { Server } from 'socket.io';
 import { TestClientsPool } from '../testUtils/testClientsPool';
 import { SocketServerContext } from './context';
 import { createSocketIoServerLink } from './server';
+import { wait } from '@nrwl/nx-cloud/lib/utilities/waiter';
 
 const testObjectSchema = z.object({
   socketId: z.string(),
@@ -18,7 +25,7 @@ const getChannelHandler = jest.fn();
 
 const schema = defineSchema({
   queries: {
-    toSocket: command()
+    queryToSocket: command()
       .withPayload(testObjectSchema)
       .withResult(testObjectSchema)
       .withMeta(
@@ -28,7 +35,15 @@ const schema = defineSchema({
       ),
   },
   commands: {},
-  events: {},
+  events: {
+    eventToSocket: event()
+      .withPayload(testObjectSchema)
+      .withMeta(
+        defineServerSocketMeta({
+          getChannel: getChannelHandler,
+        })
+      ),
+  },
 });
 
 let server: Server;
@@ -67,26 +82,43 @@ afterEach(() => {
 
 describe('resolveSocketChannel', () => {
   it('should use channel from schema meta if it was not passed', async () => {
-    const impl = (params: GetChannelParams<typeof schema.queries.toSocket>) => {
+    const impl = (
+      params: GetChannelParams<typeof schema.queries.queryToSocket>
+    ) => {
       return {
         socketId: params.payload.socketId,
       } as SocketServerChannel;
     };
     getChannelHandler.mockImplementation(impl);
 
+    const eventHandler = jest.fn();
+
     const firstClient = await clientsPool.createClient();
     const secondClient = await clientsPool.createClient();
 
     [firstClient, secondClient].forEach((client) => {
-      client.musubi.receiver.handleQuery('toSocket', () => ({
+      client.musubi.receiver.handleQuery('queryToSocket', () => ({
         socketId: client.client.id,
       }));
+
+      client.musubi.client.observeEvent('eventToSocket').subscribe(() => {
+        eventHandler(client.client.id);
+      });
     });
 
-    const result = await serverMusubi.client.query('toSocket', {
+    const result = await serverMusubi.client.query('queryToSocket', {
       socketId: firstClient.client.id,
     });
     expect(result.socketId).toBe(firstClient.client.id);
+
+    await serverMusubi.receiver.dispatchEvent('eventToSocket', {
+      socketId: firstClient.client.id,
+    });
+
+    await wait(500);
+
+    expect(eventHandler).toHaveBeenCalledTimes(1);
+    expect(eventHandler).toHaveBeenCalledWith(firstClient.client.id);
 
     expect(getChannelHandler).toHaveBeenCalledWith({
       payload: {
