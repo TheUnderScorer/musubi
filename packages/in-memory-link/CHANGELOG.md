@@ -1,3 +1,15 @@
+# [0.9.0](https://github.com/TheUnderScorer/musubi/compare/in-memory-link-v0.8.0...in-memory-link-v0.9.0) (2023-04-17)
+
+
+### Bug Fixes
+
+* fix invalid exports field for single export packages ([9c9079b](https://github.com/TheUnderScorer/musubi/commit/9c9079b6a31b840307e67ba1ea21a9142b778470))
+
+
+### Features
+
+* **core:** export operation helper ([fc3a053](https://github.com/TheUnderScorer/musubi/commit/fc3a0531bcf212c1f675c23e309777dc6fb14f16))
+
 # [0.8.0](https://github.com/TheUnderScorer/musubi/compare/in-memory-link-v0.7.1...in-memory-link-v0.8.0) (2023-04-16)
 
 
