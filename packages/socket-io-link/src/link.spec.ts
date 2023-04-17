@@ -1,6 +1,4 @@
 import { Server, Socket as ServerSocket } from 'socket.io';
-import { io, Socket } from 'socket.io-client';
-import { createSocketIoClientLink } from './client/client';
 import { createSocketIoServerLink } from './server/server';
 import {
   createMusubi,
@@ -19,6 +17,7 @@ import { z } from 'zod';
 import { wait } from '@nrwl/nx-cloud/lib/utilities/waiter';
 import { SocketServerChannel } from './server/channel';
 import invariant from 'tiny-invariant';
+import { TestClientsPool } from './testUtils/testClientsPool';
 
 const serverSchema = defineSchema({
   commands: {},
@@ -60,45 +59,15 @@ let serverMusubi: Musubi<
   SocketServerContext
 >;
 
-const clients: Set<Socket> = new Set();
-
-async function waitForConnect(client: Socket) {
-  while (!client.connected) {
-    await wait(100);
-  }
-}
-
-export async function createClient() {
-  const client = io(`http://localhost:${port}`, {
-    autoConnect: false,
-  });
-
-  client.on('connect', () => {
-    clients.add(client);
-  });
-
-  client.on('disconnect', () => {
-    clients.delete(client);
-  });
-
-  client.connect();
-
-  await waitForConnect(client);
-
-  const clientLink = createSocketIoClientLink(client);
-
-  return {
-    client,
-    musubi: createMusubi({
-      schema: socketTestSchema,
-      clientLinks: [clientLink.client],
-      receiverLinks: [clientLink.receiver],
-    }),
-  };
-}
+let clientsPool: TestClientsPool<typeof socketTestSchema>;
 
 describe('Socket io link', () => {
   beforeEach(() => {
+    clientsPool = new TestClientsPool(
+      socketTestSchema,
+      `http://localhost:${port}`
+    );
+
     server = new Server();
 
     server.listen(port);
@@ -117,13 +86,11 @@ describe('Socket io link', () => {
   afterEach(() => {
     server.close();
 
-    clients.forEach((client) => {
-      client.disconnect();
-    });
+    clientsPool.disconnectClients();
   });
 
   it('should pass sending socket in context', async () => {
-    const client = await createClient();
+    const client = await clientsPool.createClient();
 
     const handler = jest.fn();
 
@@ -141,7 +108,7 @@ describe('Socket io link', () => {
   });
 
   it('should send queries and commands from client to server', async () => {
-    const { musubi } = await createClient();
+    const { musubi } = await clientsPool.createClient();
 
     const user = await musubi.client.command('createUser', {
       name: 'test',
@@ -154,8 +121,8 @@ describe('Socket io link', () => {
     const handler = jest.fn().mockReturnValue('pong');
     const secondClientHandler = jest.fn();
 
-    const client = await createClient();
-    const secondClient = await createClient();
+    const client = await clientsPool.createClient();
+    const secondClient = await clientsPool.createClient();
 
     client.musubi.receiver.handleQuery('pingClientSocket', handler);
 
@@ -178,7 +145,7 @@ describe('Socket io link', () => {
   it('should send events from client to server', async () => {
     const handler = jest.fn();
 
-    const { musubi } = await createClient();
+    const { musubi } = await clientsPool.createClient();
 
     serverMusubi.client.observeEvent('testFromClient').subscribe(({ ctx }) => {
       expect(ctx.socket).toBeInstanceOf(ServerSocket);
@@ -198,11 +165,11 @@ describe('Socket io link', () => {
   it('should support sending messages to different channels', async () => {
     const clients = {
       a: {
-        client: await createClient(),
+        client: await clientsPool.createClient(),
         handler: jest.fn(),
       },
       b: {
-        client: await createClient(),
+        client: await clientsPool.createClient(),
         handler: jest.fn(),
       },
     };

@@ -1,4 +1,9 @@
-import { ClientLink, OperationRequest, OperationResponse } from '@musubi/core';
+import {
+  ClientLink,
+  OperationRequest,
+  OperationResponse,
+  OperationsSchema,
+} from '@musubi/core';
 import { Server } from 'socket.io';
 import { filter, map, Observable } from 'rxjs';
 import { createValidatedSocketHandler } from '../shared/handlers';
@@ -8,18 +13,25 @@ import { SocketServerContext } from './context';
 import { PacketObservable } from './packetObservable';
 
 export class SocketClientLink implements ClientLink<SocketServerContext> {
-  constructor(private server: Server, private packet$: PacketObservable) {}
+  constructor(
+    private server: Server,
+    private packet$: PacketObservable,
+    private schema: OperationsSchema
+  ) {}
 
   sendRequest<Payload, Result>(
     request: OperationRequest<Payload, SocketServerContext>
   ): Promise<
     OperationResponse<Result, OperationRequest<Payload, SocketServerContext>>
   > {
-    const channel = resolveSocketChannel(
-      this.server,
-      request.ctx.socketId,
-      request.channel
-    );
+    const channel = resolveSocketChannel({
+      schema: this.schema,
+      name: request.name,
+      channel: request.channel,
+      ctx: request.ctx,
+      server: this.server,
+      payload: request.payload,
+    });
 
     if (!('off' in channel)) {
       throw new Error('Broadcast is not supported for this type of request');

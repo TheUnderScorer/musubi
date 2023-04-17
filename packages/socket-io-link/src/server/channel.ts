@@ -1,6 +1,49 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { z } from 'zod';
 import { Server } from 'socket.io';
 import { toSocketSpecificChannel } from '../shared/channel';
+import {
+  ExtractPayload,
+  getOperationFromSchema,
+  OperationDefinition,
+  OperationName,
+  OperationsSchema,
+} from '@musubi/core';
+import { SocketServerContext } from './context';
+
+export interface GetChannelParams<
+  Definition extends OperationDefinition<any, any, any> = OperationDefinition,
+  Ctx extends SocketServerContext = SocketServerContext
+> {
+  payload: ExtractPayload<Definition>;
+  ctx: Ctx;
+  server: Server;
+}
+
+export interface ServerSocketOperationMeta<
+  Definition extends OperationDefinition = OperationDefinition,
+  Ctx extends SocketServerContext = SocketServerContext
+> {
+  /**
+   * Returns channel that will be used for this operation.
+   *
+   * When sending messages from client, it will determine to which channel the response will be sent.
+   * When sending message from server, it will determine to which channel the message will be sent.
+   *
+   * For events - it will determine to which channel the event will be sent.
+   */
+  getChannel?: (
+    params: GetChannelParams<Definition, Ctx>
+  ) => SocketServerChannel;
+}
+
+export const defineServerSocketMeta =
+  <Definition extends OperationDefinition<any, any, any, any, any>>(
+    meta: ServerSocketOperationMeta<Definition>
+  ) =>
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  (_: Definition) =>
+    meta;
 
 export type SocketServerChannel = z.infer<typeof socketServerChannelSchema>;
 export const socketServerChannelSchema = z.union([
@@ -16,18 +59,39 @@ export const socketServerChannelSchema = z.union([
   }),
 ]);
 
-export function resolveSocketChannel(
-  server: Server,
-  _socketId?: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  _channel?: any
-) {
-  const channel = {
-    ..._channel,
+interface ResolveSocketChannelParams {
+  schema: OperationsSchema;
+  name: OperationName;
+  payload: any;
+  ctx: SocketServerContext;
+  server: Server;
+  channel?: any;
+}
+
+export function resolveSocketChannel({
+  schema,
+  name,
+  payload,
+  ctx,
+  server,
+  ...params
+}: ResolveSocketChannelParams) {
+  const operation = getOperationFromSchema(schema, name);
+
+  let channel = {
+    ...params.channel,
   };
 
-  if (typeof channel === 'object' && !channel.socketId && _socketId) {
-    channel.socketId = _socketId;
+  if (!params.channel) {
+    channel = (operation.meta as ServerSocketOperationMeta)?.getChannel?.({
+      ctx,
+      payload,
+      server,
+    });
+  }
+
+  if (typeof channel === 'object' && !channel.socketId && ctx.socketId) {
+    channel.socketId = ctx.socketId;
   }
 
   const parsedChannel = socketServerChannelSchema.safeParse(channel);

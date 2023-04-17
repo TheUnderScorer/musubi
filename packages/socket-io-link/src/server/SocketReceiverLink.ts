@@ -3,6 +3,7 @@ import {
   OperationName,
   OperationRequest,
   OperationResponse,
+  OperationsSchema,
   ReceiverLink,
 } from '@musubi/core';
 import { Server } from 'socket.io';
@@ -13,7 +14,11 @@ import { PacketObservable } from './packetObservable';
 import { SocketServerContext } from './context';
 
 export class SocketReceiverLink implements ReceiverLink<SocketServerContext> {
-  constructor(private server: Server, private packet$: PacketObservable) {}
+  constructor(
+    private server: Server,
+    private packet$: PacketObservable,
+    private schema: OperationsSchema
+  ) {}
 
   receiveRequest(
     name: OperationName
@@ -60,11 +65,17 @@ export class SocketReceiverLink implements ReceiverLink<SocketServerContext> {
 
       response.ctx.socket.emit(SOCKET_MESSAGE_CHANNEL, response.toJSON());
     } else {
-      const channel = resolveSocketChannel(
-        this.server,
-        response.request?.ctx?.socketId,
-        response.channel
-      );
+      const channel = resolveSocketChannel({
+        channel: response.channel,
+        ctx: response.ctx,
+        payload:
+          response.operationKind === OperationKind.Event
+            ? response.result
+            : response.request?.payload,
+        schema: this.schema,
+        server: this.server,
+        name: response.operationName,
+      });
 
       channel.emit(SOCKET_MESSAGE_CHANNEL, response.toJSON());
     }

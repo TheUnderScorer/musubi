@@ -10,7 +10,7 @@ export function createSocketIoServerLink(
   const packet$ = createPacketObservable(server);
 
   return {
-    client: new SocketClientLink(server, packet$),
-    receiver: new SocketReceiverLink(server, packet$),
+    client: ({ schema }) => new SocketClientLink(server, packet$, schema),
+    receiver: ({ schema }) => new SocketReceiverLink(server, packet$, schema),
   };
 }
