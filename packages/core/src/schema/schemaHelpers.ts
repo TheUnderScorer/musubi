@@ -43,6 +43,18 @@ export function event() {
   return OperationDefinition.event();
 }
 
+export const operation = {
+  get query() {
+    return query();
+  },
+  get command() {
+    return command();
+  },
+  get event() {
+    return event();
+  },
+};
+
 type MergeProps<
   T extends Record<string, any>,
   U extends Record<string, any>
