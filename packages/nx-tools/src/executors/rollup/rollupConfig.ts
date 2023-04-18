@@ -79,7 +79,7 @@ export function buildRollupConfig(
           ...input,
           output: {
             ...commonOutput,
-            file: `${outputPath}/dist/${fileName}.cjs.js`,
+            file: `${outputPath}/${fileName}.cjs.js`,
             format: 'cjs',
           },
         },
@@ -87,7 +87,7 @@ export function buildRollupConfig(
           ...input,
           output: {
             ...commonOutput,
-            file: `${outputPath}/dist/${fileName}.esm.js`,
+            file: `${outputPath}/${fileName}.esm.js`,
             format: 'esm',
           },
         },
@@ -101,7 +101,7 @@ export function buildRollupConfig(
           ],
           output: {
             ...commonOutput,
-            file: `${outputPath}/dist/${fileName}.d.ts`,
+            file: `${outputPath}/${fileName}.d.ts`,
             format: 'es',
           },
         },

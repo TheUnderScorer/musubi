@@ -79,7 +79,7 @@ export async function updatePackageJson(
 
             return {
               ...acc,
-              [format]: `./${parsedPath.dir}/${parsedPath.base}`,
+              [format]: `.${parsedPath.dir}/${parsedPath.base}`,
             };
           }, {} as PackageExportsMetadata);
 
