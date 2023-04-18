@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Channel,
+  ExtractPayload,
+  ExtractResult,
   ExtractZod,
   MusubiClient,
   OperationDefinition,
@@ -34,19 +36,19 @@ export type ReactHookForOperation<Operation extends OperationDefinition<any>> =
 export interface UseQueryProperty<
   Operation extends OperationDefinition<OperationKind.Query>
 > {
-  useQuery: UseQueryFn<Operation['payload'], Operation['result']>;
+  useQuery: UseQueryFn<ExtractPayload<Operation>, ExtractResult<Operation>>;
 }
 
 export interface UseCommandProperty<
   Operation extends OperationDefinition<OperationKind.Command>
 > {
-  useCommand: UseCommandFn<Operation['payload'], Operation['result']>;
+  useCommand: UseCommandFn<ExtractPayload<Operation>, ExtractResult<Operation>>;
 }
 
 export interface UseEventProperty<
   Operation extends OperationDefinition<OperationKind.Event>
 > {
-  useEvent: UseEventFn<Operation['payload'], unknown>;
+  useEvent: UseEventFn<ExtractPayload<Operation>, unknown>;
 }
 
 export type ReactHookForOperationKind<
