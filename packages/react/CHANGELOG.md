@@ -1,3 +1,10 @@
+## [0.3.2](https://github.com/TheUnderScorer/musubi/compare/react-v0.3.1...react-v0.3.2) (2023-04-18)
+
+
+### Bug Fixes
+
+* use correct payload and result in hook ([308ed1c](https://github.com/TheUnderScorer/musubi/commit/308ed1c53307ce6367e9f7fb0e370cfeccb4340b))
+
 ## [0.3.1](https://github.com/TheUnderScorer/musubi/compare/react-v0.3.0...react-v0.3.1) (2023-04-18)
 
 
