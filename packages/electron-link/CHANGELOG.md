@@ -1,3 +1,10 @@
+## [0.7.1](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.7.0...electron-link-v0.7.1) (2023-04-18)
+
+
+### Bug Fixes
+
+* fix invalid exports path ([fd7b53b](https://github.com/TheUnderScorer/musubi/commit/fd7b53be9c5e9f02d295f8584001a3b637ea733e))
+
 # [0.7.0](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.6.0...electron-link-v0.7.0) (2023-04-17)
 
 
