@@ -1,3 +1,10 @@
+## [0.3.3](https://github.com/TheUnderScorer/musubi/compare/react-v0.3.2...react-v0.3.3) (2023-04-20)
+
+
+### Bug Fixes
+
+* **react:** use correct result type for useQuery parameters ([5dbed31](https://github.com/TheUnderScorer/musubi/commit/5dbed31635386465d1b26bb6e89b287167f51ac9))
+
 ## [0.3.2](https://github.com/TheUnderScorer/musubi/compare/react-v0.3.1...react-v0.3.2) (2023-04-18)
 
 
