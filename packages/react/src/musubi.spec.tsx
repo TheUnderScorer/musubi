@@ -44,6 +44,9 @@ describe('useCommand, useQuery', () => {
           variables: {
             id: commandResult.id,
           },
+          onSuccess: (data) => {
+            expect(data?.name).toBeTruthy();
+          },
         }),
       {
         wrapper: Wrapper,
