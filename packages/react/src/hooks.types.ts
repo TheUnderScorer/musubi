@@ -91,7 +91,7 @@ export type UseCommandReturn<Payload, Result> = UseMutationResult<
 };
 
 export interface UseQueryOptions<Payload, Result>
-  extends _UseQueryOptions<ExtractZod<Payload>, Error, ExtractZod<Result>> {
+  extends _UseQueryOptions<ExtractZod<Result>, Error, ExtractZod<Result>> {
   variables?: ExtractZod<Payload>;
   channel?: Channel;
   musubiContext?: MusubiProviderProps['Context'];

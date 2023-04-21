@@ -95,6 +95,26 @@ describe('useEvent', () => {
     expect(unsubscribeSpy).toHaveBeenCalledTimes(6);
   });
 
+  it('should support passing placeholder data to query', () => {
+    const placeholderData = {
+      id: '1234',
+      name: 'John',
+    } as const;
+
+    const hook = renderHook(
+      () =>
+        m.getUser.useQuery({
+          placeholderData,
+        }),
+      {
+        wrapper: Wrapper,
+      }
+    );
+
+    expect(hook.result.current.isPlaceholderData).toBe(true);
+    expect(hook.result.current.data).toEqual(placeholderData);
+  });
+
   it('should correctly receive events even when dependency changes', async () => {
     const handler = jest.fn();
 
