@@ -1,3 +1,11 @@
+## [0.3.4](https://github.com/TheUnderScorer/musubi/compare/react-v0.3.3...react-v0.3.4) (2023-04-21)
+
+
+### Bug Fixes
+
+* **react:** add useQueryKey export ([3f893a7](https://github.com/TheUnderScorer/musubi/commit/3f893a7ecb4a8e6bc9344dad78b0d5f6035b9ee9))
+* **react:** use correct types for query ([8561921](https://github.com/TheUnderScorer/musubi/commit/856192163feb07a17f2c4f57f8b234812982a544))
+
 ## [0.3.3](https://github.com/TheUnderScorer/musubi/compare/react-v0.3.2...react-v0.3.3) (2023-04-20)
 
 
