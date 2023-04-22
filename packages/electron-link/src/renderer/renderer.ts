@@ -17,3 +17,5 @@ export function createRendererLink() {
     client: new IpcRendererClientLink(link),
   };
 }
+
+export * from './context';

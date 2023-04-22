@@ -11,3 +11,4 @@ export function createMainLink() {
 }
 
 export { exposeElectronLink } from './expose';
+export * from './context';
