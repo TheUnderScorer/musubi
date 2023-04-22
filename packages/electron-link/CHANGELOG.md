@@ -1,3 +1,10 @@
+# [0.8.0](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.7.1...electron-link-v0.8.0) (2023-04-22)
+
+
+### Features
+
+* **electron:** export context ([53f1ec6](https://github.com/TheUnderScorer/musubi/commit/53f1ec61eb67e0f23739baf321653baba2964549))
+
 ## [0.7.1](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.7.0...electron-link-v0.7.1) (2023-04-18)
 
 
