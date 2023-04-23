@@ -1,3 +1,16 @@
+# [0.4.0](https://github.com/TheUnderScorer/musubi/compare/react-v0.3.4...react-v0.4.0) (2023-04-23)
+
+
+### Bug Fixes
+
+* **core:** set correct operation kind type ([852c004](https://github.com/TheUnderScorer/musubi/commit/852c0049bd5e70fedaa8ff8ae0650d276c5c9f28))
+* **react:** fix hook types for operation kind ([faea210](https://github.com/TheUnderScorer/musubi/commit/faea210fd2b02cea469745e2d0a7e7ceeb4e38bd))
+
+
+### Features
+
+* **core:** add MusubiZodError ([845fa40](https://github.com/TheUnderScorer/musubi/commit/845fa4007454fae3b1f45f2eb43bd126a1b06574))
+
 ## [0.3.4](https://github.com/TheUnderScorer/musubi/compare/react-v0.3.3...react-v0.3.4) (2023-04-21)
 
 
