@@ -19,7 +19,7 @@ const getChannelHandler = jest.fn();
 
 const schema = defineSchema({
   queries: {
-    queryToSocket: operation.command
+    queryToSocket: operation.query
       .withPayload(testObjectSchema)
       .withResult(testObjectSchema)
       .withMeta(
