@@ -2,13 +2,28 @@
 import { OperationKind, OperationName } from './schema.types';
 import { ZodSchema } from 'zod';
 
-export class OperationDefinition<
+export interface OperationDefinitionProperties<
   Kind extends OperationKind = OperationKind,
   Name extends OperationName = OperationName,
   Payload = undefined,
   Result = any,
   Meta extends Record<string, any> = Record<string, any>
 > {
+  kind: Kind;
+  payload: Payload;
+  result: Result;
+  name: Name;
+  meta: Meta;
+}
+
+export class OperationDefinition<
+  Kind extends OperationKind = OperationKind,
+  Name extends OperationName = OperationName,
+  Payload = undefined,
+  Result = any,
+  Meta extends Record<string, any> = Record<string, any>
+> implements OperationDefinitionProperties<Kind, Name, Payload, Result, Meta>
+{
   payload!: Payload;
 
   result!: Result;
@@ -17,7 +32,7 @@ export class OperationDefinition<
 
   meta!: Meta;
 
-  constructor(public kind: OperationKind) {}
+  constructor(public kind: Kind) {}
 
   static query() {
     return new OperationDefinition<OperationKind.Query>(OperationKind.Query);
@@ -156,7 +171,7 @@ export class OperationDefinition<
       payload: this.payload as Payload,
       result: this.result as Result,
       meta: this.meta as Meta,
-    } as OperationDefinition<Kind, Name, Payload, Result, Meta>;
+    } as OperationDefinitionProperties<Kind, Name, Payload, Result, Meta>;
   }
 
   clone() {
