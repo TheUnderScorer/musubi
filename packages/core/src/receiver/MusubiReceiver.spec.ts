@@ -6,9 +6,9 @@ import {
 import { createTestLink } from '../../../../tools/test/testLink';
 import { MusubiReceiver } from './MusubiReceiver';
 import { MusubiClient } from '../client/MusubiClient';
-import { ZodError } from 'zod';
 import { OperationBeforeMiddleware } from './OperationReceiverBuilder';
 import { OperationDefinition } from '../schema/OperationDefinition';
+import { MusubiZodError } from '../errors/MusubiZodError';
 
 const schema = mergeSchemas(testUserSchema, testPostSchema);
 
@@ -42,7 +42,7 @@ describe('MusubiReceiver', () => {
 
     await expect(
       client.command('createUser', { name: 'test' })
-    ).rejects.toThrow(ZodError);
+    ).rejects.toThrow(MusubiZodError);
   });
 
   it('should receive channel from client', async () => {

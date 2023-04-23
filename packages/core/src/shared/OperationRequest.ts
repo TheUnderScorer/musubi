@@ -39,6 +39,22 @@ export class OperationRequest<Payload = unknown, Ctx = unknown>
     this.timestamp = Date.now();
   }
 
+  static fromUnsafeObject<Payload, Ctx>(unsafeData: unknown) {
+    const data = OperationRequest.schema.parse(unsafeData);
+
+    const request = new OperationRequest<Payload, Ctx>(
+      data.name,
+      data.kind,
+      data.payload as Payload,
+      data.channel as Channel,
+      data.ctx as Ctx
+    );
+    request.id = data.id;
+    request.timestamp = data.timestamp;
+
+    return request;
+  }
+
   static fromObject<Payload, Ctx>(data: OperationRequestObject) {
     const request = new OperationRequest<Payload, Ctx>(
       data.name,

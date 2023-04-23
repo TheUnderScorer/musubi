@@ -13,3 +13,6 @@ export * from './musubi';
 export * from './schema/extendSchema';
 export * from './shared/link';
 export * from './shared/link.types';
+export * from './zod/validateZod';
+export * from './errors/MusubiError';
+export * from './errors/MusubiZodError';

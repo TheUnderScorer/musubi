@@ -50,6 +50,26 @@ export class OperationResponse<
     }
   }
 
+  static fromUnsafeObject<
+    Result,
+    Request extends OperationRequest = OperationRequest,
+    Ctx = Request['ctx']
+  >(unsafeData: unknown, ctx?: Ctx) {
+    const data = OperationResponse.schema.parse(unsafeData);
+
+    return new OperationResponse<Result, Request, Ctx>(
+      data.operationName,
+      data.operationKind,
+      data.request
+        ? (OperationRequest.fromObject(data.request) as Request)
+        : null,
+      data.result as Result,
+      data.error as Error,
+      undefined,
+      ctx ?? (data.request?.ctx as Ctx)
+    );
+  }
+
   static fromObject<
     Result,
     Request extends OperationRequest = OperationRequest,

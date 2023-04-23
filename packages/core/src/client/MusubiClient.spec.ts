@@ -7,7 +7,7 @@ import {
   testUserSchema,
 } from '../../../../tools/test/testSchemas';
 import { createTestLink } from '../../../../tools/test/testLink';
-import { ZodError } from 'zod';
+import { MusubiZodError } from '../errors/MusubiZodError';
 
 const schema = mergeSchemas(testUserSchema, testPostSchema);
 
@@ -37,7 +37,7 @@ describe('MusubiClient', () => {
     await expect(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       client.command('createUser', { invalid: 'test' } as any)
-    ).rejects.toThrow(ZodError);
+    ).rejects.toThrow(MusubiZodError);
   });
 
   it('should send channel in request', async () => {

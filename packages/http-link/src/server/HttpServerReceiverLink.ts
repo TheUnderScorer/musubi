@@ -32,8 +32,8 @@ export class HttpServerReceiverLink<
       )
       .pipe(
         map((httpRequest) => {
-          const request = OperationRequest.fromObject(
-            OperationRequest.schema.parse(httpRequest.payload)
+          const request = OperationRequest.fromUnsafeObject(
+            httpRequest.payload
           );
 
           return request.addCtx<ServerContext>({

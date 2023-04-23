@@ -8,6 +8,7 @@ import {
   OperationKind,
 } from '../schema/schema.types';
 import { MusubiReceiver } from './MusubiReceiver';
+import { MusubiError } from '../errors/MusubiError';
 
 export interface OperationBeforeMiddlewareParams<
   Operation extends OperationDefinition,
@@ -146,8 +147,9 @@ export class OperationReceiverBuilder<
    * */
   toHandler(): OperationHandler<Operation, Ctx> {
     if (!this.rootHandler) {
-      throw new Error(
-        'Root handler is missing. Perhaps you forgot to call .withHandler() ?'
+      throw new MusubiError(
+        'Root handler is missing. Perhaps you forgot to call .withHandler() ?',
+        this.operation
       );
     }
 
@@ -238,7 +240,10 @@ export class OperationReceiverBuilder<
         return this.receiver.handleQuery(this.operation.name, handler);
 
       default:
-        throw new Error(`Unknown operation kind: ${this.operation.kind}`);
+        throw new MusubiError(
+          `Unknown operation kind: ${this.operation.kind}`,
+          this.operation
+        );
     }
   }
 }

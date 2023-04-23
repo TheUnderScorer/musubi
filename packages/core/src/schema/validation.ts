@@ -1,5 +1,6 @@
 import { OperationKind, OperationName, OperationsSchema } from './schema.types';
 import { ZodSchema } from 'zod';
+import { validateZod } from '../zod/validateZod';
 
 export function validatePayload<S extends OperationsSchema, P>(
   schema: S,
@@ -12,7 +13,7 @@ export function validatePayload<S extends OperationsSchema, P>(
   const definition = schema[operationKey][name];
 
   if (definition.payload instanceof ZodSchema) {
-    return definition.payload.parse(payload) as P;
+    return validateZod(definition.payload, payload, definition);
   }
 
   return payload;
@@ -29,7 +30,7 @@ export function validateResult<S extends OperationsSchema, R>(
   const definition = schema[operationKey][name];
 
   if (definition.result instanceof ZodSchema) {
-    return definition.result.parse(result) as R;
+    return validateZod(definition.result, result, definition);
   }
 
   return result;
@@ -47,6 +48,6 @@ export function resolveSchemaKey(kind: OperationKind): keyof OperationsSchema {
       return 'events';
 
     default:
-      throw new Error(`Unknown operation kind: ${kind}`);
+      throw new TypeError(`Unknown operation kind: ${kind}`);
   }
 }
