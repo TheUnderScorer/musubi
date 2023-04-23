@@ -1,3 +1,15 @@
+# [0.2.0](https://github.com/TheUnderScorer/musubi/compare/socket-io-link-v0.1.1...socket-io-link-v0.2.0) (2023-04-23)
+
+
+### Bug Fixes
+
+* **core:** set correct operation kind type ([852c004](https://github.com/TheUnderScorer/musubi/commit/852c0049bd5e70fedaa8ff8ae0650d276c5c9f28))
+
+
+### Features
+
+* **core:** add MusubiZodError ([845fa40](https://github.com/TheUnderScorer/musubi/commit/845fa4007454fae3b1f45f2eb43bd126a1b06574))
+
 ## [0.1.1](https://github.com/TheUnderScorer/musubi/compare/socket-io-link-v0.1.0...socket-io-link-v0.1.1) (2023-04-18)
 
 
