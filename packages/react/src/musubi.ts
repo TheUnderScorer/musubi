@@ -31,9 +31,7 @@ export function createProxyForSchema<Schema extends OperationsSchema>(
         const key = p.toString() as OperationName;
 
         return Object.values(schema).reduce((acc, operations) => {
-          const definition = operations[key] as
-            | OperationDefinition<OperationKind>
-            | undefined;
+          const definition = operations[key] as OperationDefinition | undefined;
 
           if (definition) {
             const hook = buildHookForOperation(key, definition);
@@ -44,7 +42,7 @@ export function createProxyForSchema<Schema extends OperationsSchema>(
           }
 
           return acc;
-        }, {} as ReactHookForOperation<OperationDefinition<OperationKind>>);
+        }, {} as ReactHookForOperation<OperationDefinition>);
       },
     }
   ) as ReactOperationsSchema<Schema>;
@@ -52,24 +50,33 @@ export function createProxyForSchema<Schema extends OperationsSchema>(
 
 function buildHookForOperation(
   key: OperationName,
-  definition: OperationDefinition<OperationKind>
+  definition: OperationDefinition
 ) {
   switch (definition.kind) {
     case OperationKind.Query:
       return {
         useQuery: (options) => useQuery(key, options),
-      } as UseQueryProperty<OperationDefinition<OperationKind.Query>>;
+      } as UseQueryProperty<
+        OperationKind.Query,
+        OperationDefinition<OperationKind.Query>
+      >;
 
     case OperationKind.Command:
       return {
         useCommand: (options) => useCommand(key, options),
-      } as UseCommandProperty<OperationDefinition<OperationKind.Command>>;
+      } as UseCommandProperty<
+        OperationKind.Command,
+        OperationDefinition<OperationKind.Command>
+      >;
 
     case OperationKind.Event:
       return {
         useEvent: (handler, deps, channel) =>
           useEvent(key, handler, deps, channel),
-      } as UseEventProperty<OperationDefinition<OperationKind.Event>>;
+      } as UseEventProperty<
+        OperationKind.Event,
+        OperationDefinition<OperationKind.Event>
+      >;
 
     default:
       return null;

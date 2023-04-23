@@ -34,19 +34,22 @@ export type ReactHookForOperation<Operation extends OperationDefinition<any>> =
     : never;
 
 export interface UseQueryProperty<
-  Operation extends OperationDefinition<OperationKind.Query>
+  Kind extends OperationKind.Query,
+  Operation extends OperationDefinition<Kind>
 > {
   useQuery: UseQueryFn<ExtractPayload<Operation>, ExtractResult<Operation>>;
 }
 
 export interface UseCommandProperty<
-  Operation extends OperationDefinition<OperationKind.Command>
+  Kind extends OperationKind.Command,
+  Operation extends OperationDefinition<Kind>
 > {
   useCommand: UseCommandFn<ExtractPayload<Operation>, ExtractResult<Operation>>;
 }
 
 export interface UseEventProperty<
-  Operation extends OperationDefinition<OperationKind.Event>
+  Kind extends OperationKind.Event,
+  Operation extends OperationDefinition<Kind>
 > {
   useEvent: UseEventFn<ExtractPayload<Operation>, unknown>;
 }
@@ -55,11 +58,11 @@ export type ReactHookForOperationKind<
   Kind extends OperationKind,
   Operation extends OperationDefinition<Kind>
 > = Kind extends OperationKind.Query
-  ? UseQueryProperty<Operation>
+  ? UseQueryProperty<Kind, Operation>
   : Kind extends OperationKind.Command
-  ? UseCommandProperty<Operation>
+  ? UseCommandProperty<Kind, Operation>
   : Kind extends OperationKind.Event
-  ? UseEventProperty<Operation>
+  ? UseEventProperty<Kind, Operation>
   : never;
 
 export interface OnCommandSuccessParams<
