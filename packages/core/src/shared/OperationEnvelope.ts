@@ -33,6 +33,10 @@ export abstract class OperationEnvelope<Ctx> {
     }, {} as EnvelopeContext<V>);
   }
 
+  isCtxSerializable(key: keyof Ctx) {
+    return this.internalCtx?.[key]?.isSerializable ?? true;
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   addCtx<Values extends object>(values: EnvelopeContext<Values>) {
     Object.assign(this, {

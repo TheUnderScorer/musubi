@@ -115,7 +115,23 @@ export class MusubiReceiver<S extends OperationsSchema, Ctx = any> {
             name,
             request.payload as Payload
           );
-          const result = await handler(payload, request.ctx as Ctx);
+          const ctx = {
+            ...(request.ctx as Ctx),
+          };
+          const result = await handler(payload, ctx);
+
+          if (typeof ctx === 'object') {
+            Object.keys(ctx as object).forEach((key) => {
+              request.addCtx({
+                [key]: {
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  value: (ctx as any)[key],
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  isSerializable: request.isCtxSerializable(key as any),
+                },
+              });
+            });
+          }
 
           response = OperationResponse.fromResult<
             Result,
