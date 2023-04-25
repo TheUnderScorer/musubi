@@ -41,6 +41,10 @@ export class HttpServerReceiverLink<
               isSerializable: false,
               value: httpRequest,
             },
+            responseStatusCode: {
+              value: 200,
+              isSerializable: true,
+            },
           });
         })
       );
@@ -55,8 +59,8 @@ export class HttpServerReceiverLink<
   ) {
     const httpRequest = response.ctx.request ?? response.request?.ctx.request;
 
-    const status =
-      response.ctx?.responseStatusCode ?? response.error ? 500 : 200;
+    const responseStatusCode = response.ctx?.responseStatusCode;
+    const status = responseStatusCode ?? (response.error ? 500 : 200);
 
     httpRequest?.reply(response.toJSON(), status);
   }

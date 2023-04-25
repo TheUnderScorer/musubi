@@ -1,5 +1,11 @@
 import { createHttpClientLink } from '../../client/client';
-import { MusubiClient, MusubiReceiver } from '@musubi/core';
+import {
+  defineSchema,
+  mergeSchemas,
+  MusubiClient,
+  MusubiReceiver,
+  operation,
+} from '@musubi/core';
 import {
   setupTestUserHandlers,
   testSchema,
@@ -12,6 +18,17 @@ import { MusubiHeaders } from '../../shared/http';
 
 const port = 8080;
 
+const expressTestSchema = mergeSchemas(
+  testSchema,
+  defineSchema({
+    events: {},
+    queries: {},
+    commands: {
+      testStatusCode: operation.command,
+    },
+  })
+);
+
 const clientLink = createHttpClientLink({
   url: `http://localhost:${port}`,
   headers: {
@@ -19,10 +36,10 @@ const clientLink = createHttpClientLink({
   },
   fetch: globalThis.fetch,
 });
-const client = new MusubiClient(testSchema, [clientLink]);
+const client = new MusubiClient(expressTestSchema, [clientLink]);
 
 let app: Application;
-let receiver: MusubiReceiver<typeof testSchema, ServerContext>;
+let receiver: MusubiReceiver<typeof expressTestSchema, ServerContext>;
 let server: http.Server;
 
 let requests: {
@@ -31,6 +48,9 @@ let requests: {
   method: string;
   searchParams?: URLSearchParams;
   headers: Request['headers'];
+  response: {
+    status: () => number;
+  };
 }[];
 
 describe('Express adapter', () => {
@@ -44,20 +64,25 @@ describe('Express adapter', () => {
     app.use(express.json());
 
     app.use((req, res, next) => {
+      next();
+
       requests.push({
         url: req.url,
         searchParams: new URLSearchParams(req.url.split('?')[1]),
         body: req.body,
         method: req.method,
         headers: req.headers,
+        response: {
+          status: () => res.statusCode,
+        },
       });
-
-      next();
     });
 
     return new Promise<void>((resolve) => {
       server = app.listen(port, () => {
-        receiver = new MusubiReceiver(testSchema, [createExpressHttpLink(app)]);
+        receiver = new MusubiReceiver(expressTestSchema, [
+          createExpressHttpLink(app),
+        ]);
 
         setupTestUserHandlers(receiver);
 
@@ -107,5 +132,18 @@ describe('Express adapter', () => {
     expect(secondRequest.headers[MusubiHeaders.X_MUSUBI_TIMESTAMP]).toEqual(
       now.toString()
     );
+  });
+
+  it('should support setting status code via ctx', async () => {
+    receiver.handleCommand('testStatusCode', (_, ctx) => {
+      ctx.responseStatusCode = 404;
+    });
+
+    await client.command('testStatusCode');
+
+    const [request] = requests;
+    expect(request.url).toEqual('/api/musubi/testStatusCode');
+    expect(request.method).toEqual('POST');
+    expect(request.response.status()).toEqual(404);
   });
 });
