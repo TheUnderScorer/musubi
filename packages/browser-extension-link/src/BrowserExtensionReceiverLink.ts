@@ -31,8 +31,6 @@ export class BrowserExtensionReceiverLink
       OperationRequest<Payload, BrowserExtensionContext>
     >
   ) {
-    console.log('sendResponse', response);
-
     if (response.operationKind === OperationKind.Event) {
       if (response.channel) {
         await sendMessage(
@@ -68,13 +66,6 @@ export class BrowserExtensionReceiverLink
         const channel = browserExtensionChannelSchema.safeParse(
           request.channel
         );
-
-        console.log('receive request', {
-          channel,
-          currentChannel: this.currentChannel,
-          request,
-          name,
-        });
 
         return (
           request.name === name &&

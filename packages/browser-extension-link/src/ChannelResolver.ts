@@ -25,16 +25,12 @@ export class ChannelResolver<S extends OperationsSchema> {
 
     const currentTab = await getCurrentTab();
 
-    const result = getDefaultChannel(
+    return getDefaultChannel(
       this.schema,
       resolveSchemaKey(kind),
       name,
       this.currentChannel,
       currentTab
     );
-
-    console.log('ChannelResolver.resolve', { result });
-
-    return result;
   }
 }

@@ -46,11 +46,6 @@ export function observeGlobalResponses<Ctx = unknown>() {
   const listener = (message: any) => {
     const parsed = OperationResponse.schema.safeParse(message);
 
-    console.log('parsed maybe response', {
-      message,
-      parsed,
-    });
-
     if (parsed.success) {
       newResponse.next(
         OperationResponse.fromObject<unknown, OperationRequest<unknown, Ctx>>(

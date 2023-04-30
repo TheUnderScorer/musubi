@@ -79,11 +79,6 @@ export class BrowserExtensionClientLink<
       const subscription = observeGlobalResponses()
         .pipe(
           filter((response) => {
-            console.log('waiting for response', {
-              response,
-              request,
-            });
-
             return response.request?.id === request.id;
           })
         )
