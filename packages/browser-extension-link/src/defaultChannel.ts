@@ -34,7 +34,10 @@ export function getDefaultChannel<
   kind: Kind,
   operation: keyof S[Kind],
   currentChannel: BrowserExtensionChannel,
-  currentTab?: Tabs.Tab
+  currentTab?: Tabs.Tab,
+  fallback: BrowserExtensionChannel = {
+    type: 'background',
+  }
 ): BrowserExtensionChannel {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const meta = (schema?.[kind]?.[operation] as OperationDefinition<any>)?.meta;
@@ -47,5 +50,5 @@ export function getDefaultChannel<
       : resolver;
   }
 
-  return currentChannel;
+  return fallback;
 }
