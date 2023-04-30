@@ -1,3 +1,10 @@
+# [0.3.0](https://github.com/TheUnderScorer/musubi/compare/socket-io-link-v0.2.0...socket-io-link-v0.3.0) (2023-04-30)
+
+
+### Features
+
+* **core:** support modifying context by handlers ([8141576](https://github.com/TheUnderScorer/musubi/commit/8141576997da59d6cd519f901a921c133607931e))
+
 # [0.2.0](https://github.com/TheUnderScorer/musubi/compare/socket-io-link-v0.1.1...socket-io-link-v0.2.0) (2023-04-23)
 
 
