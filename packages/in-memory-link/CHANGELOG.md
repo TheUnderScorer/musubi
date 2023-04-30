@@ -1,3 +1,10 @@
+# [0.11.0](https://github.com/TheUnderScorer/musubi/compare/in-memory-link-v0.10.0...in-memory-link-v0.11.0) (2023-04-30)
+
+
+### Features
+
+* **core:** support modifying context by handlers ([8141576](https://github.com/TheUnderScorer/musubi/commit/8141576997da59d6cd519f901a921c133607931e))
+
 # [0.10.0](https://github.com/TheUnderScorer/musubi/compare/in-memory-link-v0.9.1...in-memory-link-v0.10.0) (2023-04-23)
 
 
