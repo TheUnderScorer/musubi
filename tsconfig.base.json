@@ -16,6 +16,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@musubi/broadcast-channel-link": [
+        "packages/broadcast-channel-link/src/index.ts"
+      ],
       "@musubi/browser-extension-link": [
         "packages/browser-extension-link/src/index.ts"
       ],

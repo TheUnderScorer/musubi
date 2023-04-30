@@ -1,0 +1,48 @@
+{
+  "name": "broadcast-channel-link",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/broadcast-channel-link/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@musubi/nx-tools:rollup",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/broadcast-channel-link",
+        "inputFiles": [
+          "index.ts"
+        ]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/broadcast-channel-link/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "packages/broadcast-channel-link/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "semantic-release": {
+      "executor": "@theunderscorer/nx-semantic-release:semantic-release",
+      "options": {
+        "buildTarget": "broadcast-channel-link:build",
+        "tagFormat": "broadcast-channel-link-v${VERSION}",
+        "outputPath": "dist/packages/broadcast-channel-link"
+      }
+    }
+  },
+  "tags": []
+}
