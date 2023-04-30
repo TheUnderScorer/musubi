@@ -1,3 +1,11 @@
+# [0.4.0](https://github.com/TheUnderScorer/musubi/compare/http-link-v0.3.0...http-link-v0.4.0) (2023-04-30)
+
+
+### Features
+
+* **core:** support modifying context by handlers ([8141576](https://github.com/TheUnderScorer/musubi/commit/8141576997da59d6cd519f901a921c133607931e))
+* **http-link:** use correct status code from context ([ea263c3](https://github.com/TheUnderScorer/musubi/commit/ea263c3ed1ff742a0c4fe80e297b2dbf3eaf825e))
+
 # [0.3.0](https://github.com/TheUnderScorer/musubi/compare/http-link-v0.2.1...http-link-v0.3.0) (2023-04-23)
 
 
