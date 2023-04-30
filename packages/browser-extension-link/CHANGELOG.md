@@ -1,3 +1,11 @@
+# [0.9.0](https://github.com/TheUnderScorer/musubi/compare/browser-extension-link-v0.8.0...browser-extension-link-v0.9.0) (2023-04-30)
+
+
+### Features
+
+* **browser-extension-link:** use background channel as default ([a2ae469](https://github.com/TheUnderScorer/musubi/commit/a2ae469df90d75a0715afc5fd4ee536f6600c012))
+* **core:** support modifying context by handlers ([8141576](https://github.com/TheUnderScorer/musubi/commit/8141576997da59d6cd519f901a921c133607931e))
+
 # [0.8.0](https://github.com/TheUnderScorer/musubi/compare/browser-extension-link-v0.7.1...browser-extension-link-v0.8.0) (2023-04-23)
 
 
