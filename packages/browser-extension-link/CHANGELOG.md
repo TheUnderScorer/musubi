@@ -1,3 +1,10 @@
+## [0.9.2](https://github.com/TheUnderScorer/musubi/compare/browser-extension-link-v0.9.1...browser-extension-link-v0.9.2) (2023-05-01)
+
+
+### Bug Fixes
+
+* **browser-extension-link:** correctly parse channel if it was sent from tab ([8522c37](https://github.com/TheUnderScorer/musubi/commit/8522c37837d9e57464cdc6bbc326e36853f533a5))
+
 ## [0.9.1](https://github.com/TheUnderScorer/musubi/compare/browser-extension-link-v0.9.0...browser-extension-link-v0.9.1) (2023-05-01)
 
 
