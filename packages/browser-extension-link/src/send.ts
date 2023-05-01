@@ -46,21 +46,31 @@ export async function sendMessage<T>(
 }
 
 export async function sendMessageEverywhere<T>(message: T) {
-  await browser.runtime.sendMessage(message);
+  await browser.runtime.sendMessage(message).catch((error) => {
+    console.error('browser.runtime.sendMessage failed', {
+      error,
+      message,
+    });
+  });
 
   const tabs = await browser.tabs?.query({}).catch((error) => {
-    console.error(error);
+    console.error('failed to query tabs', {
+      error,
+      message,
+    });
 
     return null;
   });
 
   if (tabs?.length) {
     await Promise.all(
-      tabs.map((tab) =>
-        browser.tabs.sendMessage(tab.id as number, message).catch((error) => {
-          console.error(error);
-        })
-      )
+      tabs.map(async (tab) => {
+        try {
+          await browser.tabs.sendMessage(tab.id as number, message);
+        } catch {
+          // No logs here, because it spams console
+        }
+      })
     );
   }
 }
