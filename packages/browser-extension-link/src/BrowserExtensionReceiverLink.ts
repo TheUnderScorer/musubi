@@ -25,6 +25,24 @@ export class BrowserExtensionReceiverLink
     this.newRequest = observeGlobalRequests<BrowserExtensionContext>();
   }
 
+  private static parseResponseChannel(channel: unknown, senderTabId?: number) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let _channel: any = channel;
+
+    if (
+      typeof _channel === 'object' &&
+      (_channel as BrowserExtensionChannel).type === 'popup' &&
+      senderTabId
+    ) {
+      _channel = {
+        type: 'tab',
+        tabId: senderTabId,
+      } as BrowserExtensionChannel;
+    }
+
+    return browserExtensionChannelSchema.parse(_channel);
+  }
+
   async sendResponse<Payload, Result>(
     response: OperationResponse<
       Result,
@@ -45,11 +63,13 @@ export class BrowserExtensionReceiverLink
       return;
     }
 
-    if (response.request?.ctx?.sentFromChannel) {
+    const ctx = response.request?.ctx;
+    if (ctx?.sentFromChannel) {
       await sendMessage(
         response,
-        browserExtensionChannelSchema.parse(
-          response.request.ctx.sentFromChannel
+        BrowserExtensionReceiverLink.parseResponseChannel(
+          ctx.sentFromChannel,
+          ctx.senderTabId
         ),
         this.currentChannel
       );
