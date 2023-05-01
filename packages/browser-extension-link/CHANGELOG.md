@@ -1,3 +1,10 @@
+## [0.9.1](https://github.com/TheUnderScorer/musubi/compare/browser-extension-link-v0.9.0...browser-extension-link-v0.9.1) (2023-05-01)
+
+
+### Bug Fixes
+
+* **browser-extension-link:** remove debug logs ([5bbb06e](https://github.com/TheUnderScorer/musubi/commit/5bbb06e41ef44f5ffd88521e9c015ffac67d1b5d))
+
 # [0.9.0](https://github.com/TheUnderScorer/musubi/compare/browser-extension-link-v0.8.0...browser-extension-link-v0.9.0) (2023-04-30)
 
 
