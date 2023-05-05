@@ -1,3 +1,10 @@
+# [0.5.0](https://github.com/TheUnderScorer/musubi/compare/http-link-v0.4.0...http-link-v0.5.0) (2023-05-05)
+
+
+### Features
+
+* **http-link:** add WIP aws lambda adapter ([5e08e24](https://github.com/TheUnderScorer/musubi/commit/5e08e242f7a04f1ba7ac2adcec9120789f0c0968))
+
 # [0.4.0](https://github.com/TheUnderScorer/musubi/compare/http-link-v0.3.0...http-link-v0.4.0) (2023-04-30)
 
 
