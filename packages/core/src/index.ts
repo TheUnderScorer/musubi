@@ -8,7 +8,7 @@ export * from './schema/OperationDefinition';
 export * from './shared/OperationRequest';
 export * from './shared/OperationResponse';
 export * from './shared/communication.types';
-export { resolveSchemaKey } from './schema/validation';
+export * from './schema/validation';
 export * from './musubi';
 export * from './schema/extendSchema';
 export * from './shared/link';
