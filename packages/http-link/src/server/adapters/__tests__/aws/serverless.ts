@@ -3,7 +3,7 @@ import * as path from 'path';
 
 let serverlessProcess: cp.ChildProcess | undefined;
 
-export async function startServerless() {
+export async function startServerless(port = 3001) {
   const nodeModulesPath = path.resolve(
     __dirname,
     '..',
@@ -20,7 +20,14 @@ export async function startServerless() {
 
   serverlessProcess = cp.spawn(
     serverlessPath,
-    ['offline', 'start', '--stage', 'development', '--httpPort', '3001'],
+    [
+      'offline',
+      'start',
+      '--stage',
+      'development',
+      '--httpPort',
+      port.toString(),
+    ],
     {
       cwd: __dirname,
     }

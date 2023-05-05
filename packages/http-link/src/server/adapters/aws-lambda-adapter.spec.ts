@@ -3,20 +3,27 @@ import { createHttpClientLink } from '../../client/client';
 import { pathPrefix } from './__tests__/aws/const';
 import { MusubiClient } from '@musubi/core';
 import { testSchema } from '../../../../../tools/test/testMusubi';
+import { findFreePorts } from 'find-free-ports';
 
 describe('AWS Lambda adapter', () => {
-  const link = createHttpClientLink({
-    url: 'http://localhost:3001',
-    pathPrefix: pathPrefix.client,
+  let link: ReturnType<typeof createHttpClientLink>;
+
+  let client: MusubiClient<typeof testSchema>;
+
+  beforeEach(async () => {
+    const [port] = await findFreePorts(1);
+
+    await startServerless(port);
+
+    link = createHttpClientLink({
+      url: `http://localhost:${port}`,
+      pathPrefix: pathPrefix.client,
+    });
+
+    client = new MusubiClient(testSchema, [link]);
   });
 
-  const client = new MusubiClient(testSchema, [link]);
-
-  beforeAll(async () => {
-    await startServerless();
-  });
-
-  afterAll(() => {
+  afterEach(() => {
     stopServerless();
   });
 
