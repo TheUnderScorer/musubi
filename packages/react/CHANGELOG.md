@@ -1,3 +1,10 @@
+## [0.5.1](https://github.com/TheUnderScorer/musubi/compare/react-v0.5.0...react-v0.5.1) (2023-05-05)
+
+
+### Bug Fixes
+
+* **core:** add missing "wait" export ([2895ebb](https://github.com/TheUnderScorer/musubi/commit/2895ebb381d49dfc02277f4ee5ecd100aabe660a))
+
 # [0.5.0](https://github.com/TheUnderScorer/musubi/compare/react-v0.4.0...react-v0.5.0) (2023-04-30)
 
 
