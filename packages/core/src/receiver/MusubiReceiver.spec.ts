@@ -297,7 +297,6 @@ describe('MusubiReceiver', () => {
           expect(ctx.fromLink).toBe(true);
           expect(ctx.fromMiddleware).toBe(true);
           expect(ctx.fromSecondMiddleware).toBe(true);
-
           return {
             id: '1',
             name: payload.name,

@@ -75,16 +75,24 @@ export class MusubiReceiver<S extends OperationsSchema, Ctx = any> {
     await this.rootLink.sendResponse(response);
   }
 
-  handleQueryBuilder<Key extends keyof S['queries'], OpCtx>(name: Key) {
-    const definition = this.schema.queries[name as OperationName];
+  handleQueryBuilder<
+    Key extends keyof S['queries'],
+    Op extends S['queries'][Key],
+    OpCtx
+  >(name: Key): OperationReceiverBuilder<Op, Ctx & OpCtx> {
+    const definition = this.schema.queries[name as OperationName] as Op;
 
     return this.createBuilder<typeof definition, OpCtx>(definition);
   }
 
-  handleCommandBuilder<Key extends keyof S['commands'], OpCtx>(name: Key) {
-    const definition = this.schema.commands[name as OperationName];
+  handleCommandBuilder<
+    Key extends keyof S['commands'],
+    Op extends S['commands'][Key],
+    OpCtx
+  >(name: Key): OperationReceiverBuilder<Op, Ctx & OpCtx> {
+    const definition = this.schema.commands[name as OperationName] as Op;
 
-    return this.createBuilder<typeof definition, OpCtx>(definition);
+    return this.createBuilder<Op, OpCtx>(definition);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
