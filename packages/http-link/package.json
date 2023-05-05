@@ -1,6 +1,6 @@
 {
   "name": "@musubi/http-link",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "sideEffects": false,
   "private": false,
   "license": "MIT",
