@@ -1,3 +1,10 @@
+## [0.5.3](https://github.com/TheUnderScorer/musubi/compare/http-link-v0.5.2...http-link-v0.5.3) (2023-05-05)
+
+
+### Bug Fixes
+
+* **http-link:** add missing exports ([39d0437](https://github.com/TheUnderScorer/musubi/commit/39d0437517fef9ed32628e680b03a0fc12f5058a))
+
 ## [0.5.2](https://github.com/TheUnderScorer/musubi/compare/http-link-v0.5.1...http-link-v0.5.2) (2023-05-05)
 
 
