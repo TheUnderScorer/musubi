@@ -26,3 +26,6 @@ export function createHttpClientLink(
 ): LinkParam<HttpClientLink> {
   return ({ schema }) => new HttpClientLink(options, schema);
 }
+
+export * from './client.types';
+export * from './HttpClientLink';
