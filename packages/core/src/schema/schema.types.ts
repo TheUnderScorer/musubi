@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { ZodSchema } from 'zod';
+import { z, ZodSchema } from 'zod';
 import { OperationDefinition } from './OperationDefinition';
 
 export type QueryDefinition<
@@ -39,7 +39,7 @@ export type ExtractResult<P extends OperationDefinition<any, any>> = ExtractZod<
   P['result']
 >;
 
-export type ExtractZod<T> = T extends ZodSchema<infer U> ? U : T;
+export type ExtractZod<T> = T extends ZodSchema ? z.infer<T> : T;
 
 export type OperationName = string;
 
