@@ -1,3 +1,10 @@
+## [0.9.4](https://github.com/TheUnderScorer/musubi/compare/browser-extension-link-v0.9.3...browser-extension-link-v0.9.4) (2023-05-05)
+
+
+### Bug Fixes
+
+* **core:** add missing "wait" export ([2895ebb](https://github.com/TheUnderScorer/musubi/commit/2895ebb381d49dfc02277f4ee5ecd100aabe660a))
+
 ## [0.9.3](https://github.com/TheUnderScorer/musubi/compare/browser-extension-link-v0.9.2...browser-extension-link-v0.9.3) (2023-05-01)
 
 
