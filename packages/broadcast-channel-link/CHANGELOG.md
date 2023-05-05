@@ -1,3 +1,10 @@
+## [0.1.3](https://github.com/TheUnderScorer/musubi/compare/broadcast-channel-link-v0.1.2...broadcast-channel-link-v0.1.3) (2023-05-05)
+
+
+### Bug Fixes
+
+* **core:** export middleware types ([3d6cd25](https://github.com/TheUnderScorer/musubi/commit/3d6cd250cf4ccf389dcda8164cae8fcfb52b6410))
+
 ## [0.1.2](https://github.com/TheUnderScorer/musubi/compare/broadcast-channel-link-v0.1.1...broadcast-channel-link-v0.1.2) (2023-05-05)
 
 
