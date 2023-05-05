@@ -1,3 +1,10 @@
+## [0.10.1](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.10.0...electron-link-v0.10.1) (2023-05-05)
+
+
+### Bug Fixes
+
+* **core:** add missing "wait" export ([2895ebb](https://github.com/TheUnderScorer/musubi/commit/2895ebb381d49dfc02277f4ee5ecd100aabe660a))
+
 # [0.10.0](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.9.1...electron-link-v0.10.0) (2023-04-30)
 
 
