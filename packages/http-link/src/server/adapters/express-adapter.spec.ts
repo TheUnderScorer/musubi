@@ -15,8 +15,7 @@ import { ServerContext } from '../server.types';
 import { createExpressHttpLink } from './express-adapter';
 import * as http from 'http';
 import { MusubiHeaders } from '../../shared/http';
-
-const port = 8080;
+import { findFreePorts } from 'find-free-ports';
 
 const expressTestSchema = mergeSchemas(
   testSchema,
@@ -29,14 +28,9 @@ const expressTestSchema = mergeSchemas(
   })
 );
 
-const clientLink = createHttpClientLink({
-  url: `http://localhost:${port}`,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  fetch: globalThis.fetch,
-});
-const client = new MusubiClient(expressTestSchema, [clientLink]);
+let clientLink: ReturnType<typeof createHttpClientLink>;
+
+let client: MusubiClient<typeof expressTestSchema>;
 
 let app: Application;
 let receiver: MusubiReceiver<typeof expressTestSchema, ServerContext>;
@@ -54,12 +48,24 @@ let requests: {
 }[];
 
 describe('Express adapter', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     jest.resetAllMocks();
 
     requests = [];
 
     app = express();
+
+    const [port] = await findFreePorts(1);
+
+    clientLink = createHttpClientLink({
+      url: `http://localhost:${port}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      fetch: globalThis.fetch,
+    });
+
+    client = new MusubiClient(expressTestSchema, [clientLink]);
 
     app.use(express.json());
 
