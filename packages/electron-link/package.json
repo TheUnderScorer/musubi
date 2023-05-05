@@ -1,6 +1,6 @@
 {
   "name": "@musubi/electron-link",
-  "version": "0.10.2",
+  "version": "0.10.3",
   "sideEffects": false,
   "private": false,
   "license": "MIT",
