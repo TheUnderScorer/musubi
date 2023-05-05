@@ -7,7 +7,7 @@ import {
 import { OperationHandler, ReceiverLink } from './receiver.types';
 import { OperationResponse } from '../shared/OperationResponse';
 import { RootReceiverLink } from './RootReceiverLink';
-import { filter } from 'rxjs';
+import { filter, share } from 'rxjs';
 import { Channel } from '../shared/communication.types';
 import { validatePayload, validateResult } from '../schema/validation';
 import { OperationRequest } from '../shared/OperationRequest';
@@ -104,6 +104,7 @@ export class MusubiReceiver<S extends OperationsSchema, Ctx = any> {
   ) {
     return this.rootLink
       .observeNewRequest(name)
+      .pipe(share())
       .pipe(filter((req) => req.kind === kind))
       .subscribe(async (request) => {
         let response: OperationResponse<Result, OperationRequest<Payload, Ctx>>;

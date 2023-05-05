@@ -9,6 +9,8 @@ import { MusubiClient } from '../client/MusubiClient';
 import { OperationBeforeMiddleware } from './OperationReceiverBuilder';
 import { OperationDefinition } from '../schema/OperationDefinition';
 import { MusubiZodError } from '../errors/MusubiZodError';
+import { wait } from '@nrwl/nx-cloud/lib/utilities/waiter';
+import { concatMap } from 'rxjs';
 
 const schema = mergeSchemas(testUserSchema, testPostSchema);
 
@@ -96,6 +98,44 @@ describe('MusubiReceiver', () => {
 
     expect(onSend).toHaveBeenCalledTimes(1);
     expect(onSend).toHaveBeenCalledWith(result);
+  });
+
+  it('should support multiple async links', async () => {
+    const receiver = new MusubiReceiver(schema, [
+      {
+        receiveRequest: (name, next) =>
+          next.pipe(
+            concatMap(async (req) => {
+              await wait(500);
+
+              req.addCtx({
+                didWait: {
+                  value: true,
+                  isSerializable: true,
+                },
+              });
+
+              return req;
+            })
+          ),
+      },
+      receiverLink,
+    ]);
+
+    receiver.handleCommand('createUser', async (payload, ctx) => {
+      expect(ctx.didWait).toBeTruthy();
+
+      return {
+        name: payload.name,
+        id: '1',
+      };
+    });
+
+    const client = new MusubiClient(schema, [clientLink]);
+
+    const result = await client.command('createUser', { name: 'test' });
+
+    expect(result).toBeTruthy();
   });
 
   describe('Operation Builder', () => {
