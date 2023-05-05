@@ -1,3 +1,10 @@
+## [0.5.2](https://github.com/TheUnderScorer/musubi/compare/react-v0.5.1...react-v0.5.2) (2023-05-05)
+
+
+### Bug Fixes
+
+* **core:** export middleware types ([3d6cd25](https://github.com/TheUnderScorer/musubi/commit/3d6cd250cf4ccf389dcda8164cae8fcfb52b6410))
+
 ## [0.5.1](https://github.com/TheUnderScorer/musubi/compare/react-v0.5.0...react-v0.5.1) (2023-05-05)
 
 
