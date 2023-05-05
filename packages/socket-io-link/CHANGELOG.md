@@ -1,3 +1,12 @@
+## [0.3.3](https://github.com/TheUnderScorer/musubi/compare/socket-io-link-v0.3.2...socket-io-link-v0.3.3) (2023-05-05)
+
+
+### Bug Fixes
+
+* **core:** ensure correct typings when using operation receiver builder ([7753b93](https://github.com/TheUnderScorer/musubi/commit/7753b93c40b36a4589a2922dc8bad0dac2c28a11))
+* **core:** set default payload to any ([c831a2c](https://github.com/TheUnderScorer/musubi/commit/c831a2c6e85aeb8afef2015dbbbd871008d48c64))
+* **core:** use z.infer in ExtractZod type ([6f6c715](https://github.com/TheUnderScorer/musubi/commit/6f6c715f5fed461f40025310faaa014e178993aa))
+
 ## [0.3.2](https://github.com/TheUnderScorer/musubi/compare/socket-io-link-v0.3.1...socket-io-link-v0.3.2) (2023-05-05)
 
 
