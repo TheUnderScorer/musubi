@@ -19,8 +19,8 @@ export interface OperationDefinitionProperties<
 export class OperationDefinition<
   Kind extends OperationKind = OperationKind,
   Name extends OperationName = OperationName,
-  Payload = void,
-  Result = void,
+  Payload = undefined,
+  Result = any,
   Meta extends Record<string, any> = Record<string, any>
 > implements OperationDefinitionProperties<Kind, Name, Payload, Result, Meta>
 {
