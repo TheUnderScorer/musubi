@@ -1,3 +1,10 @@
+## [0.3.2](https://github.com/TheUnderScorer/musubi/compare/socket-io-link-v0.3.1...socket-io-link-v0.3.2) (2023-05-05)
+
+
+### Bug Fixes
+
+* **core:** export middleware types ([3d6cd25](https://github.com/TheUnderScorer/musubi/commit/3d6cd250cf4ccf389dcda8164cae8fcfb52b6410))
+
 ## [0.3.1](https://github.com/TheUnderScorer/musubi/compare/socket-io-link-v0.3.0...socket-io-link-v0.3.1) (2023-05-05)
 
 
