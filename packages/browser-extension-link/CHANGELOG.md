@@ -1,3 +1,10 @@
+## [0.9.5](https://github.com/TheUnderScorer/musubi/compare/browser-extension-link-v0.9.4...browser-extension-link-v0.9.5) (2023-05-05)
+
+
+### Bug Fixes
+
+* **core:** export middleware types ([3d6cd25](https://github.com/TheUnderScorer/musubi/commit/3d6cd250cf4ccf389dcda8164cae8fcfb52b6410))
+
 ## [0.9.4](https://github.com/TheUnderScorer/musubi/compare/browser-extension-link-v0.9.3...browser-extension-link-v0.9.4) (2023-05-05)
 
 
