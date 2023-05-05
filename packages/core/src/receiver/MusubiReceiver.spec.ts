@@ -265,7 +265,8 @@ describe('MusubiReceiver', () => {
 
       const middleware =
         <
-          Operation extends OperationDefinition,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          Operation extends OperationDefinition<any, any, any, any>,
           Ctx
         >(): OperationBeforeMiddleware<
           Operation,
