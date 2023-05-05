@@ -10,7 +10,7 @@
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/http-link",
-        "inputFiles": ["client/client.ts", "server/adapters/express-adapter.ts"],
+        "inputFiles": ["client/client.ts", "server/adapters/express-adapter.ts", "server/adapters/aws-lambda-adapter.ts"],
         "additionalPeerDeps": ["express"]
       }
     },
