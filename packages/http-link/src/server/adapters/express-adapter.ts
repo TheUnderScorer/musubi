@@ -8,12 +8,8 @@ import {
 import { Observable } from 'rxjs';
 import { LinkParam } from '@musubi/core';
 import { HttpServerReceiverLink } from '../HttpServerReceiverLink';
-import { z } from 'zod';
-import { extractRequestDataFromGetRequest } from '../http';
-
-const querySchema = z.object({
-  input: z.string(),
-});
+import { extractRequestDataFromGetRequest, querySchema } from '../http';
+import { SharedHttpOptions } from '../../shared/options.types';
 
 class ExpressAdapter implements MusubiServerAdapter {
   constructor(private app: Application) {}
@@ -72,8 +68,9 @@ class ExpressAdapter implements MusubiServerAdapter {
  * ```
  * */
 export function createExpressHttpLink(
-  app: Application
+  app: Application,
+  options?: SharedHttpOptions
 ): LinkParam<HttpServerReceiverLink> {
   return ({ schema }) =>
-    new HttpServerReceiverLink(new ExpressAdapter(app), schema);
+    new HttpServerReceiverLink(new ExpressAdapter(app), schema, options);
 }

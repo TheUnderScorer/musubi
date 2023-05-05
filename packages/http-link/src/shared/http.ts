@@ -1,10 +1,17 @@
-import { OperationRequest } from '@musubi/core';
+import { OperationKind, OperationRequest } from '@musubi/core';
+import { MusubiHttpMethod } from './http.types';
 
 export enum MusubiHeaders {
   X_MUSUBI_CTX = 'x-musubi-ctx',
   X_MUSUBI_CHANNEL = 'x-musubi-channel',
   X_MUSUBI_ID = 'x-musubi-id',
   X_MUSUBI_TIMESTAMP = 'x-musubi-timestamp',
+}
+
+export function resolveKindForMethod(method: MusubiHttpMethod) {
+  return method === MusubiHttpMethod.GET
+    ? OperationKind.Query
+    : OperationKind.Command;
 }
 
 export interface HeadersToRequestFieldMapEntry<

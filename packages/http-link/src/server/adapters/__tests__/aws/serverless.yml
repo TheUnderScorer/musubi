@@ -1,0 +1,34 @@
+service: musubi-serverless
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: eu-west-1
+  stage: ${opt:stage, 'development'}
+  logRetentionInDays: ${self:custom.logRetentionInDays.${self:provider.stage}}
+
+plugins:
+  - serverless-offline
+  - serverless-esbuild
+
+functions:
+  server:
+    handler: awsLambdaTestHandler.handler
+    events:
+      - http:
+          path: /{path+}
+          method: any
+          cors: true
+custom:
+  esbuild:
+    bundle: true
+    minify: false
+    sourcemap: inline
+  stages:
+    - development
+    - production
+  logRetentionInDays:
+    production: 90
+    development: 30
+    staging: 30

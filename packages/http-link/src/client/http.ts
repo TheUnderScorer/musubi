@@ -55,7 +55,10 @@ export async function makeHttpRequest<Payload, Result>(
 
   const json = await response.json();
 
-  return OperationResponse.fromObject(
-    OperationResponse.schema.parse(json)
-  ) as OperationResponse<Result, OperationRequest<Payload, ClientContext>>;
+  const result = OperationResponse.fromUnsafeObject(json);
+
+  return result as OperationResponse<
+    Result,
+    OperationRequest<Payload, ClientContext>
+  >;
 }

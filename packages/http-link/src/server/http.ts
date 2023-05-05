@@ -2,6 +2,7 @@ import { OperationKind } from '@musubi/core';
 
 import { MusubiHttpHeaders, MusubiHttpMethod } from '../shared/http.types';
 import { musubiHeadersDefinitions } from '../shared/http';
+import { z } from 'zod';
 
 export function resolveHttpMethod(kind: OperationKind) {
   switch (kind) {
@@ -33,3 +34,7 @@ export function extractRequestDataFromGetRequest(
     ...inputFromHeaders,
   };
 }
+
+export const querySchema = z.object({
+  input: z.string(),
+});

@@ -143,6 +143,13 @@ export class OperationResponse<
   override toJSON() {
     return {
       ...super.toJSON(),
+      error: this.error
+        ? {
+            ...this.error,
+            name: this.error?.name,
+            message: this.error?.message,
+          }
+        : null,
       request: this.request?.toJSON(),
     } satisfies OperationResponseObject;
   }

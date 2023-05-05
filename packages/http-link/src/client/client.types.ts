@@ -1,8 +1,9 @@
 import { MusubiHttpHeaders } from '../shared/http.types';
 import { OperationRequest } from '@musubi/core';
 import { MaybePromise } from 'rollup';
+import { SharedHttpOptions } from '../shared/options.types';
 
-export interface HttpClientLinkOptions {
+export interface HttpClientLinkOptions extends SharedHttpOptions {
   /**
    * HTTP Server url
    * */

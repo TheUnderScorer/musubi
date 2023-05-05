@@ -10,6 +10,7 @@ import { MusubiServerAdapter, ServerContext } from './server.types';
 import { map, Observable } from 'rxjs';
 import { resolveHttpMethod } from './http';
 import { getPathNameForOperation } from '../shared/routing';
+import { SharedHttpOptions } from '../shared/options.types';
 
 export class HttpServerReceiverLink<
   S extends OperationsSchema = OperationsSchema
@@ -17,7 +18,8 @@ export class HttpServerReceiverLink<
 {
   constructor(
     private readonly server: MusubiServerAdapter,
-    private readonly schema: S
+    private readonly schema: S,
+    private readonly options?: SharedHttpOptions
   ) {}
 
   receiveRequest(
@@ -27,7 +29,7 @@ export class HttpServerReceiverLink<
 
     return this.server
       .observePath(
-        getPathNameForOperation(name),
+        getPathNameForOperation(name, this.options?.pathPrefix),
         resolveHttpMethod(operation.kind)
       )
       .pipe(

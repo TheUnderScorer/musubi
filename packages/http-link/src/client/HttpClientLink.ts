@@ -33,7 +33,10 @@ export class HttpClientLink<S extends OperationsSchema = OperationsSchema>
         : this.options.headers;
 
     const url = new URL(this.options.url);
-    url.pathname = getPathNameForOperation(operation.name);
+    url.pathname = getPathNameForOperation(
+      operation.name,
+      this.options.pathPrefix
+    );
 
     return makeHttpRequest(
       request,

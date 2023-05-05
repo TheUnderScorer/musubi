@@ -16,3 +16,4 @@ export * from './shared/link.types';
 export * from './zod/validateZod';
 export * from './errors/MusubiError';
 export * from './errors/MusubiZodError';
+export * from './utils/wait';
