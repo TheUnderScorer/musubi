@@ -1,3 +1,10 @@
+## [0.1.2](https://github.com/TheUnderScorer/musubi/compare/broadcast-channel-link-v0.1.1...broadcast-channel-link-v0.1.2) (2023-05-05)
+
+
+### Bug Fixes
+
+* **core:** add missing "wait" export ([2895ebb](https://github.com/TheUnderScorer/musubi/commit/2895ebb381d49dfc02277f4ee5ecd100aabe660a))
+
 ## [0.1.1](https://github.com/TheUnderScorer/musubi/compare/broadcast-channel-link-v0.1.0...broadcast-channel-link-v0.1.1) (2023-05-01)
 
 
