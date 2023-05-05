@@ -1,3 +1,10 @@
+## [0.11.2](https://github.com/TheUnderScorer/musubi/compare/core-v0.11.1...core-v0.11.2) (2023-05-05)
+
+
+### Bug Fixes
+
+* **core:** export middleware types ([3d6cd25](https://github.com/TheUnderScorer/musubi/commit/3d6cd250cf4ccf389dcda8164cae8fcfb52b6410))
+
 ## [0.11.1](https://github.com/TheUnderScorer/musubi/compare/core-v0.11.0...core-v0.11.1) (2023-05-05)
 
 
