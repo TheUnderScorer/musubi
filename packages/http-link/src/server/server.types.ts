@@ -1,12 +1,17 @@
-import { OperationResponse } from '@musubi/core';
+import { OperationRequest, OperationResponse } from '@musubi/core';
 import { Observable } from 'rxjs';
 import { MusubiHttpMethod, MusubiHttpRequest } from '../shared/http.types';
+
+export interface ObserverPathResult {
+  httpRequest: MusubiHttpRequest;
+  operationRequest: OperationRequest;
+}
 
 export interface MusubiServerAdapter {
   observePath: (
     path: string,
     method: MusubiHttpMethod
-  ) => Observable<MusubiHttpRequest>;
+  ) => Observable<ObserverPathResult>;
 }
 
 export interface ServerContext {

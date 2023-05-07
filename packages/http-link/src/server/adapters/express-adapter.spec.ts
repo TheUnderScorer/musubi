@@ -14,14 +14,31 @@ import express, { Application, Request } from 'express';
 import { ServerContext } from '../server.types';
 import { createExpressHttpLink } from './express-adapter';
 import * as http from 'http';
-import { MusubiHeaders } from '../../shared/http';
 import { findFreePorts } from 'find-free-ports';
+import { z } from 'zod';
 
 const expressTestSchema = mergeSchemas(
   testSchema,
   defineSchema({
     events: {},
-    queries: {},
+    queries: {
+      testQueryWithArray: operation.query
+        .withPayload(
+          z.object({
+            arrayStr: z.array(z.string()),
+            arrayNum: z.array(z.coerce.number()),
+            arrayObj: z.array(
+              z.object({
+                num: z.coerce.number(),
+                str: z.string(),
+                bool: z.coerce.boolean(),
+              })
+            ),
+            string: z.string(),
+          })
+        )
+        .withResult(z.literal('ok')),
+    },
     commands: {
       testStatusCode: operation.command,
     },
@@ -130,14 +147,55 @@ describe('Express adapter', () => {
 
     const [, secondRequest] = requests;
 
-    expect(user).toEqual(commandResult);
-    expect(secondRequest.url).toContain('/api/musubi/getUser?input=');
-    expect(secondRequest.method).toEqual('GET');
-    expect(secondRequest.headers[MusubiHeaders.X_MUSUBI_ID]).toBeTruthy();
-    expect(secondRequest.headers[MusubiHeaders.X_MUSUBI_CTX]).toEqual('{}');
-    expect(secondRequest.headers[MusubiHeaders.X_MUSUBI_TIMESTAMP]).toEqual(
+    expect(secondRequest.searchParams?.get('payload.id')).toEqual(
+      commandResult.id
+    );
+
+    expect(secondRequest.searchParams?.get('timestamp')).toEqual(
       now.toString()
     );
+    expect(secondRequest.searchParams?.get('ctx')).toEqual('{}');
+
+    expect(user).toEqual(commandResult);
+    expect(secondRequest.url).toContain('/api/musubi/getUser');
+    expect(secondRequest.method).toEqual('GET');
+  });
+
+  it('should support queries with array payload', async () => {
+    receiver.handleQuery(
+      'testQueryWithArray',
+      ({ string, arrayNum, arrayStr, arrayObj }) => {
+        expect(string).toEqual('string');
+        expect(arrayNum).toEqual([1, 2, 3]);
+        expect(arrayStr).toEqual(['1', '2', '3']);
+        expect(arrayObj[0]).toEqual({
+          num: 1,
+          str: 'str',
+          bool: true,
+        });
+
+        return 'ok';
+      }
+    );
+
+    const response = await client.query('testQueryWithArray', {
+      string: 'string',
+      arrayStr: ['1', '2', '3'],
+      arrayNum: [1, 2, 3],
+      arrayObj: [
+        {
+          num: 1,
+          str: 'str',
+          bool: true,
+        },
+      ],
+    });
+
+    expect(response).toEqual('ok');
+
+    const [request] = requests;
+
+    expect(request).toBeTruthy();
   });
 
   it('should support setting status code via ctx', async () => {

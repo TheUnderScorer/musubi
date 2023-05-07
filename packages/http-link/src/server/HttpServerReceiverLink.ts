@@ -33,12 +33,8 @@ export class HttpServerReceiverLink<
         resolveHttpMethod(operation.kind)
       )
       .pipe(
-        map((httpRequest) => {
-          const request = OperationRequest.fromUnsafeObject(
-            httpRequest.payload
-          );
-
-          return request.addCtx<ServerContext>({
+        map(({ httpRequest, operationRequest }) => {
+          return operationRequest.addCtx<ServerContext>({
             request: {
               isSerializable: false,
               value: httpRequest,
@@ -64,6 +60,9 @@ export class HttpServerReceiverLink<
     const responseStatusCode = response.ctx?.responseStatusCode;
     const status = responseStatusCode ?? (response.error ? 500 : 200);
 
-    httpRequest?.reply(response.toJSON(), status);
+    httpRequest?.reply({
+      response: response.toJSON(),
+      status,
+    });
   }
 }

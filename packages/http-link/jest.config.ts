@@ -1,4 +1,5 @@
 /* eslint-disable */
+
 export default {
   displayName: 'http-link',
   preset: '../../jest.preset.js',

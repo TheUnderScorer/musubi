@@ -1,7 +1,6 @@
 import { MusubiHttpHeaders, MusubiHttpMethod } from '../shared/http.types';
 import { OperationRequest, OperationResponse } from '@musubi/core';
 import { ClientContext } from './client.types';
-import { musubiHeadersDefinitions } from '../shared/http';
 
 export async function makeHttpRequest<Payload, Result>(
   request: OperationRequest<Payload>,
@@ -21,30 +20,16 @@ export async function makeHttpRequest<Payload, Result>(
   } satisfies RequestInit;
 
   if (method === MusubiHttpMethod.GET) {
+    requestToQueryParams(request, url.searchParams);
+
     const json = request.toJSON();
 
-    const queryInput = {
-      name: json.name,
-      kind: json.kind,
-      payload: json.payload,
-    };
-
-    const headersInput = musubiHeadersDefinitions.reduce((acc, entry) => {
-      const value = entry.serialize
-        ? entry.serialize(json[entry.requestKey])
-        : json[entry.requestKey];
-
-      return {
-        ...acc,
-        [entry.headersKey]: value,
-      };
-    }, {});
-
-    url.searchParams.set('input', JSON.stringify(queryInput));
-
-    Object.entries(headersInput).forEach(([key, value]) => {
+    Object.entries(json).forEach(([key, value]) => {
       if (value) {
-        requestInit.headers[key] = value.toString();
+        url.searchParams.set(
+          key,
+          typeof value === 'object' ? JSON.stringify(value) : value
+        );
       }
     });
   } else {
@@ -61,4 +46,33 @@ export async function makeHttpRequest<Payload, Result>(
     Result,
     OperationRequest<Payload, ClientContext>
   >;
+}
+
+function requestToQueryParams(
+  request: OperationRequest,
+  params = new URLSearchParams(),
+  path = ''
+) {
+  Object.entries(request).forEach(([key, value]) => {
+    const keyPath = path ? `${path}.${key}` : key;
+
+    if (value) {
+      if (keyPath === ('payload' as keyof OperationRequest)) {
+        if (typeof value === 'object') {
+          requestToQueryParams(value, params, keyPath);
+        } else {
+          params.set(keyPath, value);
+        }
+
+        return;
+      }
+
+      params.set(
+        keyPath,
+        typeof value === 'object' ? JSON.stringify(value) : value
+      );
+    }
+  });
+
+  return params;
 }

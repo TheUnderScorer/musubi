@@ -1,5 +1,5 @@
 import { Application } from 'express';
-import { MusubiServerAdapter } from '../server.types';
+import { MusubiServerAdapter, ObserverPathResult } from '../server.types';
 import {
   MusubiHttpHeaders,
   MusubiHttpMethod,
@@ -8,8 +8,8 @@ import {
 import { Observable } from 'rxjs';
 import { LinkParam } from '@musubi/core';
 import { HttpServerReceiverLink } from '../HttpServerReceiverLink';
-import { extractRequestDataFromGetRequest, querySchema } from '../http';
 import { SharedHttpOptions } from '../../shared/options.types';
+import { parseMusubiHttpRequest } from '../http';
 
 class ExpressAdapter implements MusubiServerAdapter {
   constructor(private app: Application) {}
@@ -17,29 +17,26 @@ class ExpressAdapter implements MusubiServerAdapter {
   observePath(
     path: string,
     method: MusubiHttpMethod
-  ): Observable<MusubiHttpRequest> {
+  ): Observable<ObserverPathResult> {
     const httpMethod = method.toLowerCase() as Lowercase<MusubiHttpMethod>;
 
     return new Observable((observer) => {
       this.app[httpMethod](path, (req, res) => {
-        const payload =
-          method === MusubiHttpMethod.GET
-            ? extractRequestDataFromGetRequest(
-                querySchema.parse(req.query).input,
-                req.headers as MusubiHttpHeaders
-              )
-            : req.body;
-
         const request: MusubiHttpRequest = {
           method,
           headers: req.headers as MusubiHttpHeaders,
-          payload,
-          reply: (response, status) => {
+          queryParams: req.query,
+          path: req.path,
+          body: req.body,
+          reply: ({ response, status }) => {
             res.status(status).json(response);
           },
         };
 
-        observer.next(request);
+        observer.next({
+          operationRequest: parseMusubiHttpRequest(request),
+          httpRequest: request,
+        });
       });
     });
   }

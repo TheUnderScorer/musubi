@@ -1,110 +1,103 @@
-import { MusubiServerAdapter } from '../server.types';
+import { MusubiServerAdapter, ObserverPathResult } from '../server.types';
 import {
   MusubiHttpHeaders,
   MusubiHttpMethod,
   MusubiHttpRequest,
 } from '../../shared/http.types';
-import { filter, firstValueFrom, map, Observable, Subject } from 'rxjs';
+import { filter, map, Observable, Subject } from 'rxjs';
 import {
   APIGatewayProxyEvent,
+  APIGatewayProxyEventV2,
   APIGatewayProxyStructuredResultV2,
   Context,
 } from 'aws-lambda';
-import {
-  LinkParam,
-  OperationRequest,
-  OperationResponse,
-  wait,
-} from '@musubi/core';
+import { LinkParam, OperationResponse, wait } from '@musubi/core';
 import { HttpServerReceiverLink } from '../HttpServerReceiverLink';
-import { extractRequestDataFromGetRequest, querySchema } from '../http';
+import { parseMusubiHttpRequest } from '../http';
 import { SharedHttpOptions } from '../../shared/options.types';
 import { resolveKindForMethod } from '../../shared/http';
+import { getOperationFromPath } from '../../shared/routing';
 
-export interface AwsLambdaContext {
-  event: APIGatewayProxyEvent;
+export interface AwsLambdaContext<Format extends LambdaApiFormat> {
+  event: LambdaRequestPayloadMap[Format];
   context: Context;
 }
 
-export interface AwsLambdaAdapterOptions {
-  timeoutMs?: number;
+export enum LambdaApiFormat {
+  v1 = 'v1',
+  v2 = 'v2',
 }
 
-class AwsLambdaAdapter implements MusubiServerAdapter {
-  protected readonly response$ = new Subject<
-    APIGatewayProxyStructuredResultV2 & { event: APIGatewayProxyEvent }
-  >();
+type LambdaRequestParser<Event> = (
+  event: Event
+) => Omit<MusubiHttpRequest, 'reply'>;
 
-  protected readonly newRequest$ = new Subject<AwsLambdaContext>();
+type LambdaRequestParsers = {
+  [Key in LambdaApiFormat]: LambdaRequestParser<LambdaRequestPayloadMap[Key]>;
+};
 
-  constructor(protected readonly options?: AwsLambdaAdapterOptions) {}
+export type LambdaRequestPayloadMap = {
+  [LambdaApiFormat.v1]: APIGatewayProxyEvent;
+  [LambdaApiFormat.v2]: APIGatewayProxyEventV2;
+};
+
+const requestParsers: LambdaRequestParsers = {
+  [LambdaApiFormat.v1]: (event) => {
+    return {
+      method: event.httpMethod.toUpperCase() as MusubiHttpMethod,
+      headers: event.headers as MusubiHttpHeaders,
+      body: event.body ? JSON.parse(event.body) : {},
+      path: event.path,
+      queryParams: event.queryStringParameters ?? {},
+    };
+  },
+  [LambdaApiFormat.v2]: (event) => {
+    return {
+      method:
+        event.requestContext.http.method.toUpperCase() as MusubiHttpMethod,
+      headers: event.headers as MusubiHttpHeaders,
+      path: event.rawPath,
+      body: event.body ? JSON.parse(event.body) : {},
+      queryParams: event.queryStringParameters ?? {},
+    };
+  },
+};
+
+export interface AwsLambdaAdapterOptions<Format extends LambdaApiFormat> {
+  timeoutMs?: number;
+  format: Format;
+}
+
+class AwsLambdaAdapter<Format extends LambdaApiFormat>
+  implements MusubiServerAdapter
+{
+  protected readonly newRequest$ = new Subject<{
+    request: MusubiHttpRequest;
+    event: LambdaRequestPayloadMap[Format];
+    context: Context;
+  }>();
+
+  constructor(
+    protected readonly options: AwsLambdaAdapterOptions<Format> &
+      SharedHttpOptions
+  ) {}
 
   protected get timeout() {
     return this.options?.timeoutMs ?? 3000;
   }
 
-  protected parseMethodAndHeaders(event: APIGatewayProxyEvent) {
-    const method = event.httpMethod.toUpperCase() as MusubiHttpMethod;
-    const headers = event.headers as MusubiHttpHeaders;
-
-    return { method, headers };
-  }
-
-  protected extractMusubiRequest(event: APIGatewayProxyEvent) {
-    const { method, headers } = this.parseMethodAndHeaders(event);
-
-    const requestProperties =
-      method === MusubiHttpMethod.GET
-        ? extractRequestDataFromGetRequest(
-            querySchema.parse(event.queryStringParameters).input ?? '',
-            headers
-          )
-        : JSON.parse(event.body ?? '');
-
-    return {
-      request: OperationRequest.fromUnsafeObject(requestProperties),
-      method,
-      headers,
-    };
-  }
-
   observePath(
     path: string,
     method: MusubiHttpMethod
-  ): Observable<MusubiHttpRequest> {
+  ): Observable<ObserverPathResult> {
     return this.newRequest$.pipe(
-      filter(({ event }) => event.path === path && event.httpMethod === method),
-      map(({ event, context }) => {
-        let data: ReturnType<typeof this.extractMusubiRequest> | undefined;
+      filter(
+        ({ request }) => request.path === path && request.method === method
+      ),
+      map(({ event, context, request }) => {
+        const operationRequest = parseMusubiHttpRequest(request);
 
-        try {
-          data = this.extractMusubiRequest(event);
-        } catch (error) {
-          const { method } = this.parseMethodAndHeaders(event);
-
-          const response = OperationResponse.fromError(
-            'unknownOp',
-            resolveKindForMethod(method),
-            error,
-            null
-          );
-
-          this.response$.next({
-            event,
-            body: JSON.stringify(response.toJSON()),
-            statusCode: 500,
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
-
-          return null;
-        }
-
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const { method, headers, request: musubiRequest } = data!;
-
-        musubiRequest.addCtx<AwsLambdaContext>({
+        operationRequest.addCtx<AwsLambdaContext<Format>>({
           context: {
             value: context,
             isSerializable: false,
@@ -116,23 +109,11 @@ class AwsLambdaAdapter implements MusubiServerAdapter {
         });
 
         return {
-          method,
-          headers,
-          payload: musubiRequest,
-          reply: (response, status) => {
-            this.response$.next({
-              event,
-              body: JSON.stringify(response),
-              statusCode: status,
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            });
-          },
-        } as MusubiHttpRequest;
-      }),
-      filter((v) => Boolean(v))
-    ) as Observable<MusubiHttpRequest>;
+          httpRequest: request,
+          operationRequest,
+        };
+      })
+    ) as Observable<ObserverPathResult>;
   }
 
   /**
@@ -140,25 +121,41 @@ class AwsLambdaAdapter implements MusubiServerAdapter {
    * */
   toHandler() {
     return (
-      event: APIGatewayProxyEvent,
+      event: LambdaRequestPayloadMap[Format],
       context: Context
     ): Promise<APIGatewayProxyStructuredResultV2> => {
-      const response$ = this.response$.pipe(
-        filter((response) => response.event === event),
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        map(({ event: _event, ...res }) => res)
+      const parser = requestParsers[this.options.format];
+      const rawRequest = parser(event);
+
+      const requestPromise = new Promise<APIGatewayProxyStructuredResultV2>(
+        (resolve) => {
+          const request: MusubiHttpRequest = {
+            ...rawRequest,
+            reply: ({ status, response }) => {
+              resolve({
+                body: JSON.stringify(response),
+                statusCode: status,
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              });
+            },
+          };
+
+          this.newRequest$.next({
+            request,
+            event,
+            context,
+          });
+        }
       );
 
-      this.newRequest$.next({ event, context });
-
       return Promise.race([
-        firstValueFrom(response$),
+        requestPromise,
         wait(this.timeout).then(() => {
-          const { method } = this.parseMethodAndHeaders(event);
-
           const response = OperationResponse.fromError(
-            'UNKNOWN',
-            resolveKindForMethod(method),
+            getOperationFromPath(rawRequest.path, this.options.pathPrefix),
+            resolveKindForMethod(rawRequest.method),
             {
               message: 'Timeout waiting for response from server.',
             },
@@ -171,7 +168,7 @@ class AwsLambdaAdapter implements MusubiServerAdapter {
             headers: {
               'Content-Type': 'application/json',
             },
-          } as APIGatewayProxyStructuredResultV2;
+          } satisfies APIGatewayProxyStructuredResultV2;
         }),
       ]);
     };
@@ -179,8 +176,8 @@ class AwsLambdaAdapter implements MusubiServerAdapter {
 }
 
 /***/
-export function createAwsLambdaHttpLink(
-  options?: SharedHttpOptions & AwsLambdaAdapterOptions
+export function createAwsLambdaHttpLink<Format extends LambdaApiFormat>(
+  options: SharedHttpOptions & AwsLambdaAdapterOptions<Format>
 ) {
   const adapter = new AwsLambdaAdapter(options);
   const link: LinkParam<HttpServerReceiverLink> = ({ schema }) =>

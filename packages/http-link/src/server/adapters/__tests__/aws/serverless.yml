@@ -7,19 +7,27 @@ provider:
   region: eu-west-1
   stage: ${opt:stage, 'development'}
   logRetentionInDays: ${self:custom.logRetentionInDays.${self:provider.stage}}
+  httpApi:
+    cors: true
 
 plugins:
   - serverless-offline
   - serverless-esbuild
 
 functions:
-  server:
-    handler: awsLambdaTestHandler.handler
+  http:
+    handler: awsLambdaTestHandlerHttp.handler
+    events:
+      - httpApi:
+          cors: true
+          path: /http/{path+}
+          method: any
+  rest:
+    handler: awsLambdaTestHandlerRest.handler
     events:
       - http:
-          path: /{path+}
+          path: /rest/{path+}
           method: any
-          cors: true
 custom:
   esbuild:
     bundle: true
