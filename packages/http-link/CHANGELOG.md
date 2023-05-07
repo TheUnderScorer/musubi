@@ -1,3 +1,11 @@
+# [0.6.0](https://github.com/TheUnderScorer/musubi/compare/http-link-v0.5.4...http-link-v0.6.0) (2023-05-07)
+
+
+### Features
+
+* **core:** export id generator ([2ffd65f](https://github.com/TheUnderScorer/musubi/commit/2ffd65f190e1b987d14c38ef67cae318aca9d58c))
+* **http-link:** support rest and http format for aws lambda ([f5f6ccc](https://github.com/TheUnderScorer/musubi/commit/f5f6ccc7586c35f1bd0fea4c4f47ac9a0b980cba))
+
 ## [0.5.4](https://github.com/TheUnderScorer/musubi/compare/http-link-v0.5.3...http-link-v0.5.4) (2023-05-05)
 
 
