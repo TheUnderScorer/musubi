@@ -1,3 +1,10 @@
+# [0.4.0](https://github.com/TheUnderScorer/musubi/compare/socket-io-link-v0.3.3...socket-io-link-v0.4.0) (2023-05-07)
+
+
+### Features
+
+* **core:** export id generator ([2ffd65f](https://github.com/TheUnderScorer/musubi/commit/2ffd65f190e1b987d14c38ef67cae318aca9d58c))
+
 ## [0.3.3](https://github.com/TheUnderScorer/musubi/compare/socket-io-link-v0.3.2...socket-io-link-v0.3.3) (2023-05-05)
 
 
