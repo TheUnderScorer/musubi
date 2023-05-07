@@ -3,18 +3,40 @@ import { MusubiProvider } from './providers/MusubiProvider';
 import { QueryClient } from '@tanstack/react-query';
 import { act, renderHook } from '@testing-library/react';
 import { PropsWithChildren, useState } from 'react';
-import { createTestMusubi, testSchema } from '../../../tools/test/testMusubi';
+import {
+  setupTestUserHandlers,
+  testSchema,
+} from '../../../tools/test/testMusubi';
 import { wait } from '@nrwl/nx-cloud/lib/utilities/waiter';
 import { Subject, Subscription } from 'rxjs';
+import {
+  createMusubi,
+  defineSchema,
+  mergeSchemas,
+  Musubi,
+  operation,
+} from '@musubi/core';
+import { createInMemoryLink } from '@musubi/in-memory-link';
 
-const m = createReactMusubi(testSchema);
+const testReactSchema = mergeSchemas(
+  testSchema,
+  defineSchema({
+    queries: {
+      testUndefinedToNull: operation.query,
+    },
+    commands: {},
+    events: {},
+  })
+);
+
+const m = createReactMusubi(testReactSchema);
 
 let queryClient: QueryClient;
-let testMusubi: ReturnType<typeof createTestMusubi>;
+let musubi: Musubi<typeof testReactSchema>;
 
 function Wrapper(props: PropsWithChildren) {
   return (
-    <MusubiProvider queryClient={queryClient} client={testMusubi.musubi.client}>
+    <MusubiProvider queryClient={queryClient} client={musubi.client}>
       {props.children}
     </MusubiProvider>
   );
@@ -23,11 +45,33 @@ function Wrapper(props: PropsWithChildren) {
 beforeEach(() => {
   jest.resetAllMocks();
 
+  const link = createInMemoryLink();
+
   queryClient = new QueryClient();
-  testMusubi = createTestMusubi();
+
+  musubi = createMusubi({
+    schema: testReactSchema,
+    clientLinks: [link.client],
+    receiverLinks: [link.receiver],
+  });
+
+  setupTestUserHandlers(musubi.receiver);
 });
 
 describe('useCommand, useQuery', () => {
+  it('should convert undefined to null from queries', async () => {
+    musubi.receiver.handleQuery('testUndefinedToNull', () => {
+      return undefined;
+    });
+
+    const queryHook = renderHook(() => m.testUndefinedToNull.useQuery(), {
+      wrapper: Wrapper,
+    });
+    const queryResult = await queryHook.result.current.refetch();
+
+    expect(queryResult.data).toBeNull();
+  });
+
   it('should work', async () => {
     const commandHook = renderHook(() => m.createUser.useCommand(), {
       wrapper: Wrapper,
