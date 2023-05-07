@@ -1,3 +1,10 @@
+# [0.6.0](https://github.com/TheUnderScorer/musubi/compare/react-v0.5.3...react-v0.6.0) (2023-05-07)
+
+
+### Features
+
+* **core:** export id generator ([2ffd65f](https://github.com/TheUnderScorer/musubi/commit/2ffd65f190e1b987d14c38ef67cae318aca9d58c))
+
 ## [0.5.3](https://github.com/TheUnderScorer/musubi/compare/react-v0.5.2...react-v0.5.3) (2023-05-05)
 
 
