@@ -1,3 +1,10 @@
+# [0.2.0](https://github.com/TheUnderScorer/musubi/compare/broadcast-channel-link-v0.1.4...broadcast-channel-link-v0.2.0) (2023-05-07)
+
+
+### Features
+
+* **core:** export id generator ([2ffd65f](https://github.com/TheUnderScorer/musubi/commit/2ffd65f190e1b987d14c38ef67cae318aca9d58c))
+
 ## [0.1.4](https://github.com/TheUnderScorer/musubi/compare/broadcast-channel-link-v0.1.3...broadcast-channel-link-v0.1.4) (2023-05-05)
 
 
