@@ -23,7 +23,13 @@ export function useQuery<Payload, Result>(
   const query = _useQuery<Result, Error, Payload>(
     queryKey,
     async () => {
-      return client.query(name, options?.variables, options?.channel);
+      const result = await client.query(
+        name,
+        options?.variables,
+        options?.channel
+      );
+
+      return result === undefined ? null : result;
     },
     options as UseQueryOptions<any, any>
   );
