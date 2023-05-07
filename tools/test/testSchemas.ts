@@ -33,7 +33,7 @@ export const testUserSchema = defineSchema({
     getUser: query()
       .withPayload(
         z.object({
-          id: z.string(),
+          id: z.coerce.string(),
         })
       )
       .withResult(User.optional()),
