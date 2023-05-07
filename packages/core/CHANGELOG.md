@@ -1,3 +1,10 @@
+# [0.12.0](https://github.com/TheUnderScorer/musubi/compare/core-v0.11.3...core-v0.12.0) (2023-05-07)
+
+
+### Features
+
+* **core:** export id generator ([2ffd65f](https://github.com/TheUnderScorer/musubi/commit/2ffd65f190e1b987d14c38ef67cae318aca9d58c))
+
 ## [0.11.3](https://github.com/TheUnderScorer/musubi/compare/core-v0.11.2...core-v0.11.3) (2023-05-05)
 
 
