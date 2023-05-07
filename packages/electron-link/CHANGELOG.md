@@ -1,3 +1,10 @@
+# [0.11.0](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.10.3...electron-link-v0.11.0) (2023-05-07)
+
+
+### Features
+
+* **core:** export id generator ([2ffd65f](https://github.com/TheUnderScorer/musubi/commit/2ffd65f190e1b987d14c38ef67cae318aca9d58c))
+
 ## [0.10.3](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.10.2...electron-link-v0.10.3) (2023-05-05)
 
 
