@@ -1,3 +1,10 @@
+## [0.6.1](https://github.com/TheUnderScorer/musubi/compare/react-v0.6.0...react-v0.6.1) (2023-05-07)
+
+
+### Bug Fixes
+
+* **react:** return null in case where query returns undefined ([50e4bec](https://github.com/TheUnderScorer/musubi/commit/50e4bec9ff2cb2f6010533872137397e4e3700c0))
+
 # [0.6.0](https://github.com/TheUnderScorer/musubi/compare/react-v0.5.3...react-v0.6.0) (2023-05-07)
 
 
