@@ -8,7 +8,6 @@ import {
   testSchema,
 } from '../../../tools/test/testMusubi';
 import { wait } from '@nrwl/nx-cloud/lib/utilities/waiter';
-import { Subject, Subscription } from 'rxjs';
 import {
   createMusubi,
   defineSchema,
@@ -102,10 +101,52 @@ describe('useCommand, useQuery', () => {
 });
 
 describe('useEvent', () => {
-  it('should subscribe to event', async () => {
+  it('should subscribe to event and unsubscribe correctly on unmount', async () => {
     const handler = jest.fn();
 
-    renderHook(() => m.userCreated.useEvent(handler), {
+    const orgObserveEvent = musubi.client.observeEvent.bind(musubi.client);
+
+    let unsubCallCount = 0;
+
+    jest.spyOn(musubi.client, 'observeEvent').mockImplementation((name) => {
+      const observable = orgObserveEvent(name);
+
+      const orgSubscribe = observable.subscribe.bind(observable);
+
+      if (name === 'userCreated') {
+        jest.spyOn(observable, 'subscribe').mockImplementation((handler) => {
+          const subscription = orgSubscribe(handler);
+
+          const orgUnsub = subscription.unsubscribe.bind(subscription);
+
+          jest.spyOn(subscription, 'unsubscribe').mockImplementation(() => {
+            unsubCallCount++;
+
+            return orgUnsub();
+          });
+
+          return subscription;
+        });
+      }
+
+      return observable;
+    });
+
+    const useMockHook = () => {
+      const [count, setCount] = useState(0);
+
+      m.userCreated.useEvent(
+        (args) => {
+          handler(args);
+
+          // Changing count should cause the hook to unsubscribe to the event and subscribe again
+          setCount(count + 1);
+        },
+        [count]
+      );
+    };
+
+    const hook = renderHook(() => useMockHook(), {
       wrapper: Wrapper,
     });
 
@@ -113,30 +154,29 @@ describe('useEvent', () => {
       wrapper: Wrapper,
     });
 
-    const user = await commandHook.result.current.mutateAsync({
-      name: 'John',
-    });
+    const user = await act(() =>
+      commandHook.result.current.mutateAsync({
+        name: 'John',
+      })
+    );
 
     expect(handler).toHaveBeenCalledTimes(1);
     expect(handler).toHaveBeenCalledWith({ payload: user, ctx: {} });
-  });
 
-  it('should correctly unsubscribe once hook is unmounted', () => {
-    const unsubscribeSpy = jest.spyOn(Subscription.prototype, 'unsubscribe');
-    const completeSpy = jest.spyOn(Subject.prototype, 'complete');
+    // Trigger event again
+    await act(() =>
+      commandHook.result.current.mutateAsync({
+        name: 'Greg',
+      })
+    );
 
-    const handler = jest.fn();
+    expect(handler).toHaveBeenCalledTimes(2);
 
-    const hook = renderHook(() => m.userCreated.useEvent(handler), {
-      wrapper: Wrapper,
-    });
+    expect(unsubCallCount).toEqual(2);
 
-    act(() => {
-      hook.unmount();
-    });
+    hook.unmount();
 
-    expect(completeSpy).toHaveBeenCalledTimes(1);
-    expect(unsubscribeSpy).toHaveBeenCalledTimes(6);
+    expect(unsubCallCount).toEqual(3);
   });
 
   it('should support passing placeholder data to query', () => {

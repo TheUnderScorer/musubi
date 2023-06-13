@@ -1,7 +1,6 @@
 import { Channel, OperationName } from '@musubi/core';
 import { DefaultContext, useMusubiClient } from '../providers/MusubiProvider';
 import { useEffect, useMemo, useRef } from 'react';
-import { concatMap } from 'rxjs';
 
 export function useEvent<Payload>(
   name: OperationName,
@@ -27,14 +26,10 @@ export function useEvent<Payload>(
   }, [client, name, channel]);
 
   useEffect(() => {
-    const subscription = observerRef.current
-      .pipe(
-        concatMap(async (value) => {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          await handler(value as any);
-        })
-      )
-      .subscribe();
+    const subscription = observerRef.current.subscribe(async (value) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await handler(value as any);
+    });
 
     return () => {
       subscription.unsubscribe();
