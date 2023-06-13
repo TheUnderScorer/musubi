@@ -10,7 +10,7 @@ import { ClientLink, OperationEvent } from './client.types';
 import { OperationRequest } from '../shared/OperationRequest';
 import { Channel } from '../shared/communication.types';
 import { OperationResponse } from '../shared/OperationResponse';
-import { map, Observable, Subject, tap } from 'rxjs';
+import { finalize, map, Observable, Subject } from 'rxjs';
 import { isSubscription } from 'rxjs/internal/Subscription';
 import { validatePayload, validateResult } from '../schema/validation';
 import { LinkParam } from '../shared/link.types';
@@ -115,10 +115,8 @@ export class MusubiClient<S extends OperationsSchema, Ctx = any> {
 
         if (isSubscription(result)) {
           return next.pipe(
-            tap({
-              finalize: () => {
-                result.unsubscribe();
-              },
+            finalize(() => {
+              result.unsubscribe();
             })
           );
         }
@@ -141,10 +139,8 @@ export class MusubiClient<S extends OperationsSchema, Ctx = any> {
         ),
         ctx: event.ctx as Ctx,
       })),
-      tap({
-        finalize: () => {
-          rootNext.complete();
-        },
+      finalize(() => {
+        rootNext.complete();
       })
     );
   }

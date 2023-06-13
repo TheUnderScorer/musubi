@@ -1,4 +1,4 @@
-import { Subject, tap } from 'rxjs';
+import { finalize, Subject } from 'rxjs';
 import { OperationRequest } from '../shared/OperationRequest';
 import { OperationResponse } from '../shared/OperationResponse';
 import { ReceiverLink } from './receiver.types';
@@ -48,10 +48,8 @@ export class RootReceiverLink<Ctx = unknown> {
 
         if (isSubscription(observableOrSubscription)) {
           return next.pipe(
-            tap({
-              finalize: () => {
-                observableOrSubscription.unsubscribe();
-              },
+            finalize(() => {
+              observableOrSubscription.unsubscribe();
             })
           );
         }
@@ -59,10 +57,8 @@ export class RootReceiverLink<Ctx = unknown> {
         return observableOrSubscription;
       }, newRequestSubject.asObservable())
       .pipe(
-        tap({
-          finalize: () => {
-            newRequestSubject.complete();
-          },
+        finalize(() => {
+          newRequestSubject.complete();
         })
       );
   }
