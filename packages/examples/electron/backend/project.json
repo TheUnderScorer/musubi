@@ -5,7 +5,7 @@
   "projectType": "application",
   "targets": {
     "build": {
-      "executor": "@nrwl/esbuild:esbuild",
+      "executor": "@nx/esbuild:esbuild",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
@@ -14,7 +14,9 @@
         "format": ["cjs"],
         "bundle": true,
         "external": ["electron"],
-        "additionalEntryPoints": ["packages/examples/electron/backend/src/preload.ts"],
+        "additionalEntryPoints": [
+          "packages/examples/electron/backend/src/preload.ts"
+        ],
         "main": "packages/examples/electron/backend/src/main.ts",
         "tsConfig": "packages/examples/electron/backend/tsconfig.app.json",
         "assets": [
@@ -30,7 +32,8 @@
           "outExtension": {
             ".js": ".js"
           }
-        }
+        },
+        "thirdParty": true
       },
       "configurations": {
         "development": {
@@ -53,14 +56,14 @@
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": ["packages/examples/electron/backend/**/*.ts"]
       }
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
         "jestConfig": "packages/examples/electron/backend/jest.config.ts",

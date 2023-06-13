@@ -9,20 +9,18 @@
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/broadcast-channel-link",
-        "inputFiles": [
-          "index.ts"
-        ]
+        "inputFiles": ["index.ts"]
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": ["packages/broadcast-channel-link/**/*.ts"]
       }
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
         "jestConfig": "packages/broadcast-channel-link/jest.config.ts",

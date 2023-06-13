@@ -1,7 +1,7 @@
 import { ModuleFormat, RollupOptions } from 'rollup';
 import { PackageJson } from 'nx/src/utils/package-json';
 import { ExecutorContext } from 'nx/src/config/misc-interfaces';
-import { DependentBuildableProjectNode } from '@nrwl/js/src/utils/buildable-libs-utils';
+import { DependentBuildableProjectNode } from '@nx/js/src/utils/buildable-libs-utils';
 import * as path from 'path';
 import { isDevDependency } from './deps';
 import * as fs from 'fs';

@@ -1,7 +1,6 @@
 {
   "$schema": "https://json-schema.org/schema",
   "version": 2,
-  "cli": "nx",
   "title": "Rollup executor",
   "description": "",
   "type": "object",
@@ -38,5 +37,7 @@
       "default": []
     }
   },
-  "required": ["inputFiles"]
+  "required": [
+    "inputFiles"
+  ]
 }

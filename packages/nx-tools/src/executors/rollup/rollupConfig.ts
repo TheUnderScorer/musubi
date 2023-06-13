@@ -10,7 +10,7 @@ import * as path from 'path';
 import copy from 'rollup-plugin-copy';
 import { RollupOptions } from 'rollup';
 import { PackageJson } from 'nx/src/utils/package-json';
-import { NormalizedRollupExecutorOptions } from '@nrwl/rollup/src/executors/rollup/lib/normalize';
+import { NormalizedRollupExecutorOptions } from '@nx/rollup/src/executors/rollup/lib/normalize';
 import jsx from 'acorn-jsx';
 
 export function buildRollupConfig(

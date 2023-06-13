@@ -1,13 +1,13 @@
 import { rollup, RollupBuild } from 'rollup';
 import { ExecutorContext } from 'nx/src/config/misc-interfaces';
 import invariant from 'tiny-invariant';
-import { calculateProjectDependencies } from '@nrwl/js/src/utils/buildable-libs-utils';
+import { calculateProjectDependencies } from '@nx/js/src/utils/buildable-libs-utils';
 import * as path from 'path';
 import * as fs from 'fs';
 import {
   NormalizedRollupExecutorOptions,
   normalizeRollupExecutorOptions,
-} from '@nrwl/rollup/src/executors/rollup/lib/normalize';
+} from '@nx/rollup/src/executors/rollup/lib/normalize';
 import { updatePackageJson } from './packageJson';
 import { makeExternal } from './external';
 import { RollupExecutorSchema } from './schema';

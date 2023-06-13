@@ -11,21 +11,18 @@
       "options": {
         "outputPath": "dist/packages/socket-io-link",
         "inputFiles": ["client/client.ts", "server/server.ts"],
-        "additionalPeerDeps": [
-          "socket.io",
-          "socket.io-client"
-        ]
+        "additionalPeerDeps": ["socket.io", "socket.io-client"]
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": ["packages/socket-io-link/**/*.ts"]
       }
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
         "jestConfig": "packages/socket-io-link/jest.config.ts",

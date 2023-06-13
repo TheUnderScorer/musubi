@@ -7,7 +7,7 @@
   "tags": [],
   "targets": {
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": ["packages/react/**/*.{ts,tsx,js,jsx}"]
@@ -20,9 +20,7 @@
       "options": {
         "outputPath": "dist/packages/react",
         "additionalPeerDeps": ["react"],
-        "inputFiles": [
-          "index.ts"
-        ]
+        "inputFiles": ["index.ts"]
       },
       "configurations": {
         "development": {
@@ -34,7 +32,7 @@
       }
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
         "jestConfig": "packages/react/jest.config.ts",

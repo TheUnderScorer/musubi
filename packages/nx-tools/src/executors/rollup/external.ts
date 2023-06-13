@@ -1,7 +1,7 @@
 import { ExecutorContext } from 'nx/src/config/misc-interfaces';
 import { RollupOptions } from 'rollup';
 import { PackageJson } from 'nx/src/utils/package-json';
-import { DependentBuildableProjectNode } from '@nrwl/js/src/utils/buildable-libs-utils';
+import { DependentBuildableProjectNode } from '@nx/js/src/utils/buildable-libs-utils';
 import invariant from 'tiny-invariant';
 
 export function makeExternal(
