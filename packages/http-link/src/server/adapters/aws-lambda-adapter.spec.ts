@@ -5,6 +5,7 @@ import { MusubiClient } from '@musubi/core';
 import { testSchema } from '../../../../../tools/test/testMusubi';
 import { findFreePorts } from 'find-free-ports';
 import { LambdaApiFormat } from './aws-lambda-adapter';
+import { wait } from 'nx-cloud/lib/utilities/waiter';
 
 describe('AWS Lambda adapter', () => {
   let link: ReturnType<typeof createHttpClientLink>;
@@ -12,26 +13,26 @@ describe('AWS Lambda adapter', () => {
 
   let client: MusubiClient<typeof testSchema>;
 
-  beforeEach(async () => {
-    [port] = await findFreePorts(1);
-
-    await startServerless(port);
-  }, 10_000);
-
-  afterEach(() => {
-    stopServerless();
-  });
-
   Object.values(LambdaApiFormat).forEach((format) => {
     describe(format, () => {
-      beforeEach(() => {
+      beforeEach(async () => {
+        [port] = await findFreePorts(1);
+
+        await startServerless(port);
+
         link = createHttpClientLink({
           url: `http://localhost:${port}`,
           pathPrefix: lambdaPaths[format].client,
         });
 
         client = new MusubiClient(testSchema, [link]);
+
+        await wait(2000);
       });
+
+      afterEach(() => {
+        stopServerless();
+      }, 10_000);
 
       it('should receive queries and commands', async () => {
         const user = await client.command('createUser', { name: 'John' });
