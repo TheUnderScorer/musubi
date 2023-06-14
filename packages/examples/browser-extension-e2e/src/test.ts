@@ -2,7 +2,7 @@ import path from 'path';
 import { test as pwTest } from '@playwright/test';
 import { BrowserContext, chromium } from 'playwright';
 import config from '../playwright.config';
-import { wait } from '@nrwl/nx-cloud/lib/utilities/waiter';
+import { wait } from 'nx-cloud/lib/utilities/waiter';
 import fs from 'fs-extra';
 
 const contextsPath = path.resolve(__dirname, 'contexts');

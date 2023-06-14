@@ -9,7 +9,7 @@ import { Server } from 'socket.io';
 import { TestClientsPool } from '../testUtils/testClientsPool';
 import { SocketServerContext } from './context';
 import { createSocketIoServerLink } from './server';
-import { wait } from '@nrwl/nx-cloud/lib/utilities/waiter';
+import { wait } from 'nx-cloud/lib/utilities/waiter';
 
 const testObjectSchema = z.object({
   socketId: z.string(),

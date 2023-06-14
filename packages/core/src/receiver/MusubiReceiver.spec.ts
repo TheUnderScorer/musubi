@@ -9,7 +9,7 @@ import { MusubiClient } from '../client/MusubiClient';
 import { OperationBeforeMiddleware } from './OperationReceiverBuilder';
 import { OperationDefinition } from '../schema/OperationDefinition';
 import { MusubiZodError } from '../errors/MusubiZodError';
-import { wait } from '@nrwl/nx-cloud/lib/utilities/waiter';
+import { wait } from 'nx-cloud/lib/utilities/waiter';
 import { concatMap } from 'rxjs';
 
 const schema = mergeSchemas(testUserSchema, testPostSchema);
