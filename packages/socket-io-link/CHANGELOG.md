@@ -1,3 +1,5 @@
+## [0.4.1](https://github.com/TheUnderScorer/musubi/compare/socket-io-link-v0.4.0...socket-io-link-v0.4.1) (2023-06-15)
+
 # [0.4.0](https://github.com/TheUnderScorer/musubi/compare/socket-io-link-v0.3.3...socket-io-link-v0.4.0) (2023-05-07)
 
 
