@@ -28,7 +28,7 @@ describe('AWS Lambda adapter', () => {
         client = new MusubiClient(testSchema, [link]);
 
         await wait(2000);
-      });
+      }, 20_000);
 
       afterEach(() => {
         stopServerless();
