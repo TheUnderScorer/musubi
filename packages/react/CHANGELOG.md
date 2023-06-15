@@ -1,3 +1,10 @@
+## [0.6.2](https://github.com/TheUnderScorer/musubi/compare/react-v0.6.1...react-v0.6.2) (2023-06-15)
+
+
+### Performance Improvements
+
+* optimize useEvent hook ([5690d36](https://github.com/TheUnderScorer/musubi/commit/5690d36c80ab7d9f7ef4d0469a27f4b705560ee2))
+
 ## [0.6.1](https://github.com/TheUnderScorer/musubi/compare/react-v0.6.0...react-v0.6.1) (2023-05-07)
 
 
