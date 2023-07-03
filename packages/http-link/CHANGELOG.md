@@ -1,3 +1,10 @@
+## [0.6.1](https://github.com/TheUnderScorer/musubi/compare/http-link-v0.6.0...http-link-v0.6.1) (2023-07-03)
+
+
+### Performance Improvements
+
+* optimize MergeSchemas type ([f99bc8a](https://github.com/TheUnderScorer/musubi/commit/f99bc8a309f8130a8a9d281d17cda76d1b43a021))
+
 # [0.6.0](https://github.com/TheUnderScorer/musubi/compare/http-link-v0.5.4...http-link-v0.6.0) (2023-05-07)
 
 
