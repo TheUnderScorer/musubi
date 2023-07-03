@@ -1,3 +1,10 @@
+## [0.4.2](https://github.com/TheUnderScorer/musubi/compare/socket-io-link-v0.4.1...socket-io-link-v0.4.2) (2023-07-03)
+
+
+### Performance Improvements
+
+* optimize MergeSchemas type ([f99bc8a](https://github.com/TheUnderScorer/musubi/commit/f99bc8a309f8130a8a9d281d17cda76d1b43a021))
+
 ## [0.4.1](https://github.com/TheUnderScorer/musubi/compare/socket-io-link-v0.4.0...socket-io-link-v0.4.1) (2023-06-15)
 
 # [0.4.0](https://github.com/TheUnderScorer/musubi/compare/socket-io-link-v0.3.3...socket-io-link-v0.4.0) (2023-05-07)
