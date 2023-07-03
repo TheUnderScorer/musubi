@@ -1,3 +1,10 @@
+## [0.12.1](https://github.com/TheUnderScorer/musubi/compare/in-memory-link-v0.12.0...in-memory-link-v0.12.1) (2023-07-03)
+
+
+### Performance Improvements
+
+* optimize MergeSchemas type ([f99bc8a](https://github.com/TheUnderScorer/musubi/commit/f99bc8a309f8130a8a9d281d17cda76d1b43a021))
+
 # [0.12.0](https://github.com/TheUnderScorer/musubi/compare/in-memory-link-v0.11.3...in-memory-link-v0.12.0) (2023-05-07)
 
 
