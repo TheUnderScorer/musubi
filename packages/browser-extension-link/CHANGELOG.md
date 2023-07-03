@@ -1,3 +1,10 @@
+## [0.10.1](https://github.com/TheUnderScorer/musubi/compare/browser-extension-link-v0.10.0...browser-extension-link-v0.10.1) (2023-07-03)
+
+
+### Performance Improvements
+
+* optimize MergeSchemas type ([f99bc8a](https://github.com/TheUnderScorer/musubi/commit/f99bc8a309f8130a8a9d281d17cda76d1b43a021))
+
 # [0.10.0](https://github.com/TheUnderScorer/musubi/compare/browser-extension-link-v0.9.6...browser-extension-link-v0.10.0) (2023-05-07)
 
 
