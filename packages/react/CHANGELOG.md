@@ -1,3 +1,10 @@
+## [0.6.3](https://github.com/TheUnderScorer/musubi/compare/react-v0.6.2...react-v0.6.3) (2023-07-03)
+
+
+### Performance Improvements
+
+* optimize MergeSchemas type ([f99bc8a](https://github.com/TheUnderScorer/musubi/commit/f99bc8a309f8130a8a9d281d17cda76d1b43a021))
+
 ## [0.6.2](https://github.com/TheUnderScorer/musubi/compare/react-v0.6.1...react-v0.6.2) (2023-06-15)
 
 
