@@ -43,6 +43,12 @@ export type ExtractZod<T> = T extends ZodSchema ? z.infer<T> : T;
 
 export type OperationName = string;
 
+export type OperationsSchemaLike = {
+  queries: any;
+  commands: any;
+  events: any;
+};
+
 export interface OperationsSchema<
   Queries extends DefinitionsRecord<
     QueryDefinition<any, any, any>

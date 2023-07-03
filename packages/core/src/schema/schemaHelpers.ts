@@ -2,6 +2,7 @@
 import { OperationDefinition } from './OperationDefinition';
 import { OperationSchemaOperations, OperationsSchema } from './schema.types';
 import { mapObject } from '../utils/map';
+import { MergeAll } from '../shared/merge';
 
 export function getOperationFromSchema<
   S extends OperationsSchema,
@@ -55,38 +56,7 @@ export const operation = {
   },
 };
 
-type MergeProps<
-  T extends Record<string, any>,
-  U extends Record<string, any>
-> = { [K in keyof T]: K extends keyof U ? never : T[K] } & {
-  [K in keyof U]: K extends keyof T ? never : U[K];
-} & { [K in keyof T & keyof U]: T[K] & U[K] };
-
-type MergeSchemas<
-  Schemas extends Array<OperationsSchema>,
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  Acc extends OperationsSchema = OperationsSchema<{}, {}, {}>
-> = Schemas extends [infer Head, ...infer Tail]
-  ? MergeSchemas<
-      Tail extends Array<OperationsSchema> ? Tail : never,
-      {
-        queries: MergeProps<
-          Acc['queries'],
-          Head extends OperationsSchema<any, any, any> ? Head['queries'] : never
-        >;
-        commands: MergeProps<
-          Acc['commands'],
-          Head extends OperationsSchema<any, any, any>
-            ? Head['commands']
-            : never
-        >;
-        events: MergeProps<
-          Acc['events'],
-          Head extends OperationsSchema<any, any, any> ? Head['events'] : never
-        >;
-      }
-    >
-  : Acc;
+type MergeSchemas<Schemas extends Array<OperationsSchema>> = MergeAll<Schemas>;
 
 export function mergeSchemas<S extends OperationsSchema[]>(
   ...schemas: S
