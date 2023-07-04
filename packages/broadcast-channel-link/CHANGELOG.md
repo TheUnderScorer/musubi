@@ -1,3 +1,10 @@
+## [0.2.3](https://github.com/TheUnderScorer/musubi/compare/broadcast-channel-link-v0.2.2...broadcast-channel-link-v0.2.3) (2023-07-04)
+
+
+### Bug Fixes
+
+* **core:** add missing Merge type export ([9d07b9c](https://github.com/TheUnderScorer/musubi/commit/9d07b9c32a22262cf380814f1e8b54eda7eb58d2))
+
 ## [0.2.2](https://github.com/TheUnderScorer/musubi/compare/broadcast-channel-link-v0.2.1...broadcast-channel-link-v0.2.2) (2023-07-03)
 
 
