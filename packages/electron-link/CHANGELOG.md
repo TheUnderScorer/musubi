@@ -1,3 +1,10 @@
+## [0.11.2](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.11.1...electron-link-v0.11.2) (2023-07-04)
+
+
+### Bug Fixes
+
+* **core:** add missing Merge type export ([9d07b9c](https://github.com/TheUnderScorer/musubi/commit/9d07b9c32a22262cf380814f1e8b54eda7eb58d2))
+
 ## [0.11.1](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.11.0...electron-link-v0.11.1) (2023-07-03)
 
 
