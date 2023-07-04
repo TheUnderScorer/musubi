@@ -1,6 +1,6 @@
 {
   "name": "@musubi/browser-extension-link",
-  "version": "0.10.1",
+  "version": "0.10.2",
   "private": false,
   "sideEffects": false,
   "license": "MIT",
