@@ -1,3 +1,10 @@
+## [0.11.3](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.11.2...electron-link-v0.11.3) (2023-07-09)
+
+
+### Performance Improvements
+
+* **core:** optimize Merge type ([6588ca7](https://github.com/TheUnderScorer/musubi/commit/6588ca77b72a39f50ef1e7cf6e3b365ba7340982))
+
 ## [0.11.2](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.11.1...electron-link-v0.11.2) (2023-07-04)
 
 
