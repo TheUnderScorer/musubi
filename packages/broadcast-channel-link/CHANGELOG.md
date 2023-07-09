@@ -1,3 +1,10 @@
+## [0.2.4](https://github.com/TheUnderScorer/musubi/compare/broadcast-channel-link-v0.2.3...broadcast-channel-link-v0.2.4) (2023-07-09)
+
+
+### Performance Improvements
+
+* **core:** optimize Merge type ([6588ca7](https://github.com/TheUnderScorer/musubi/commit/6588ca77b72a39f50ef1e7cf6e3b365ba7340982))
+
 ## [0.2.3](https://github.com/TheUnderScorer/musubi/compare/broadcast-channel-link-v0.2.2...broadcast-channel-link-v0.2.3) (2023-07-04)
 
 
