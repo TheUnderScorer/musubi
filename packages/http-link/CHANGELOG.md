@@ -1,3 +1,10 @@
+## [0.6.4](https://github.com/TheUnderScorer/musubi/compare/http-link-v0.6.3...http-link-v0.6.4) (2023-07-11)
+
+
+### Bug Fixes
+
+* support circular references in request and response payloads ([29329a8](https://github.com/TheUnderScorer/musubi/commit/29329a8981b33479897de8628d0132c4dc40b320))
+
 ## [0.6.3](https://github.com/TheUnderScorer/musubi/compare/http-link-v0.6.2...http-link-v0.6.3) (2023-07-09)
 
 
