@@ -1,3 +1,10 @@
+## [0.4.5](https://github.com/TheUnderScorer/musubi/compare/socket-io-link-v0.4.4...socket-io-link-v0.4.5) (2023-07-11)
+
+
+### Bug Fixes
+
+* support circular references in request and response payloads ([29329a8](https://github.com/TheUnderScorer/musubi/commit/29329a8981b33479897de8628d0132c4dc40b320))
+
 ## [0.4.4](https://github.com/TheUnderScorer/musubi/compare/socket-io-link-v0.4.3...socket-io-link-v0.4.4) (2023-07-09)
 
 

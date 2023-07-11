@@ -1,6 +1,6 @@
 {
   "name": "@musubi/socket-io-link",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "sideEffects": false,
   "private": false,
   "license": "MIT",
