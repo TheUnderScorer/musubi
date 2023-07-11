@@ -4,6 +4,7 @@ import { Channel } from './communication.types';
 import { z } from 'zod';
 import { OperationEnvelope } from './OperationEnvelope';
 import { EnvelopeContext } from './context';
+import { safeStringify } from '../utils/json';
 
 const operationResponseSchema = z.object({
   operationName: z.string(),
@@ -126,7 +127,7 @@ export class OperationResponse<
       operationKind,
       req,
       null,
-      error instanceof Error ? error : new Error(JSON.stringify(error)),
+      error instanceof Error ? error : new Error(safeStringify(error)),
       undefined,
       ctx ?? (req?.ctx as Ctx)
     );

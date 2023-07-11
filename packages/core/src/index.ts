@@ -20,3 +20,4 @@ export * from './utils/wait';
 export * from './receiver/OperationReceiverBuilder';
 export * from './utils/id';
 export * from './shared/merge';
+export * from './utils/json';

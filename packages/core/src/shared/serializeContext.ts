@@ -1,4 +1,5 @@
 import { EnvelopeContextEntry } from './context';
+import { safeStringify } from '../utils/json';
 
 export function serializeContext<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -50,7 +51,7 @@ export function serializeValue<Value>(ctx: Value): any {
   }
 
   try {
-    return JSON.stringify(ctx);
+    return safeStringify(ctx);
   } catch (error) {
     return '[unserializable]';
   }

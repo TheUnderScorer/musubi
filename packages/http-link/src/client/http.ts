@@ -1,5 +1,9 @@
 import { MusubiHttpHeaders, MusubiHttpMethod } from '../shared/http.types';
-import { OperationRequest, OperationResponse } from '@musubi/core';
+import {
+  OperationRequest,
+  OperationResponse,
+  safeStringify,
+} from '@musubi/core';
 import { ClientContext } from './client.types';
 
 export async function makeHttpRequest<Payload, Result>(
@@ -28,12 +32,12 @@ export async function makeHttpRequest<Payload, Result>(
       if (value) {
         url.searchParams.set(
           key,
-          typeof value === 'object' ? JSON.stringify(value) : value
+          typeof value === 'object' ? safeStringify(value) : value
         );
       }
     });
   } else {
-    requestInit.body = JSON.stringify(request.toJSON());
+    requestInit.body = safeStringify(request.toJSON());
   }
 
   const response = await fetchFn(url.toString(), requestInit);
@@ -69,7 +73,7 @@ function requestToQueryParams(
 
       params.set(
         keyPath,
-        typeof value === 'object' ? JSON.stringify(value) : value
+        typeof value === 'object' ? safeStringify(value) : value
       );
     }
   });

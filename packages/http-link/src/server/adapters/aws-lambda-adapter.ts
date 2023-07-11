@@ -11,7 +11,12 @@ import {
   APIGatewayProxyStructuredResultV2,
   Context,
 } from 'aws-lambda';
-import { LinkParam, OperationResponse, wait } from '@musubi/core';
+import {
+  LinkParam,
+  OperationResponse,
+  safeStringify,
+  wait,
+} from '@musubi/core';
 import { HttpServerReceiverLink } from '../HttpServerReceiverLink';
 import { parseMusubiHttpRequest } from '../http';
 import { SharedHttpOptions } from '../../shared/options.types';
@@ -133,7 +138,7 @@ class AwsLambdaAdapter<Format extends LambdaApiFormat>
             ...rawRequest,
             reply: ({ status, response }) => {
               resolve({
-                body: JSON.stringify(response),
+                body: safeStringify(response),
                 statusCode: status,
                 headers: {
                   'Content-Type': 'application/json',
@@ -163,7 +168,7 @@ class AwsLambdaAdapter<Format extends LambdaApiFormat>
           );
 
           return {
-            body: JSON.stringify(response.toJSON()),
+            body: safeStringify(response.toJSON()),
             statusCode: 500,
             headers: {
               'Content-Type': 'application/json',
