@@ -1,3 +1,10 @@
+## [0.11.4](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.11.3...electron-link-v0.11.4) (2023-07-11)
+
+
+### Bug Fixes
+
+* support circular references in request and response payloads ([29329a8](https://github.com/TheUnderScorer/musubi/commit/29329a8981b33479897de8628d0132c4dc40b320))
+
 ## [0.11.3](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.11.2...electron-link-v0.11.3) (2023-07-09)
 
 
