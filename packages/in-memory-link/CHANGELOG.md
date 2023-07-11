@@ -1,3 +1,10 @@
+## [0.12.4](https://github.com/TheUnderScorer/musubi/compare/in-memory-link-v0.12.3...in-memory-link-v0.12.4) (2023-07-11)
+
+
+### Bug Fixes
+
+* support circular references in request and response payloads ([29329a8](https://github.com/TheUnderScorer/musubi/commit/29329a8981b33479897de8628d0132c4dc40b320))
+
 ## [0.12.3](https://github.com/TheUnderScorer/musubi/compare/in-memory-link-v0.12.2...in-memory-link-v0.12.3) (2023-07-09)
 
 
