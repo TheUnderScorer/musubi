@@ -1,3 +1,10 @@
+## [0.2.5](https://github.com/TheUnderScorer/musubi/compare/broadcast-channel-link-v0.2.4...broadcast-channel-link-v0.2.5) (2023-07-11)
+
+
+### Bug Fixes
+
+* support circular references in request and response payloads ([29329a8](https://github.com/TheUnderScorer/musubi/commit/29329a8981b33479897de8628d0132c4dc40b320))
+
 ## [0.2.4](https://github.com/TheUnderScorer/musubi/compare/broadcast-channel-link-v0.2.3...broadcast-channel-link-v0.2.4) (2023-07-09)
 
 
