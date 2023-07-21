@@ -1,3 +1,10 @@
+## [0.11.5](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.11.4...electron-link-v0.11.5) (2023-07-21)
+
+
+### Bug Fixes
+
+* **electron-link:** avoid storing window reference for too long ([8ad5049](https://github.com/TheUnderScorer/musubi/commit/8ad5049d8a8b097c21aac4626ce7053152285446))
+
 ## [0.11.4](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.11.3...electron-link-v0.11.4) (2023-07-11)
 
 
