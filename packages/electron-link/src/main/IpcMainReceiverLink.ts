@@ -7,7 +7,7 @@ import {
 import { BrowserWindow, IpcMain, IpcMainInvokeEvent } from 'electron';
 import { Observable } from 'rxjs';
 import { ELECTRON_MESSAGE_CHANNEL } from '../shared/channel';
-import { getWindowProviderFromChannel } from './getWindowProviderFromChannel';
+import { getWindowFromChannel } from './getWindowFromChannel';
 import { makeRequestHandler } from '../shared/request';
 import { ElectronMainContext } from './context';
 
@@ -17,7 +17,7 @@ export class IpcMainReceiverLink implements ReceiverLink<ElectronMainContext> {
   async sendResponse<Payload, Result>(
     response: OperationResponse<Result, OperationRequest<Payload>>
   ) {
-    const window = getWindowProviderFromChannel(response.channel).get();
+    const window = getWindowFromChannel(response.channel);
 
     const payload = response.toJSON();
 

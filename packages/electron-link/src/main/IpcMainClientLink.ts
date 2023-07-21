@@ -1,7 +1,7 @@
 import { ClientLink, OperationRequest, OperationResponse } from '@musubi/core';
 import { BrowserWindow, IpcMain, IpcMainInvokeEvent } from 'electron';
 import { ELECTRON_MESSAGE_CHANNEL } from '../shared/channel';
-import { getWindowProviderFromChannel } from './getWindowProviderFromChannel';
+import { getWindowFromChannel } from './getWindowFromChannel';
 import { Observable } from 'rxjs';
 import { makeResponseHandler } from '../shared/response';
 import { ElectronMainContext } from './context';
@@ -21,7 +21,7 @@ export class IpcMainClientLink implements ClientLink<ElectronMainContext> {
         Payload,
         ElectronMainContext
       >((event, response) => {
-        const window = getWindowProviderFromChannel(request.channel).get();
+        const window = getWindowFromChannel(request.channel);
 
         if (
           response.operationName === request.name &&
@@ -53,7 +53,7 @@ export class IpcMainClientLink implements ClientLink<ElectronMainContext> {
   > {
     return new Promise((resolve) => {
       // TODO Reject when window is closed?
-      const window = getWindowProviderFromChannel(request.channel).get();
+      const window = getWindowFromChannel(request.channel);
 
       const handler = makeResponseHandler<
         IpcMainInvokeEvent,
