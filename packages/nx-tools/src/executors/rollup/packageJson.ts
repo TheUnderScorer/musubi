@@ -71,7 +71,13 @@ export async function updatePackageJson(
               return acc;
             }
 
+            const filePath = `.${parsedPath.dir}/${parsedPath.base}`;
+
             const format = resolveExportsFormat(output.format, output.file);
+
+            if (format === 'require') {
+              result.main = filePath;
+            }
 
             if (!format) {
               return acc;
@@ -79,7 +85,7 @@ export async function updatePackageJson(
 
             return {
               ...acc,
-              [format]: `.${parsedPath.dir}/${parsedPath.base}`,
+              [format]: filePath,
             };
           }, {} as PackageExportsMetadata);
 

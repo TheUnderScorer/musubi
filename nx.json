@@ -19,6 +19,14 @@
   "affected": {
     "defaultBase": "main"
   },
+  "namedInputs": {
+    "sharedGlobals": [
+      "{workspaceRoot}/packages/nx-tools"
+    ],
+    "default": [
+      "sharedGlobals"
+    ]
+  },
   "targetDefaults": {
     "lint": {
       "inputs": [
