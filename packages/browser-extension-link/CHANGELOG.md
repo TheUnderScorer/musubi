@@ -1,3 +1,11 @@
+## [0.10.5](https://github.com/TheUnderScorer/musubi/compare/browser-extension-link-v0.10.4...browser-extension-link-v0.10.5) (2023-08-12)
+
+
+### Bug Fixes
+
+* **core:** remove internal rxjs imports ([4dd614b](https://github.com/TheUnderScorer/musubi/commit/4dd614bc9d686f3844bd251f20178cb9894e1671))
+* include "main" field in package.json for better compatibility ([27a5db3](https://github.com/TheUnderScorer/musubi/commit/27a5db3e03d56e309c0a75dd31f4a21261993769))
+
 ## [0.10.4](https://github.com/TheUnderScorer/musubi/compare/browser-extension-link-v0.10.3...browser-extension-link-v0.10.4) (2023-07-11)
 
 
