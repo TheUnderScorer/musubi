@@ -11,10 +11,10 @@ import { OperationRequest } from '../shared/OperationRequest';
 import { Channel } from '../shared/communication.types';
 import { OperationResponse } from '../shared/OperationResponse';
 import { finalize, map, Observable, Subject } from 'rxjs';
-import { isSubscription } from 'rxjs/internal/Subscription';
 import { validatePayload, validateResult } from '../schema/validation';
 import { LinkParam } from '../shared/link.types';
 import { createLinks } from '../shared/link';
+import { isSubscription } from '../utils/isSubscription';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class MusubiClient<S extends OperationsSchema, Ctx = any> {

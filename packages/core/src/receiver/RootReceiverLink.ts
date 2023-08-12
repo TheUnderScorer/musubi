@@ -3,7 +3,7 @@ import { OperationRequest } from '../shared/OperationRequest';
 import { OperationResponse } from '../shared/OperationResponse';
 import { ReceiverLink } from './receiver.types';
 import { OperationName } from '../schema/schema.types';
-import { isSubscription } from 'rxjs/internal/Subscription';
+import { isSubscription } from '../utils/isSubscription';
 
 export class RootReceiverLink<Ctx = unknown> {
   readonly sendResponse: (
