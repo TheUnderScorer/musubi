@@ -11,3 +11,5 @@ export function createSocketIoClientLink(
     receiver: new SocketReceiverLink(socket),
   };
 }
+
+export * from '../shared/channel';

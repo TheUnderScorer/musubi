@@ -14,3 +14,5 @@ export function createSocketIoServerLink(
     receiver: ({ schema }) => new SocketReceiverLink(server, packet$, schema),
   };
 }
+
+export * from '../shared/channel';
