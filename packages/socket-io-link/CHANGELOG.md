@@ -1,3 +1,10 @@
+## [0.4.7](https://github.com/TheUnderScorer/musubi/compare/socket-io-link-v0.4.6...socket-io-link-v0.4.7) (2023-08-15)
+
+
+### Bug Fixes
+
+* add channel exports ([3cff6ac](https://github.com/TheUnderScorer/musubi/commit/3cff6acde6839c3aa2d781f4b19498b88c7c3b7d))
+
 ## [0.4.6](https://github.com/TheUnderScorer/musubi/compare/socket-io-link-v0.4.5...socket-io-link-v0.4.6) (2023-08-12)
 
 
