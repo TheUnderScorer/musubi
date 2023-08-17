@@ -1,3 +1,10 @@
+## [0.11.7](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.11.6...electron-link-v0.11.7) (2023-08-17)
+
+
+### Bug Fixes
+
+* catch potential errors while sending message to a window ([e2c2c27](https://github.com/TheUnderScorer/musubi/commit/e2c2c2712ff8210e8f6f897b1e34e1d3f330a2a6))
+
 ## [0.11.6](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.11.5...electron-link-v0.11.6) (2023-08-12)
 
 
