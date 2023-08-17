@@ -1,10 +1,11 @@
 import { ClientLink, OperationRequest, OperationResponse } from '@musubi/core';
-import { BrowserWindow, IpcMain, IpcMainInvokeEvent } from 'electron';
+import { IpcMain, IpcMainInvokeEvent } from 'electron';
 import { ELECTRON_MESSAGE_CHANNEL } from '../shared/channel';
 import { getWindowFromChannel } from './getWindowFromChannel';
 import { Observable } from 'rxjs';
 import { makeResponseHandler } from '../shared/response';
 import { ElectronMainContext } from './context';
+import { sendMessageToAllWindows, sendMessageToWindow } from './send';
 
 export class IpcMainClientLink implements ClientLink<ElectronMainContext> {
   constructor(private readonly ipc: IpcMain) {}
@@ -72,11 +73,9 @@ export class IpcMainClientLink implements ClientLink<ElectronMainContext> {
       const payload = request.toJSON();
 
       if (window) {
-        window.webContents.send(ELECTRON_MESSAGE_CHANNEL, payload);
+        sendMessageToWindow(window, payload);
       } else {
-        BrowserWindow.getAllWindows().forEach((window) => {
-          window.webContents.send(ELECTRON_MESSAGE_CHANNEL, payload);
-        });
+        sendMessageToAllWindows(payload);
       }
     });
   }

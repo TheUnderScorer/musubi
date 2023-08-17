@@ -10,6 +10,7 @@ import { ELECTRON_MESSAGE_CHANNEL } from '../shared/channel';
 import { getWindowFromChannel } from './getWindowFromChannel';
 import { makeRequestHandler } from '../shared/request';
 import { ElectronMainContext } from './context';
+import { sendMessageToAllWindows, sendMessageToWindow } from './send';
 
 export class IpcMainReceiverLink implements ReceiverLink<ElectronMainContext> {
   constructor(private readonly ipc: IpcMain) {}
@@ -22,14 +23,12 @@ export class IpcMainReceiverLink implements ReceiverLink<ElectronMainContext> {
     const payload = response.toJSON();
 
     if (window) {
-      window.webContents.send(ELECTRON_MESSAGE_CHANNEL, payload);
+      sendMessageToWindow(window, payload);
 
       return;
     }
 
-    BrowserWindow.getAllWindows().forEach((window) => {
-      window.webContents.send(ELECTRON_MESSAGE_CHANNEL, payload);
-    });
+    sendMessageToAllWindows(payload);
   }
 
   receiveRequest(
