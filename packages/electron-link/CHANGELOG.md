@@ -1,3 +1,10 @@
+## [0.11.8](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.11.7...electron-link-v0.11.8) (2023-08-18)
+
+
+### Bug Fixes
+
+* prevent sending messages to destroyed windows ([74bafc5](https://github.com/TheUnderScorer/musubi/commit/74bafc59d958a1e34043b10a2fadcb715b75e1d5))
+
 ## [0.11.7](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.11.6...electron-link-v0.11.7) (2023-08-17)
 
 
