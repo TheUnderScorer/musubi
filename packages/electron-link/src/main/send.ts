@@ -12,6 +12,15 @@ export function sendMessageToWindow<T>(window: BrowserWindow, message: T) {
       return;
     }
 
+    if (!window.isVisible()) {
+      console.warn(
+        `Attempted to send message to invisible window ${window.id}`,
+        message
+      );
+
+      return;
+    }
+
     window.webContents.send(ELECTRON_MESSAGE_CHANNEL, message);
   } catch (error) {
     console.error(`Failed to send message to window ${window.id}`, {
