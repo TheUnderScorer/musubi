@@ -1,3 +1,10 @@
+## [0.11.11](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.11.10...electron-link-v0.11.11) (2023-08-19)
+
+
+### Bug Fixes
+
+* avoid sending messages to destroyed windows by storing them locally ([f133baa](https://github.com/TheUnderScorer/musubi/commit/f133baa21263ecdd188b67359bb4548ecda5cb63))
+
 ## [0.11.10](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.11.9...electron-link-v0.11.10) (2023-08-19)
 
 
