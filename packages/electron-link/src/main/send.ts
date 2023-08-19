@@ -3,7 +3,7 @@ import { ELECTRON_MESSAGE_CHANNEL } from '../shared/channel';
 
 export function sendMessageToWindow<T>(window: BrowserWindow, message: T) {
   try {
-    if (window.isDestroyed()) {
+    if (window.webContents.isDestroyed()) {
       console.warn(
         `Attempted to send message to destroyed window ${window.id}`,
         message
@@ -21,8 +21,11 @@ export function sendMessageToWindow<T>(window: BrowserWindow, message: T) {
   }
 }
 
-export function sendMessageToAllWindows<T>(message: T) {
-  BrowserWindow.getAllWindows().forEach((window) => {
+export function sendMessageToAllWindows<T>(
+  message: T,
+  windows: BrowserWindow[]
+) {
+  windows.forEach((window) => {
     sendMessageToWindow(window, message);
   });
 }

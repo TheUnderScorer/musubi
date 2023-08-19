@@ -6,9 +6,13 @@ import { Observable } from 'rxjs';
 import { makeResponseHandler } from '../shared/response';
 import { ElectronMainContext } from './context';
 import { sendMessageToAllWindows, sendMessageToWindow } from './send';
+import { ElectronWindows } from './ElectronWindows';
 
 export class IpcMainClientLink implements ClientLink<ElectronMainContext> {
-  constructor(private readonly ipc: IpcMain) {}
+  constructor(
+    private readonly ipc: IpcMain,
+    private readonly windows: ElectronWindows
+  ) {}
 
   subscribeToEvent<Payload>(
     request: OperationRequest<unknown, ElectronMainContext>
@@ -61,7 +65,7 @@ export class IpcMainClientLink implements ClientLink<ElectronMainContext> {
         Payload,
         Result,
         ElectronMainContext
-      >((event, response) => {
+      >((_event, response) => {
         if (response.request?.id === request.id) {
           this.ipc.off(ELECTRON_MESSAGE_CHANNEL, handler);
           resolve(response);
@@ -75,7 +79,7 @@ export class IpcMainClientLink implements ClientLink<ElectronMainContext> {
       if (window) {
         sendMessageToWindow(window, payload);
       } else {
-        sendMessageToAllWindows(payload);
+        sendMessageToAllWindows(payload, this.windows.windows);
       }
     });
   }

@@ -11,9 +11,13 @@ import { getWindowFromChannel } from './getWindowFromChannel';
 import { makeRequestHandler } from '../shared/request';
 import { ElectronMainContext } from './context';
 import { sendMessageToAllWindows, sendMessageToWindow } from './send';
+import { ElectronWindows } from './ElectronWindows';
 
 export class IpcMainReceiverLink implements ReceiverLink<ElectronMainContext> {
-  constructor(private readonly ipc: IpcMain) {}
+  constructor(
+    private readonly ipc: IpcMain,
+    private readonly windows: ElectronWindows
+  ) {}
 
   async sendResponse<Payload, Result>(
     response: OperationResponse<Result, OperationRequest<Payload>>
@@ -28,7 +32,7 @@ export class IpcMainReceiverLink implements ReceiverLink<ElectronMainContext> {
       return;
     }
 
-    sendMessageToAllWindows(payload);
+    sendMessageToAllWindows(payload, this.windows.windows);
   }
 
   receiveRequest(

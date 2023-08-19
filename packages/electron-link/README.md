@@ -33,14 +33,6 @@ import { cr } from "@musubi/electron-link/main";
 import { schema } from "./schema";
 
 app.on("ready", () => {
-  const electronLink = createMainLink();
-
-  const { receiver, client } = createMusubi({
-    schema,
-    clientLinks: [electronLink.client],
-    receiverLinks: [electronLink.receiver]
-  });
-
   const win = new BrowserWindow({
     webPreferences: {
       // Replace this path with the path to your preload file (more in next step)
@@ -48,13 +40,23 @@ app.on("ready", () => {
     }
   });
 
+  const electronLink = createMainLink({
+    windows: [win]
+  });
+
+  const { receiver, client } = createMusubi({
+    schema,
+    clientLinks: [electronLink.client],
+    receiverLinks: [electronLink.receiver]
+  });
+
   receiver.handleCommand(...);
   receiver.handleQuery(...);
-  
-  
+
+
   // Send query to specific window, by passing it's ID as last parementer.
   // It works with commands and events as well
-  client.query('testQuery', {test: true}, win.id)
+  client.query("testQuery", { test: true }, win.id);
 });
 ```
 > Note: By omitting `channel` parameter, message will be sent to all windows, but you will always get `void` as result

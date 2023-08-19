@@ -11,19 +11,21 @@ const webPreferences: WebPreferences = {
 async function main() {
   await app.whenReady();
 
-  const link = createMainLink();
-
-  const { client, receiver } = createMusubi({
-    clientLinks: [link.client],
-    receiverLinks: [link.receiver],
-    schema: electronSchema,
-  });
-
   const window = new BrowserWindow({
     width: 800,
     height: 600,
     show: true,
     webPreferences,
+  });
+
+  const link = createMainLink({
+    windows: [window],
+  });
+
+  const { client, receiver } = createMusubi({
+    clientLinks: [link.client],
+    receiverLinks: [link.receiver],
+    schema: electronSchema,
   });
 
   await window.loadURL('http://localhost:4200');
