@@ -1,3 +1,10 @@
+## [0.11.10](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.11.9...electron-link-v0.11.10) (2023-08-19)
+
+
+### Bug Fixes
+
+* revert avoid sending message to hidden windows ([b03a84b](https://github.com/TheUnderScorer/musubi/commit/b03a84b06bee40630f642147a4f82677f9c65733))
+
 ## [0.11.9](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.11.8...electron-link-v0.11.9) (2023-08-19)
 
 
