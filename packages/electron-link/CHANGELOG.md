@@ -1,3 +1,10 @@
+# [0.12.0](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.11.11...electron-link-v0.12.0) (2023-08-20)
+
+
+### Features
+
+* support registering new windows ([bb53872](https://github.com/TheUnderScorer/musubi/commit/bb53872c38a54ce4a9988e1ef48c5438cf258ecf))
+
 ## [0.11.11](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.11.10...electron-link-v0.11.11) (2023-08-19)
 
 
