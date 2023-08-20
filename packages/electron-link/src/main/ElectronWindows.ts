@@ -13,6 +13,10 @@ export class ElectronWindows {
     return [...this.windowsSet];
   }
 
+  add(window: BrowserWindow) {
+    this.registerWindow(window);
+  }
+
   private registerWindow(window: BrowserWindow) {
     this.windowsSet.add(window);
 

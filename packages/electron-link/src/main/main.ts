@@ -14,7 +14,12 @@ export function createMainLink({ windows }: ElectronLinkOptions = {}) {
   return {
     receiver: new IpcMainReceiverLink(ipcMain, electronWindows),
     client: new IpcMainClientLink(ipcMain, electronWindows),
-  } satisfies LinkPair<IpcMainClientLink, IpcMainReceiverLink>;
+    addWindow: (window: BrowserWindow) => {
+      electronWindows.add(window);
+    },
+  } satisfies LinkPair<IpcMainClientLink, IpcMainReceiverLink> & {
+    addWindow: (window: BrowserWindow) => void;
+  };
 }
 
 export { exposeElectronLink } from './expose';
