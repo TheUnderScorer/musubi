@@ -1,3 +1,10 @@
+# [0.13.0](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.12.0...electron-link-v0.13.0) (2023-08-21)
+
+
+### Features
+
+* add debug log when sending message ([32af4fd](https://github.com/TheUnderScorer/musubi/commit/32af4fd8bc5148552e50a94663c98527138a0972))
+
 # [0.12.0](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.11.11...electron-link-v0.12.0) (2023-08-20)
 
 
