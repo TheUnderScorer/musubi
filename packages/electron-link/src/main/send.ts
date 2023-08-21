@@ -12,6 +12,12 @@ export function sendMessageToWindow<T>(window: BrowserWindow, message: T) {
       return;
     }
 
+    // TODO Remove later
+    console.debug(
+      `Sending message to window #${window.id} (${window.title})`,
+      message
+    );
+
     window.webContents.send(ELECTRON_MESSAGE_CHANNEL, message);
   } catch (error) {
     console.error(`Failed to send message to window ${window.id}`, {
