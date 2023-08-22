@@ -1,3 +1,10 @@
+## [0.13.1](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.13.0...electron-link-v0.13.1) (2023-08-22)
+
+
+### Bug Fixes
+
+* remove debug log ([2f5fded](https://github.com/TheUnderScorer/musubi/commit/2f5fded0b61ede811d628781e523fff575892fd5))
+
 # [0.13.0](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.12.0...electron-link-v0.13.0) (2023-08-21)
 
 
