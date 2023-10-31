@@ -14,6 +14,7 @@ import {
 import { useQuery } from './hooks/useQuery';
 import { useCommand } from './hooks/useCommand';
 import { useEvent } from './hooks/useEvent';
+import { useInfiniteQuery } from './hooks/useInfiniteQuery';
 
 export function createReactMusubi<Schema extends OperationsSchema>(
   schema: Schema
@@ -27,7 +28,7 @@ export function createProxyForSchema<Schema extends OperationsSchema>(
   return new Proxy(
     {},
     {
-      get: (target, p) => {
+      get: (_, p) => {
         const key = p.toString() as OperationName;
 
         return Object.values(schema).reduce((acc, operations) => {
@@ -56,6 +57,7 @@ function buildHookForOperation(
     case OperationKind.Query:
       return {
         useQuery: (options) => useQuery(key, options),
+        useInfiniteQuery: (options) => useInfiniteQuery(key, options),
       } as UseQueryProperty<
         OperationKind.Query,
         OperationDefinition<OperationKind.Query>

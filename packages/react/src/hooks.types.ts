@@ -11,8 +11,11 @@ import {
   OperationsSchema,
 } from '@musubi/core';
 import {
+  InfiniteData,
   QueryClient,
   QueryKey,
+  UseInfiniteQueryOptions as _UseInfiniteQueryOptions,
+  UseInfiniteQueryResult,
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions as _UseQueryOptions,
@@ -38,6 +41,10 @@ export interface UseQueryProperty<
   Operation extends OperationDefinition<Kind>
 > {
   useQuery: UseQueryFn<ExtractPayload<Operation>, ExtractResult<Operation>>;
+  useInfiniteQuery: UseInfiniteQueryFn<
+    ExtractPayload<Operation>,
+    ExtractResult<Operation>
+  >;
 }
 
 export interface UseCommandProperty<
@@ -93,25 +100,62 @@ export type UseCommandReturn<Payload, Result> = UseMutationResult<
   key: QueryKey;
 };
 
-export interface UseQueryOptions<Payload, Result>
-  extends _UseQueryOptions<ExtractZod<Result>, Error, ExtractZod<Result>> {
+export interface QueryOptionsExtra<Payload> {
   variables?: ExtractZod<Payload>;
   channel?: Channel;
   musubiContext?: MusubiProviderProps['Context'];
 }
 
-export type UseQueryReturn<Result> = UseQueryResult<
-  ExtractZod<Result>,
-  Error
-> & {
+export interface UseQueryOptions<Payload, Result>
+  extends Omit<
+      _UseQueryOptions<ExtractZod<Result>, Error, ExtractZod<Result>>,
+      'queryFn' | 'queryKey'
+    >,
+    QueryOptionsExtra<Payload> {}
+
+export interface UseInfiniteQueryOptions<
+  Payload,
+  Result,
+  PageParamKey extends keyof Payload = keyof Payload
+> extends Omit<
+      _UseInfiniteQueryOptions<
+        ExtractZod<Result>,
+        Error,
+        ExtractZod<Result>,
+        ExtractZod<Result>,
+        QueryKey,
+        Payload[PageParamKey]
+      >,
+      'queryKey' | 'queryFn'
+    >,
+    QueryOptionsExtra<Omit<Payload, PageParamKey>> {
+  pageParamKey: PageParamKey;
+}
+
+export interface QueryReturnExtra<Result> {
   key: QueryKey;
   setQueryData: SetQueryDataFn<Result>;
   cancel: () => Promise<void>;
-};
+}
+
+export type UseQueryReturn<Result> = UseQueryResult<ExtractZod<Result>, Error> &
+  QueryReturnExtra<Result>;
+
+export type UseInfiniteQueryReturn<Result> = UseInfiniteQueryResult<
+  InfiniteData<ExtractZod<Result>>,
+  Error
+> &
+  QueryReturnExtra<Result>;
 
 export type UseQueryFn<Payload, Result> = (
   options?: UseQueryOptions<Payload, Result>
 ) => UseQueryReturn<Result>;
+
+export type UseInfiniteQueryFn<Payload, Result> = <
+  PageParam extends keyof Payload = keyof Payload
+>(
+  options: UseInfiniteQueryOptions<Payload, Result, PageParam>
+) => UseInfiniteQueryReturn<Result>;
 
 export type UseCommandFn<Payload, Result> = (
   options?: UseCommandOptions<Payload, Result>

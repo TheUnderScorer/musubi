@@ -1,18 +1,26 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useQuery as _useQuery, useQueryClient } from '@tanstack/react-query';
+import { OperationName } from '@musubi/core';
 import {
   SetQueryDataFn,
-  UseQueryOptions,
-  UseQueryReturn,
+  UseInfiniteQueryOptions,
+  UseInfiniteQueryReturn,
 } from '../hooks.types';
 import { useQueryKey } from './useQueryKey';
-import { OperationName } from '@musubi/core';
+import {
+  InfiniteData,
+  QueryKey,
+  useInfiniteQuery as _useInfiniteQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { useMusubiClient } from '../providers/MusubiProvider';
 import { useCallback } from 'react';
 
-export function useQuery<Payload, Result>(
+export function useInfiniteQuery<
+  Payload,
+  Result,
+  PageParam extends keyof Payload
+>(
   name: OperationName,
-  options?: UseQueryOptions<Payload, Result>
+  options: UseInfiniteQueryOptions<Payload, Result, PageParam>
 ) {
   const variables = options?.variables;
   const queryKey = useQueryKey(name, variables);
@@ -20,13 +28,27 @@ export function useQuery<Payload, Result>(
   const queryClient = useQueryClient();
   const client = useMusubiClient(options?.musubiContext);
 
-  const query = _useQuery<Result, Error, Payload>({
-    ...(options as UseQueryOptions<any, any>),
+  const query = _useInfiniteQuery<
+    Result,
+    Error,
+    InfiniteData<Result>,
+    QueryKey,
+    PageParam
+  >({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ...(options as UseInfiniteQueryOptions<any, any, any>),
     queryKey,
-    queryFn: async () => {
+
+    queryFn: async (params) => {
       const result = await client.query(
         name,
-        options?.variables,
+        {
+          ...options?.variables,
+          [options.pageParamKey]:
+            'pageParam' in params
+              ? params.pageParam
+              : options?.variables?.[options.pageParamKey],
+        },
         options?.channel
       );
 
@@ -53,5 +75,5 @@ export function useQuery<Payload, Result>(
     key: queryKey,
     setQueryData,
     cancel,
-  } as UseQueryReturn<Result>;
+  } as UseInfiniteQueryReturn<Result>;
 }

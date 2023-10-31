@@ -16,12 +16,35 @@ import {
   operation,
 } from '@musubi/core';
 import { createInMemoryLink } from '@musubi/in-memory-link';
+import { z } from 'zod';
+
+const PaginationSchema = z.object({
+  start: z.number(),
+  offset: z.number(),
+});
+
+const TestInfiniteQueryPayloadSchema = z.object({
+  pagination: PaginationSchema,
+});
 
 const testReactSchema = mergeSchemas(
   testSchema,
   defineSchema({
     queries: {
       testUndefinedToNull: operation.query,
+      testInfiniteQuery: operation.query
+        .withPayload(TestInfiniteQueryPayloadSchema)
+        .withResult(
+          z.object({
+            newPagination: PaginationSchema,
+            items: z.array(
+              z.object({
+                id: z.string(),
+                name: z.string(),
+              })
+            ),
+          })
+        ),
     },
     commands: {},
     events: {},
@@ -57,6 +80,62 @@ beforeEach(() => {
   setupTestUserHandlers(musubi.receiver);
 });
 
+describe('useInfiniteQuery', () => {
+  it('should pass page param correctly', async () => {
+    const items = Array.from({ length: 100 }).map((_, i) => ({
+      id: i.toString(),
+      name: `Item ${i}`,
+    }));
+
+    const handler = jest.fn(
+      ({ pagination }: z.infer<typeof TestInfiniteQueryPayloadSchema>) => {
+        return {
+          items: items.slice(
+            pagination.start,
+            pagination.start + pagination.offset
+          ),
+          newPagination: {
+            start: pagination.start + pagination.offset,
+            offset: pagination.offset,
+          },
+        };
+      }
+    );
+
+    musubi.receiver.handleQuery('testInfiniteQuery', handler);
+
+    const queryHook = renderHook(
+      () =>
+        m.testInfiniteQuery.useInfiniteQuery({
+          pageParamKey: 'pagination',
+          initialPageParam: {
+            start: 0,
+            offset: 10,
+          },
+          getNextPageParam: (lastPage) => lastPage.newPagination,
+        }),
+      {
+        wrapper: Wrapper,
+      }
+    );
+
+    const queryResult = await queryHook.result.current.refetch();
+    expect(queryResult.data?.pages).toHaveLength(1);
+    expect(queryResult.data?.pages?.[0].items).toHaveLength(10);
+    expect(queryResult.data?.pages?.[0].items[9].id).toEqual('9');
+
+    await act(async () => {
+      await queryHook.result.current.fetchNextPage();
+    });
+
+    const queryResult2 = await queryHook.result.current.refetch();
+
+    expect(queryResult2.data?.pages).toHaveLength(2);
+    expect(queryResult2.data?.pages?.[1].items).toHaveLength(10);
+    expect(queryResult2.data?.pages?.[1].items[9].id).toEqual('19');
+  });
+});
+
 describe('useCommand, useQuery', () => {
   it('should convert undefined to null from queries', async () => {
     musubi.receiver.handleQuery('testUndefinedToNull', () => {
@@ -87,9 +166,6 @@ describe('useCommand, useQuery', () => {
           variables: {
             id: commandResult.id,
           },
-          onSuccess: (data) => {
-            expect(data?.name).toBeTruthy();
-          },
         }),
       {
         wrapper: Wrapper,
@@ -97,6 +173,7 @@ describe('useCommand, useQuery', () => {
     );
     const queryResult = await queryHook.result.current.refetch();
     expect(queryResult.data).toEqual(commandResult);
+    expect(queryResult.data?.name).toBeTruthy();
   });
 });
 
