@@ -1,3 +1,11 @@
+# [0.7.0](https://github.com/TheUnderScorer/musubi/compare/react-v0.6.7...react-v0.7.0) (2023-10-31)
+
+
+### Features
+
+* add useInfiniteQuery hook ([83f85d6](https://github.com/TheUnderScorer/musubi/commit/83f85d608f9ec7358b4ff8a0f7b0d31eca350f7f))
+* bump react-query to 5.4.3 ([02f713e](https://github.com/TheUnderScorer/musubi/commit/02f713effdc9cb8bf27d0082b6a037469f1b1f96))
+
 ## [0.6.7](https://github.com/TheUnderScorer/musubi/compare/react-v0.6.6...react-v0.6.7) (2023-08-12)
 
 
