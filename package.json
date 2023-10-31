@@ -101,7 +101,7 @@
     "packages/**"
   ],
   "dependencies": {
-    "@tanstack/react-query": "^4.29.5",
+    "@tanstack/react-query": "^5.4.3",
     "axios": "^1.0.0",
     "electron": "^24.1.2",
     "express": "^4.18.2",
