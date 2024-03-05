@@ -54,20 +54,17 @@
     },
     "test": {
       "executor": "@nx/vite:test",
-      "outputs": ["coverage/packages/examples/electron/frontend"],
+      "outputs": [
+        "{workspaceRoot}/coverage/packages/examples/electron/frontend"
+      ],
       "options": {
         "passWithNoTests": true,
         "reportsDirectory": "../../../../coverage/packages/examples/electron/frontend"
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": [
-          "packages/examples/electron/frontend/**/*.{ts,tsx,js,jsx}"
-        ]
-      }
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
     },
     "serve-static": {
       "executor": "@nrwl/web:file-server",

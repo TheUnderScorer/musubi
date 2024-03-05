@@ -2,7 +2,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
-import tsconfigPaths from 'vite-tsconfig-paths';
+import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import checker from 'vite-plugin-checker';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 
@@ -15,7 +15,10 @@ export default defineConfig(async ({ mode }) => {
   );
 
   return {
+    root: __dirname,
     build: {
+      reportCompressedSize: true,
+      commonjsOptions: { transformMixedEsModules: true },
       outDir,
       emptyOutDir: true,
       minify: isDev ? false : 'esbuild',
@@ -42,10 +45,7 @@ export default defineConfig(async ({ mode }) => {
       },
     },
     plugins: [
-      tsconfigPaths({
-        root: '../../..',
-        projects: ['tsconfig.base.json'],
-      }),
+      nxViteTsPaths(),
       react(),
       checker({
         typescript: {

@@ -1,8 +1,16 @@
 /// <reference types="vitest" />
 import { defineConfig } from 'vite';
-import viteTsConfigPaths from 'vite-tsconfig-paths';
+import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 
 export default defineConfig({
+  root: __dirname,
+  build: {
+    outDir: '../../../../dist/packages/examples/electron/frontend',
+    reportCompressedSize: true,
+    commonjsOptions: {
+      transformMixedEsModules: true,
+    },
+  },
   cacheDir: '../../../../node_modules/.vite/examples-electron-frontend',
 
   server: {
@@ -15,11 +23,7 @@ export default defineConfig({
     host: 'localhost',
   },
 
-  plugins: [
-    viteTsConfigPaths({
-      root: '../../../../',
-    }),
-  ],
+  plugins: [nxViteTsPaths()],
 
   // Uncomment this if you are using workers.
   // worker: {
@@ -31,6 +35,12 @@ export default defineConfig({
   // },
 
   test: {
+    reporters: ['default'],
+    coverage: {
+      reportsDirectory:
+        '../../../../coverage/packages/examples/electron/frontend',
+      provider: 'v8',
+    },
     globals: true,
     cache: {
       dir: '../../../../node_modules/.vitest',
