@@ -1,8 +1,5 @@
 import { defineSchema, mergeSchemas, operation } from './schemaHelpers';
-import {
-  testPostSchema,
-  testUserSchema,
-} from '../../../../tools/test/testSchemas';
+import { testPostSchema, testUserSchema } from 'tools/test/testSchemas';
 
 describe('mergeSchemas', () => {
   it('should merge schemas multiple times', () => {

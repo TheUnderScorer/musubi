@@ -16,6 +16,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "tools/*": ["tools/*"],
       "@musubi/broadcast-channel-link": [
         "packages/broadcast-channel-link/src/index.ts"
       ],

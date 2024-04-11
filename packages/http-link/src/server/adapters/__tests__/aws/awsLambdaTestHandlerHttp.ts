@@ -3,10 +3,7 @@ import {
   LambdaApiFormat,
 } from '../../aws-lambda-adapter';
 import { MusubiReceiver } from '@musubi/core';
-import {
-  setupTestUserHandlers,
-  testSchema,
-} from '../../../../../../../tools/test/testMusubi';
+import { setupTestUserHandlers, testSchema } from 'tools/test/testMusubi';
 import { lambdaPaths } from './const';
 
 const { link, getHandler } = createAwsLambdaHttpLink({

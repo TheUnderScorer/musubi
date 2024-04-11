@@ -1,10 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { BroadcastChannelLinkContext, CommunicationChannel } from './types';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import {
-  setupTestUserHandlers,
-  testSchema,
-} from '../../../tools/test/testMusubi';
+import { setupTestUserHandlers, testSchema } from 'tools/test/testMusubi';
 import { createMusubi, Musubi } from '@musubi/core';
 import { createBroadcastChannelLink } from './link';
 

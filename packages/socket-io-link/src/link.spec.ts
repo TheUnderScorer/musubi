@@ -9,10 +9,7 @@ import {
   query,
   wait,
 } from '@musubi/core';
-import {
-  setupTestUserHandlers,
-  testSchema,
-} from '../../../tools/test/testMusubi';
+import { setupTestUserHandlers, testSchema } from 'tools/test/testMusubi';
 import { SocketServerContext } from './server/context';
 import { z } from 'zod';
 import { SocketServerChannel } from './server/channel';

@@ -3,11 +3,7 @@ import { MusubiProvider } from './providers/MusubiProvider';
 import { QueryClient } from '@tanstack/react-query';
 import { act, renderHook } from '@testing-library/react';
 import { PropsWithChildren, useState } from 'react';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import {
-  setupTestUserHandlers,
-  testSchema,
-} from '../../../tools/test/testMusubi';
+import { setupTestUserHandlers, testSchema } from 'tools/test/testMusubi';
 import {
   createMusubi,
   defineSchema,

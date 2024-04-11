@@ -2,11 +2,8 @@ import { MusubiClient } from './MusubiClient';
 import { OperationResponse } from '../shared/OperationResponse';
 import { MusubiReceiver } from '../receiver/MusubiReceiver';
 import { mergeSchemas } from '../schema/schemaHelpers';
-import {
-  testPostSchema,
-  testUserSchema,
-} from '../../../../tools/test/testSchemas';
-import { createTestLink } from '../../../../tools/test/testLink';
+import { testPostSchema, testUserSchema } from 'tools/test/testSchemas';
+import { createTestLink } from 'tools/test/testLink';
 import { MusubiZodError } from '../errors/MusubiZodError';
 
 const schema = mergeSchemas(testUserSchema, testPostSchema);

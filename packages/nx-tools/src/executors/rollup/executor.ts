@@ -22,7 +22,7 @@ export default async function runExecutor(
 
   const normalizedOptions = normalizeRollupExecutorOptions(
     options,
-    context.root,
+    context,
     projectGraph.data.sourceRoot ?? ''
   ) as NormalizedRollupExecutorOptions & RollupExecutorSchema;
 
@@ -34,6 +34,7 @@ export default async function runExecutor(
   const packageJson = fs.existsSync(packageJsonPath)
     ? await import(packageJsonPath).then((mod) => mod.default)
     : {};
+  // eslint-disable-next-line @nx/enforce-module-boundaries
   const rootPackageJson = await import('../../../../../package.json');
 
   invariant(context.projectGraph, 'Project graph is required');

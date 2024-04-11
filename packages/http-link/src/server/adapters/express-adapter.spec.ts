@@ -6,11 +6,7 @@ import {
   MusubiReceiver,
   operation,
 } from '@musubi/core';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import {
-  setupTestUserHandlers,
-  testSchema,
-} from '../../../../../tools/test/testMusubi';
+import { setupTestUserHandlers, testSchema } from 'tools/test/testMusubi';
 import express, { Application, Request } from 'express';
 import { ServerContext } from '../server.types';
 import { createExpressHttpLink } from './express-adapter';

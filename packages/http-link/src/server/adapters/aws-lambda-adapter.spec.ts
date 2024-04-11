@@ -2,8 +2,7 @@ import { startServerless, stopServerless } from './__tests__/aws/serverless';
 import { createHttpClientLink } from '../../client/client';
 import { lambdaPaths } from './__tests__/aws/const';
 import { MusubiClient, wait } from '@musubi/core';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import { testSchema } from '../../../../../tools/test/testMusubi';
+import { testSchema } from 'tools/test/testMusubi';
 import { findFreePorts } from 'find-free-ports';
 import { LambdaApiFormat } from './aws-lambda-adapter';
 
