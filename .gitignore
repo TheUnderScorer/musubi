@@ -44,3 +44,6 @@ Thumbs.db
 **/playwright/.cache
 
 .nx
+**/.esbuild
+remote-profile
+packages/examples/browser-extension-e2e/src/contexts
