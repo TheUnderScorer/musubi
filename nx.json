@@ -6,9 +6,6 @@
   },
   "extends": "nx/presets/npm.json",
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
-  "affected": {
-    "defaultBase": "main"
-  },
   "namedInputs": {
     "sharedGlobals": ["{workspaceRoot}/packages/nx-tools"],
     "default": ["sharedGlobals"]
@@ -68,5 +65,6 @@
       }
     }
   },
-  "nxCloudAccessToken": "ZGIxYTA1ODMtOGUyMi00NzBjLWEwY2QtZjcwNTQyNmM4OTg4fHJlYWQtd3JpdGU="
+  "nxCloudAccessToken": "ZGIxYTA1ODMtOGUyMi00NzBjLWEwY2QtZjcwNTQyNmM4OTg4fHJlYWQtd3JpdGU=",
+  "defaultBase": "main"
 }
