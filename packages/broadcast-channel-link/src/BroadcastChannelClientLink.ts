@@ -1,6 +1,10 @@
-import { ClientLink, OperationRequest, OperationResponse } from '@musubi/core';
+import {
+  ClientLink,
+  Observable,
+  OperationRequest,
+  OperationResponse,
+} from '@musubi/core';
 import { BroadcastChannelLinkContext, CommunicationChannel } from './types';
-import { Observable } from 'rxjs';
 
 export class BroadcastChannelClientLink
   implements ClientLink<BroadcastChannelLinkContext>
@@ -44,7 +48,8 @@ export class BroadcastChannelClientLink
   ): Observable<
     OperationResponse<
       Payload,
-      OperationRequest<unknown, BroadcastChannelLinkContext>
+      OperationRequest<unknown, BroadcastChannelLinkContext>,
+      BroadcastChannelLinkContext
     >
   > {
     return new Observable((observer) => {

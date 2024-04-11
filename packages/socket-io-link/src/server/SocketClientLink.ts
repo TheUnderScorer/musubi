@@ -1,11 +1,11 @@
 import {
   ClientLink,
+  Observable,
   OperationRequest,
   OperationResponse,
   OperationsSchema,
 } from '@musubi/core';
 import { Server } from 'socket.io';
-import { filter, map, Observable } from 'rxjs';
 import { createValidatedSocketHandler } from '../shared/handlers';
 import { resolveSocketChannel } from './channel';
 import { SOCKET_MESSAGE_CHANNEL } from '../shared/channel';
@@ -64,17 +64,17 @@ export class SocketClientLink implements ClientLink<SocketServerContext> {
       SocketServerContext
     >
   > {
-    return this.packet$.pipe(
-      map((data) => ({
+    return this.packet$
+      .map((data) => ({
         ...data,
         payload: OperationResponse.schema.safeParse(data.payload),
-      })),
-      filter(
+      }))
+      .filter(
         (result) =>
           result.payload.success &&
           result.payload.data.operationName === request.name
-      ),
-      map((data) => {
+      )
+      .map((data) => {
         if (!data.payload.success) {
           throw new Error();
         }
@@ -95,7 +95,6 @@ export class SocketClientLink implements ClientLink<SocketServerContext> {
           OperationRequest<unknown, SocketServerContext>,
           SocketServerContext
         >;
-      })
-    );
+      });
   }
 }

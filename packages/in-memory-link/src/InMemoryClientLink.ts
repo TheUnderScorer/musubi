@@ -1,15 +1,21 @@
 import { Handlers } from './handlers';
-import { ClientLink, OperationRequest, OperationResponse } from '@musubi/core';
-import { filter, Observable } from 'rxjs';
+import {
+  ClientLink,
+  Observable,
+  OperationRequest,
+  OperationResponse,
+} from '@musubi/core';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class InMemoryClientLink<Ctx = any> implements ClientLink<Ctx> {
   constructor(readonly handlers: Handlers) {}
 
   subscribeToEvent<Payload>(request: OperationRequest<unknown, Ctx>) {
-    return this.handlers.event.pipe(
-      filter((event) => event.operationName === request.name)
-    ) as Observable<OperationResponse<Payload, OperationRequest<unknown, Ctx>>>;
+    return this.handlers.event.filter(
+      (event) => event.operationName === request.name
+    ) as Observable<
+      OperationResponse<Payload, OperationRequest<unknown, Ctx>, Ctx>
+    >;
   }
 
   sendRequest<Payload, Result>(

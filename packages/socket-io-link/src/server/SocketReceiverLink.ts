@@ -1,4 +1,5 @@
 import {
+  Observable,
   OperationKind,
   OperationName,
   OperationRequest,
@@ -7,7 +8,6 @@ import {
   ReceiverLink,
 } from '@musubi/core';
 import { Server } from 'socket.io';
-import { filter, map, Observable } from 'rxjs';
 import { SOCKET_MESSAGE_CHANNEL } from '../shared/channel';
 import { resolveSocketChannel } from './channel';
 import { PacketObservable } from './packetObservable';
@@ -23,13 +23,13 @@ export class SocketReceiverLink implements ReceiverLink<SocketServerContext> {
   receiveRequest(
     name: OperationName
   ): Observable<OperationRequest<unknown, SocketServerContext>> {
-    return this.packet$.pipe(
-      map((v) => ({
+    return this.packet$
+      .map((v) => ({
         ...v,
         payload: OperationRequest.schema.safeParse(v.payload),
-      })),
-      filter((v) => v.payload.success && v.payload.data.name === name),
-      map((v) => {
+      }))
+      .filter((v) => v.payload.success && v.payload.data.name === name)
+      .map((v) => {
         if (!v.payload.success) {
           // Should NOT happen, just for correct types :D
           throw new Error();
@@ -47,8 +47,7 @@ export class SocketReceiverLink implements ReceiverLink<SocketServerContext> {
             isSerializable: false,
           },
         });
-      })
-    );
+      });
   }
 
   async sendResponse<Payload, Result>(

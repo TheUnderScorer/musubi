@@ -1,4 +1,5 @@
 import {
+  Observable,
   OperationKind,
   OperationName,
   OperationRequest,
@@ -6,7 +7,6 @@ import {
   ReceiverLink,
 } from '@musubi/core';
 import { Socket } from 'socket.io-client';
-import { Observable, Subscription } from 'rxjs';
 import { createValidatedSocketHandler } from '../shared/handlers';
 import { SOCKET_MESSAGE_CHANNEL } from '../shared/channel';
 import { SocketContext } from '../shared/context';
@@ -20,7 +20,7 @@ export class SocketReceiverLink implements ReceiverLink<SocketContext> {
 
   receiveRequest(
     name: OperationName
-  ): Observable<OperationRequest<unknown, SocketContext>> | Subscription {
+  ): Observable<OperationRequest<unknown, SocketContext>> {
     return new Observable((observer) => {
       const handler = createValidatedSocketHandler(
         OperationRequest.schema,

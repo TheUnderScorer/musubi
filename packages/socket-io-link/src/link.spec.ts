@@ -7,6 +7,7 @@ import {
   mergeSchemas,
   Musubi,
   query,
+  wait,
 } from '@musubi/core';
 import {
   setupTestUserHandlers,
@@ -14,7 +15,6 @@ import {
 } from '../../../tools/test/testMusubi';
 import { SocketServerContext } from './server/context';
 import { z } from 'zod';
-import { wait } from 'nx-cloud/lib/utilities/waiter';
 import { SocketServerChannel } from './server/channel';
 import invariant from 'tiny-invariant';
 import { TestClientsPool } from './testUtils/testClientsPool';

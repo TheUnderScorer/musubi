@@ -1,4 +1,10 @@
-import { createMusubi, defineSchema, operation, Musubi } from '@musubi/core';
+import {
+  createMusubi,
+  defineSchema,
+  operation,
+  Musubi,
+  wait,
+} from '@musubi/core';
 import { z } from 'zod';
 import {
   defineServerSocketMeta,
@@ -9,7 +15,6 @@ import { Server } from 'socket.io';
 import { TestClientsPool } from '../testUtils/testClientsPool';
 import { SocketServerContext } from './context';
 import { createSocketIoServerLink } from './server';
-import { wait } from 'nx-cloud/lib/utilities/waiter';
 
 const testObjectSchema = z.object({
   socketId: z.string(),

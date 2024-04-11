@@ -1,11 +1,11 @@
 import {
+  Observable,
   OperationName,
   OperationRequest,
   OperationResponse,
   ReceiverLink,
 } from '@musubi/core';
 import { BrowserWindow, IpcMain, IpcMainInvokeEvent } from 'electron';
-import { Observable } from 'rxjs';
 import { ELECTRON_MESSAGE_CHANNEL } from '../shared/channel';
 import { getWindowFromChannel } from './getWindowFromChannel';
 import { makeRequestHandler } from '../shared/request';

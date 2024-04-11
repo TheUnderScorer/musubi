@@ -21,4 +21,5 @@ export * from './receiver/OperationReceiverBuilder';
 export * from './utils/id';
 export * from './shared/merge';
 export * from './utils/json';
-export * from './utils/isSubscription';
+export * from './observable/Observable';
+export * from './observable/Subscription';

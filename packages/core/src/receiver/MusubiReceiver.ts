@@ -4,10 +4,13 @@ import {
   OperationName,
   OperationsSchema,
 } from '../schema/schema.types';
-import { OperationHandler, ReceiverLink } from './receiver.types';
+import {
+  OperationHandler,
+  ReceiveRequestFn,
+  ReceiverLink,
+  SendResponseFn,
+} from './receiver.types';
 import { OperationResponse } from '../shared/OperationResponse';
-import { RootReceiverLink } from './RootReceiverLink';
-import { filter, share } from 'rxjs';
 import { Channel } from '../shared/communication.types';
 import { validatePayload, validateResult } from '../schema/validation';
 import { OperationRequest } from '../shared/OperationRequest';
@@ -16,23 +19,24 @@ import { LinkParam } from '../shared/link.types';
 import { createLinks } from '../shared/link';
 import { OperationReceiverBuilder } from './OperationReceiverBuilder';
 import { OperationDefinition } from '../schema/OperationDefinition';
+import { Chain } from '../chain/Chain';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class MusubiReceiver<S extends OperationsSchema, Ctx = any> {
-  private readonly rootLink: RootReceiverLink<Ctx>;
+  private readonly links: ReceiverLink<Ctx>[];
 
   constructor(
     private readonly schema: S,
     links: LinkParam<ReceiverLink<Ctx>>[]
   ) {
-    this.rootLink = new RootReceiverLink(createLinks(links, schema));
+    this.links = createLinks(links, schema);
   }
 
   handleQuery<Name extends keyof S['queries']>(
     name: Name,
     handler: OperationHandler<S['queries'][Name], Ctx>
   ) {
-    return this.handleOperation(
+    return this.subscribeToOperation(
       name as OperationName,
       handler,
       OperationKind.Query
@@ -43,7 +47,7 @@ export class MusubiReceiver<S extends OperationsSchema, Ctx = any> {
     name: Name,
     handler: OperationHandler<S['commands'][Name], Ctx>
   ) {
-    return this.handleOperation(
+    return this.subscribeToOperation(
       name as OperationName,
       handler,
       OperationKind.Command
@@ -72,7 +76,7 @@ export class MusubiReceiver<S extends OperationsSchema, Ctx = any> {
       channel
     );
 
-    await this.rootLink.sendResponse(response);
+    await this.sendResponse(response);
   }
 
   handleQueryBuilder<
@@ -105,16 +109,43 @@ export class MusubiReceiver<S extends OperationsSchema, Ctx = any> {
     );
   }
 
-  private handleOperation<Payload, Result>(
+  private async sendResponse(
+    response: OperationResponse<unknown, OperationRequest<unknown, Ctx>>
+  ) {
+    const chain = new Chain<SendResponseFn<Ctx>>();
+
+    for (const link of this.links) {
+      if (link.sendResponse) {
+        chain.use(link.sendResponse.bind(link));
+      }
+    }
+
+    await chain.exec(
+      response as OperationResponse<
+        unknown,
+        OperationRequest<unknown, Ctx>,
+        Ctx
+      >
+    );
+  }
+
+  private subscribeToOperation<Payload, Result>(
     name: OperationName,
     handler: (payload: Payload, ctx: Ctx) => MaybePromise<Result>,
     kind: OperationKind
   ) {
-    return this.rootLink
-      .observeNewRequest(name)
-      .pipe(share())
-      .pipe(filter((req) => req.kind === kind))
-      .subscribe(async (request) => {
+    const chain = new Chain<ReceiveRequestFn<Ctx>>();
+
+    const links = this.links.filter((link) => link.receiveRequest);
+
+    for (const link of links) {
+      if (link.receiveRequest) {
+        chain.use(link.receiveRequest.bind(link));
+      }
+    }
+
+    return chain.exec(name).subscribe(async (request) => {
+      if (request.kind === kind) {
         let response: OperationResponse<Result, OperationRequest<Payload, Ctx>>;
 
         try {
@@ -154,7 +185,8 @@ export class MusubiReceiver<S extends OperationsSchema, Ctx = any> {
         } catch (error) {
           response = OperationResponse.fromError<
             Result,
-            OperationRequest<Payload, Ctx>
+            OperationRequest<Payload, Ctx>,
+            Ctx
           >(
             request.name,
             request.kind,
@@ -163,7 +195,8 @@ export class MusubiReceiver<S extends OperationsSchema, Ctx = any> {
           );
         }
 
-        await this.rootLink.sendResponse(response);
-      });
+        await this.sendResponse(response);
+      }
+    });
   }
 }

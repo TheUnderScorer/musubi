@@ -1,6 +1,10 @@
-import { ClientLink, OperationRequest, OperationResponse } from '@musubi/core';
+import {
+  ClientLink,
+  Observable,
+  OperationRequest,
+  OperationResponse,
+} from '@musubi/core';
 import { Socket } from 'socket.io-client';
-import { Observable } from 'rxjs';
 import { SOCKET_MESSAGE_CHANNEL } from '../shared/channel';
 import { createValidatedSocketHandler } from '../shared/handlers';
 import { SocketContext } from '../shared/context';
@@ -42,7 +46,11 @@ export class SocketClientLink implements ClientLink<SocketContext> {
   subscribeToEvent<Payload>(
     request: OperationRequest<unknown, SocketContext>
   ): Observable<
-    OperationResponse<Payload, OperationRequest<unknown, SocketContext>>
+    OperationResponse<
+      Payload,
+      OperationRequest<unknown, SocketContext>,
+      SocketContext
+    >
   > {
     return new Observable((observer) => {
       const handler = createValidatedSocketHandler(

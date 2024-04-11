@@ -1,5 +1,5 @@
 import { Socket } from 'socket.io-client';
-import { wait } from 'nx-cloud/lib/utilities/waiter';
+import { wait } from '@musubi/core';
 
 export async function waitForConnect(client: Socket) {
   while (!client.connected) {

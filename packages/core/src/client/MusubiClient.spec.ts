@@ -128,7 +128,7 @@ describe('MusubiClient', () => {
   });
 
   it('should support multiple links for events', async () => {
-    const onClientEvent = jest.fn();
+    const onLinkEvent = jest.fn();
     const onEvent = jest.fn();
 
     const onTeardown = jest.fn();
@@ -138,30 +138,42 @@ describe('MusubiClient', () => {
     const client = new MusubiClient(schema, [
       {
         subscribeToEvent: (request, next) => {
-          const sub = next.subscribe((event) => {
+          const obs = next(request);
+
+          const sub = obs.subscribe((event) => {
             expect(event).toBeInstanceOf(OperationResponse);
 
-            onClientEvent(event);
-
-            return event;
+            onLinkEvent(event);
           });
 
           sub.add(onTeardown);
 
-          return sub;
+          obs.subscribe({
+            complete: () => {
+              sub.unsubscribe();
+            },
+          });
+
+          return obs;
         },
       },
       {
         subscribeToEvent: (request, next) => {
-          const sub = next.subscribe((event) => {
-            onClientEvent(event);
+          const obs = next(request);
 
-            return event;
+          const sub = obs.subscribe((event) => {
+            onLinkEvent(event);
           });
 
           sub.add(onTeardown);
 
-          return sub;
+          obs.subscribe({
+            complete: () => {
+              sub.unsubscribe();
+            },
+          });
+
+          return obs;
         },
       },
       clientLink,
@@ -174,25 +186,28 @@ describe('MusubiClient', () => {
       id: '1',
       title: '1',
     };
+
     await receiver.dispatchEvent('postCreated', payload);
     await receiver.dispatchEvent('postCreated', payload);
     await receiver.dispatchEvent('postCreated', payload);
 
-    expect(onClientEvent).toHaveBeenCalledTimes(6);
+    expect(onLinkEvent).toHaveBeenCalledTimes(6);
     expect(onEvent).toHaveBeenCalledTimes(3);
     expect(onEvent).toHaveBeenCalledWith({
       payload,
       ctx: {},
     });
 
-    subscription.unsubscribe();
+    await eventObservable.completeAll();
+
+    expect(subscription.isUnsubscribed).toBe(true);
 
     expect(onTeardown).toHaveBeenCalledTimes(2);
 
     await receiver.dispatchEvent('postCreated', payload);
 
     expect(onTeardown).toHaveBeenCalledTimes(2);
-    expect(onClientEvent).toHaveBeenCalledTimes(6);
+    expect(onLinkEvent).toHaveBeenCalledTimes(6);
     expect(onEvent).toHaveBeenCalledTimes(3);
     expect(onEvent).toHaveBeenCalledWith({ payload, ctx: {} });
   });

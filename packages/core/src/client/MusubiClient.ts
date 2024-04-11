@@ -6,15 +6,20 @@ import {
   OperationsSchema,
   OptionalPayload,
 } from '../schema/schema.types';
-import { ClientLink, OperationEvent } from './client.types';
+import {
+  ClientLink,
+  OperationEvent,
+  SendRequestFn,
+  SubscribeToEventFn,
+} from './client.types';
 import { OperationRequest } from '../shared/OperationRequest';
 import { Channel } from '../shared/communication.types';
 import { OperationResponse } from '../shared/OperationResponse';
-import { finalize, map, Observable, Subject } from 'rxjs';
 import { validatePayload, validateResult } from '../schema/validation';
 import { LinkParam } from '../shared/link.types';
 import { createLinks } from '../shared/link';
-import { isSubscription } from '../utils/isSubscription';
+import { Chain } from '../chain/Chain';
+import { Observable } from '../observable/Observable';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class MusubiClient<S extends OperationsSchema, Ctx = any> {
@@ -93,56 +98,23 @@ export class MusubiClient<S extends OperationsSchema, Ctx = any> {
       channel
     );
 
-    const rootNext = new Subject<
-      OperationResponse<
-        ExtractPayload<S['events'][Name]>,
-        OperationRequest<unknown, Ctx>
-      >
-    >();
+    const chain = new Chain<SubscribeToEventFn<Ctx>>();
 
-    const observable = this.links
-      .filter((link) => link.subscribeToEvent)
-      .reduceRight<
-        Observable<
-          OperationResponse<
-            ExtractPayload<S['events'][Name]>,
-            OperationRequest<unknown, Ctx>
-          >
-        >
-      >((next, link) => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const result = link.subscribeToEvent!(request, next);
+    for (const link of this.links) {
+      if (link.subscribeToEvent) {
+        chain.use(link.subscribeToEvent.bind(link));
+      }
+    }
 
-        if (isSubscription(result)) {
-          return next.pipe(
-            finalize(() => {
-              result.unsubscribe();
-            })
-          );
-        }
-
-        return result as Observable<
-          OperationResponse<
-            ExtractPayload<S['events'][Name]>,
-            OperationRequest<unknown, Ctx>
-          >
-        >;
-      }, rootNext.asObservable());
-
-    return observable.pipe(
-      map((event) => ({
-        payload: validatePayload(
-          this.schema,
-          OperationKind.Event,
-          event.operationName,
-          event.unwrap()
-        ),
-        ctx: event.ctx as Ctx,
-      })),
-      finalize(() => {
-        rootNext.complete();
-      })
-    );
+    return chain.exec(request).map((event) => ({
+      payload: validatePayload(
+        this.schema,
+        OperationKind.Event,
+        event.operationName,
+        event.unwrap()
+      ),
+      ctx: event.ctx as Ctx,
+    }));
   }
 
   private async sendOperation<Name extends OperationName, Payload, Result>(
@@ -158,27 +130,23 @@ export class MusubiClient<S extends OperationsSchema, Ctx = any> {
       channel
     );
 
-    const rootNext = async (request: OperationRequest<Payload, Ctx>) => {
-      return OperationResponse.fromError<Result, typeof request>(
-        request.name,
-        request.kind,
-        new Error('No link handled the request'),
-        request
-      );
-    };
+    const chain = new Chain<SendRequestFn<Ctx>>();
 
-    const handler = this.links
-      .filter((link) => link.sendRequest)
-      .reduceRight(
-        (next, link) => async () =>
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          link.sendRequest!<Payload, Result>(request, next),
-        rootNext
-      );
+    for (const link of this.links) {
+      if (link.sendRequest) {
+        chain.use(link.sendRequest.bind(link));
+      }
+    }
 
-    const response = await handler(request).catch((error) =>
-      OperationResponse.fromError(request.name, request.kind, error, request)
-    );
+    chain.use(() => {
+      throw new Error('No link handled the request');
+    });
+
+    const response = await chain
+      .exec(request)
+      .catch((error) =>
+        OperationResponse.fromError(request.name, request.kind, error, request)
+      );
 
     return validateResult<S, Result>(
       this.schema,

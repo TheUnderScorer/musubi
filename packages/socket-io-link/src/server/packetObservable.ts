@@ -1,14 +1,14 @@
 import { Server, Socket } from 'socket.io';
-import { Subject } from 'rxjs';
 import {
   SOCKET_MESSAGE_CHANNEL,
   toSocketSpecificChannel,
 } from '../shared/channel';
+import { Observable } from '@musubi/core';
 
 export type PacketObservable = ReturnType<typeof createPacketObservable>;
 
 export function createPacketObservable(server: Server) {
-  const subject = new Subject<{
+  const observable = new Observable<{
     payload: unknown;
     socket: Socket;
   }>();
@@ -20,7 +20,7 @@ export function createPacketObservable(server: Server) {
       const [name, payload] = packet;
 
       if (name === SOCKET_MESSAGE_CHANNEL) {
-        subject.next({
+        observable.next({
           payload,
           socket,
         });
@@ -30,5 +30,5 @@ export function createPacketObservable(server: Server) {
     });
   });
 
-  return subject.asObservable();
+  return observable;
 }

@@ -1,4 +1,5 @@
 import {
+  Observable,
   OperationKind,
   OperationName,
   OperationRequest,
@@ -6,7 +7,6 @@ import {
   ReceiverLink,
 } from '@musubi/core';
 import { BrowserExtensionContext } from './context';
-import { filter, Observable } from 'rxjs';
 import {
   BrowserExtensionChannel,
   browserExtensionChannelSchema,
@@ -81,18 +81,14 @@ export class BrowserExtensionReceiverLink
   receiveRequest(
     name: OperationName
   ): Observable<OperationRequest<unknown, BrowserExtensionContext>> {
-    return this.newRequest.pipe(
-      filter((request) => {
-        const channel = browserExtensionChannelSchema.safeParse(
-          request.channel
-        );
+    return this.newRequest.filter((request) => {
+      const channel = browserExtensionChannelSchema.safeParse(request.channel);
 
-        return (
-          request.name === name &&
-          (!request.channel ||
-            (channel.success && channel.data.type === this.currentChannel.type))
-        );
-      })
-    );
+      return (
+        request.name === name &&
+        (!request.channel ||
+          (channel.success && channel.data.type === this.currentChannel.type))
+      );
+    });
   }
 }

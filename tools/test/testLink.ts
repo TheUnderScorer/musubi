@@ -1,12 +1,12 @@
 import { ClientLink } from '../../packages/core/src/client/client.types';
 import { ReceiverLink } from '../../packages/core/src/receiver/receiver.types';
-import { filter, Subject } from 'rxjs';
 import { OperationRequest } from '../../packages/core/src/shared/OperationRequest';
 import { OperationResponse } from '../../packages/core/src/shared/OperationResponse';
 import {
   OperationKind,
   OperationName,
 } from '../../packages/core/src/schema/schema.types';
+import { Observable } from '../../packages/core/src/observable/Observable';
 
 export function createTestLink() {
   const clientLink = {
@@ -19,34 +19,34 @@ export function createTestLink() {
     sendResponse: jest.fn(),
   } satisfies ReceiverLink;
 
-  const newRequest = new Subject<OperationRequest>();
-  const newResponse = new Subject<OperationResponse>();
-  const newEvent = new Subject<OperationResponse>();
+  const newRequest = new Observable<OperationRequest>();
+  const newResponse = new Observable<OperationResponse>();
+  const newEvent = new Observable<OperationResponse>();
 
   receiverLink.receiveRequest.mockImplementation((name: OperationName) => {
-    return newRequest.pipe(filter((req) => req.name === name));
+    return newRequest.filter((req) => req.name === name);
   });
 
   receiverLink.sendResponse.mockImplementation(
-    (response: OperationResponse) => {
+    async (response: OperationResponse) => {
       if (response.operationKind === OperationKind.Event) {
-        newEvent.next(response);
+        await newEvent.next(response);
       } else {
-        newResponse.next(response);
+        await newResponse.next(response);
       }
     }
   );
 
   clientLink.subscribeToEvent.mockImplementation(
     (request: OperationRequest) => {
-      return newEvent.pipe(filter((res) => res.operationName === request.name));
+      return newEvent.filter((res) => res.operationName === request.name);
     }
   );
 
   clientLink.sendRequest.mockImplementation((request) => {
     return new Promise((resolve) => {
       const sub = newResponse
-        .pipe(filter((res) => res.request?.id === request.id))
+        .filter((res) => res.request?.id === request.id)
         .subscribe((response) => {
           sub.unsubscribe();
 

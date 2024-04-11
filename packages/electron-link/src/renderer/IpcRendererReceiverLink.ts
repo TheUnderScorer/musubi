@@ -1,10 +1,11 @@
 import {
+  Observable,
   OperationName,
   OperationRequest,
   OperationResponse,
   ReceiverLink,
+  Subscription,
 } from '@musubi/core';
-import { Observable, Subscription } from 'rxjs';
 import { makeRequestHandler } from '../shared/request';
 import { IpcRendererEvent } from 'electron';
 import { ElectronClientContext } from './context';

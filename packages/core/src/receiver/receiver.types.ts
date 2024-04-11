@@ -1,6 +1,5 @@
 import { OperationRequest } from '../shared/OperationRequest';
 import { OperationResponse } from '../shared/OperationResponse';
-import { Observable, Subscription } from 'rxjs';
 import {
   ExtractPayload,
   ExtractResult,
@@ -8,6 +7,19 @@ import {
 } from '../schema/schema.types';
 import { OperationDefinition } from '../schema/OperationDefinition';
 import { MaybePromise } from '../shared/promise';
+import { Observable } from '../observable/Observable';
+
+export type ReceiveRequestFn<Ctx = unknown> = (
+  name: OperationName,
+  next: (name: OperationName) => Observable<OperationRequest<unknown, Ctx>>
+) => Observable<OperationRequest<unknown, Ctx>>;
+
+export type SendResponseFn<Ctx = unknown> = <Payload, Result>(
+  response: OperationResponse<Result, OperationRequest<Payload, Ctx>, Ctx>,
+  next: (
+    response: OperationResponse<Result, OperationRequest<Payload, Ctx>, Ctx>
+  ) => Promise<void>
+) => Promise<void>;
 
 export type ReceiverLink<Ctx = unknown> = {
   /**
@@ -15,10 +27,7 @@ export type ReceiverLink<Ctx = unknown> = {
    *
    * @see {ClientLink}
    * */
-  receiveRequest?: (
-    name: OperationName,
-    next: Observable<OperationRequest<unknown, Ctx>>
-  ) => Observable<OperationRequest<unknown, Ctx>> | Subscription;
+  receiveRequest?: ReceiveRequestFn<Ctx>;
 
   /**
    * This method is responsible for sending responses to client.
@@ -26,12 +35,7 @@ export type ReceiverLink<Ctx = unknown> = {
    *
    * You can use `response.kind` to distinguish between them.
    * */
-  sendResponse?: <Payload, Result>(
-    response: OperationResponse<Result, OperationRequest<Payload, Ctx>, Ctx>,
-    next: (
-      response: OperationResponse<Result, OperationRequest<Payload, Ctx>, Ctx>
-    ) => Promise<void>
-  ) => Promise<void>;
+  sendResponse?: SendResponseFn<Ctx>;
 };
 
 export type OperationHandler<

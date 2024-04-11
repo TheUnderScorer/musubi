@@ -1,11 +1,10 @@
-import { Subject, tap } from 'rxjs';
-import { OperationRequest, OperationResponse } from '@musubi/core';
+import { Observable, OperationRequest, OperationResponse } from '@musubi/core';
 import * as browser from 'webextension-polyfill';
 import { Runtime } from 'webextension-polyfill';
 import { BrowserExtensionContext } from './context';
 
 export function observeGlobalRequests<Ctx = unknown>() {
-  const newRequest = new Subject<OperationRequest<unknown, Ctx>>();
+  const newRequest = new Observable<OperationRequest<unknown, Ctx>>();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const listener = (message: any, sender: Runtime.MessageSender) => {
@@ -28,17 +27,17 @@ export function observeGlobalRequests<Ctx = unknown>() {
   browser.runtime.onMessage.addListener(listener);
 
   // TODO Test if disposes correctly
-  return newRequest.asObservable().pipe(
-    tap({
-      complete: () => {
-        browser.runtime.onMessage.removeListener(listener);
-      },
-    })
-  );
+  newRequest.subscribe({
+    complete: () => {
+      browser.runtime.onMessage.removeListener(listener);
+    },
+  });
+
+  return newRequest;
 }
 
 export function observeGlobalResponses<Ctx = unknown>() {
-  const newResponse = new Subject<
+  const newResponse = new Observable<
     OperationResponse<unknown, OperationRequest<unknown, Ctx>>
   >();
 
@@ -58,11 +57,11 @@ export function observeGlobalResponses<Ctx = unknown>() {
   browser.runtime.onMessage.addListener(listener);
 
   // TODO Test if disposes correctly
-  return newResponse.asObservable().pipe(
-    tap({
-      complete: () => {
-        browser.runtime.onMessage.removeListener(listener);
-      },
-    })
-  );
+  newResponse.subscribe({
+    complete: () => {
+      browser.runtime.onMessage.removeListener(listener);
+    },
+  });
+
+  return newResponse;
 }

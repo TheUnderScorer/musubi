@@ -1,5 +1,6 @@
 import {
   getOperationFromSchema,
+  Observable,
   OperationName,
   OperationRequest,
   OperationResponse,
@@ -7,7 +8,6 @@ import {
   ReceiverLink,
 } from '@musubi/core';
 import { MusubiServerAdapter, ServerContext } from './server.types';
-import { map, Observable } from 'rxjs';
 import { resolveHttpMethod } from './http';
 import { getPathNameForOperation } from '../shared/routing';
 import { SharedHttpOptions } from '../shared/options.types';
@@ -32,20 +32,18 @@ export class HttpServerReceiverLink<
         getPathNameForOperation(name, this.options?.pathPrefix),
         resolveHttpMethod(operation.kind)
       )
-      .pipe(
-        map(({ httpRequest, operationRequest }) => {
-          return operationRequest.addCtx<ServerContext>({
-            request: {
-              isSerializable: false,
-              value: httpRequest,
-            },
-            responseStatusCode: {
-              value: 200,
-              isSerializable: true,
-            },
-          });
-        })
-      );
+      .map(({ httpRequest, operationRequest }) => {
+        return operationRequest.addCtx<ServerContext>({
+          request: {
+            isSerializable: false,
+            value: httpRequest,
+          },
+          responseStatusCode: {
+            value: 200,
+            isSerializable: true,
+          },
+        });
+      });
   }
 
   async sendResponse<Payload, Result>(

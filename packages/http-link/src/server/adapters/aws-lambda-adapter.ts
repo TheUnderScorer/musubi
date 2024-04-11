@@ -4,7 +4,6 @@ import {
   MusubiHttpMethod,
   MusubiHttpRequest,
 } from '../../shared/http.types';
-import { filter, map, Observable, Subject } from 'rxjs';
 import {
   APIGatewayProxyEvent,
   APIGatewayProxyEventV2,
@@ -13,6 +12,7 @@ import {
 } from 'aws-lambda';
 import {
   LinkParam,
+  Observable,
   OperationResponse,
   safeStringify,
   wait,
@@ -76,7 +76,7 @@ export interface AwsLambdaAdapterOptions<Format extends LambdaApiFormat> {
 class AwsLambdaAdapter<Format extends LambdaApiFormat>
   implements MusubiServerAdapter
 {
-  protected readonly newRequest$ = new Subject<{
+  protected readonly newRequest$ = new Observable<{
     request: MusubiHttpRequest;
     event: LambdaRequestPayloadMap[Format];
     context: Context;
@@ -95,11 +95,11 @@ class AwsLambdaAdapter<Format extends LambdaApiFormat>
     path: string,
     method: MusubiHttpMethod
   ): Observable<ObserverPathResult> {
-    return this.newRequest$.pipe(
-      filter(
+    return this.newRequest$
+      .filter(
         ({ request }) => request.path === path && request.method === method
-      ),
-      map(({ event, context, request }) => {
+      )
+      .map(({ event, context, request }) => {
         const operationRequest = parseMusubiHttpRequest(request);
 
         operationRequest.addCtx<AwsLambdaContext<Format>>({
@@ -117,8 +117,7 @@ class AwsLambdaAdapter<Format extends LambdaApiFormat>
           httpRequest: request,
           operationRequest,
         };
-      })
-    ) as Observable<ObserverPathResult>;
+      }) as Observable<ObserverPathResult>;
   }
 
   /**

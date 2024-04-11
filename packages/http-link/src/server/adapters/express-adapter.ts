@@ -5,8 +5,7 @@ import {
   MusubiHttpMethod,
   MusubiHttpRequest,
 } from '../../shared/http.types';
-import { Observable } from 'rxjs';
-import { LinkParam } from '@musubi/core';
+import { LinkParam, Observable } from '@musubi/core';
 import { HttpServerReceiverLink } from '../HttpServerReceiverLink';
 import { SharedHttpOptions } from '../../shared/options.types';
 import { parseMusubiHttpRequest } from '../http';

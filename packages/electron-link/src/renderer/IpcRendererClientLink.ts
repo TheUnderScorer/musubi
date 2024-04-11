@@ -1,6 +1,11 @@
-import { ClientLink, OperationRequest, OperationResponse } from '@musubi/core';
+import {
+  ClientLink,
+  Observable,
+  OperationRequest,
+  OperationResponse,
+  Subscription,
+} from '@musubi/core';
 import { IpcRendererEvent } from 'electron';
-import { Observable, Subscription } from 'rxjs';
 import { makeResponseHandler } from '../shared/response';
 import { ElectronClientContext } from './context';
 import { ExposedMusubiLink } from '../shared/expose';
@@ -17,7 +22,8 @@ export class IpcRendererClientLink
     return new Observable<
       OperationResponse<
         Payload,
-        OperationRequest<unknown, ElectronClientContext>
+        OperationRequest<unknown, ElectronClientContext>,
+        ElectronClientContext
       >
     >((observer) => {
       const handler = makeResponseHandler<
@@ -27,7 +33,13 @@ export class IpcRendererClientLink
         ElectronClientContext
       >((event, response) => {
         if (response.operationName === request.name) {
-          observer.next(response);
+          observer.next(
+            response as OperationResponse<
+              Payload,
+              OperationRequest<unknown, ElectronClientContext>,
+              ElectronClientContext
+            >
+          );
         }
       });
 

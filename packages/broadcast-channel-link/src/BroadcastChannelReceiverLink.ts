@@ -1,11 +1,11 @@
 import {
+  Observable,
   OperationName,
   OperationRequest,
   OperationResponse,
   ReceiverLink,
 } from '@musubi/core';
 import { BroadcastChannelLinkContext, CommunicationChannel } from './types';
-import { Observable } from 'rxjs';
 
 export class BroadcastChannelReceiverLink
   implements ReceiverLink<BroadcastChannelLinkContext>

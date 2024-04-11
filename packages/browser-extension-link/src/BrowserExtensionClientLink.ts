@@ -1,5 +1,6 @@
 import {
   ClientLink,
+  Observable,
   OperationRequest,
   OperationResponse,
   OperationsSchema,
@@ -11,7 +12,6 @@ import {
 } from './channel';
 import { sendMessage } from './send';
 import { observeGlobalResponses } from './globalListener';
-import { filter, Observable } from 'rxjs';
 import { ChannelResolver } from './ChannelResolver';
 
 export class BrowserExtensionClientLink<
@@ -30,12 +30,13 @@ export class BrowserExtensionClientLink<
   subscribeToEvent<Payload>(
     request: OperationRequest<unknown, BrowserExtensionContext>
   ) {
-    return observeGlobalResponses().pipe(
-      filter((response) => response.operationName === request.name)
+    return observeGlobalResponses().filter(
+      (response) => response.operationName === request.name
     ) as Observable<
       OperationResponse<
         Payload,
-        OperationRequest<unknown, BrowserExtensionContext>
+        OperationRequest<unknown, BrowserExtensionContext>,
+        BrowserExtensionContext
       >
     >;
   }
@@ -77,11 +78,9 @@ export class BrowserExtensionClientLink<
       >
     >((resolve) => {
       const subscription = observeGlobalResponses()
-        .pipe(
-          filter((response) => {
-            return response.request?.id === request.id;
-          })
-        )
+        .filter((response) => {
+          return response.request?.id === request.id;
+        })
         .subscribe((response) => {
           subscription.unsubscribe();
 

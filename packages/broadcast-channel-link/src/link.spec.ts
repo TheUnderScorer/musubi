@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { BroadcastChannelLinkContext, CommunicationChannel } from './types';
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import {
   setupTestUserHandlers,
   testSchema,

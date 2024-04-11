@@ -9,8 +9,7 @@ import { MusubiClient } from '../client/MusubiClient';
 import { OperationBeforeMiddleware } from './OperationReceiverBuilder';
 import { OperationDefinition } from '../schema/OperationDefinition';
 import { MusubiZodError } from '../errors/MusubiZodError';
-import { wait } from 'nx-cloud/lib/utilities/waiter';
-import { concatMap } from 'rxjs';
+import { wait } from '../utils/wait';
 
 const schema = mergeSchemas(testUserSchema, testPostSchema);
 
@@ -55,9 +54,13 @@ describe('MusubiReceiver', () => {
     const receiver = new MusubiReceiver(schema, [
       {
         receiveRequest: (name, next) => {
-          return next.subscribe((request) => {
+          const observable = next(name);
+
+          observable.subscribe((request) => {
             expect(request.channel).toBe(channel);
           });
+
+          return observable;
         },
       },
       receiverLink,
@@ -103,21 +106,22 @@ describe('MusubiReceiver', () => {
   it('should support multiple async links', async () => {
     const receiver = new MusubiReceiver(schema, [
       {
-        receiveRequest: (name, next) =>
-          next.pipe(
-            concatMap(async (req) => {
-              await wait(500);
+        receiveRequest: (name, next) => {
+          const obs = next(name);
 
-              req.addCtx({
-                didWait: {
-                  value: true,
-                  isSerializable: true,
-                },
-              });
+          return obs.map(async (req) => {
+            await wait(500);
 
-              return req;
-            })
-          ),
+            req.addCtx({
+              didWait: {
+                value: true,
+                isSerializable: true,
+              },
+            });
+
+            return req;
+          });
+        },
       },
       receiverLink,
     ]);
@@ -249,13 +253,15 @@ describe('MusubiReceiver', () => {
         [
           {
             receiveRequest: (name, next) => {
-              return next.subscribe((request) => {
+              return next(name).map((request) => {
                 request.addCtx({
                   fromLink: {
                     isSerializable: true,
                     value: true,
                   },
                 });
+
+                return request;
               });
             },
           },

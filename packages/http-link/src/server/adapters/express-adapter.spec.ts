@@ -6,6 +6,7 @@ import {
   MusubiReceiver,
   operation,
 } from '@musubi/core';
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import {
   setupTestUserHandlers,
   testSchema,

@@ -1,8 +1,12 @@
-import { ClientLink, OperationRequest, OperationResponse } from '@musubi/core';
+import {
+  ClientLink,
+  Observable,
+  OperationRequest,
+  OperationResponse,
+} from '@musubi/core';
 import { IpcMain, IpcMainInvokeEvent } from 'electron';
 import { ELECTRON_MESSAGE_CHANNEL } from '../shared/channel';
 import { getWindowFromChannel } from './getWindowFromChannel';
-import { Observable } from 'rxjs';
 import { makeResponseHandler } from '../shared/response';
 import { ElectronMainContext } from './context';
 import { sendMessageToAllWindows, sendMessageToWindow } from './send';
@@ -17,7 +21,11 @@ export class IpcMainClientLink implements ClientLink<ElectronMainContext> {
   subscribeToEvent<Payload>(
     request: OperationRequest<unknown, ElectronMainContext>
   ): Observable<
-    OperationResponse<Payload, OperationRequest<unknown, ElectronMainContext>>
+    OperationResponse<
+      Payload,
+      OperationRequest<unknown, ElectronMainContext>,
+      ElectronMainContext
+    >
   > {
     return new Observable((observer) => {
       const handler = makeResponseHandler<
@@ -39,7 +47,13 @@ export class IpcMainClientLink implements ClientLink<ElectronMainContext> {
             },
           });
 
-          observer.next(response);
+          observer.next(
+            response as OperationResponse<
+              Payload,
+              OperationRequest<unknown, ElectronMainContext>,
+              ElectronMainContext
+            >
+          );
         }
       });
 

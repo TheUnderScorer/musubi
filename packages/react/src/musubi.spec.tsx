@@ -3,17 +3,18 @@ import { MusubiProvider } from './providers/MusubiProvider';
 import { QueryClient } from '@tanstack/react-query';
 import { act, renderHook } from '@testing-library/react';
 import { PropsWithChildren, useState } from 'react';
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import {
   setupTestUserHandlers,
   testSchema,
 } from '../../../tools/test/testMusubi';
-import { wait } from 'nx-cloud/lib/utilities/waiter';
 import {
   createMusubi,
   defineSchema,
   mergeSchemas,
   Musubi,
   operation,
+  wait,
 } from '@musubi/core';
 import { createInMemoryLink } from '@musubi/in-memory-link';
 import { z } from 'zod';
