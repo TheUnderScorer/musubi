@@ -1,3 +1,12 @@
+# [0.11.0](https://github.com/TheUnderScorer/musubi/compare/browser-extension-link-v0.10.5...browser-extension-link-v0.11.0) (2024-04-12)
+
+
+### Features
+
+* remove rxjs ([93f750d](https://github.com/TheUnderScorer/musubi/commit/93f750d6ceb897efcd06ec67c1f65e943297ba37))
+* update @tanstack/react-query ([91f2faa](https://github.com/TheUnderScorer/musubi/commit/91f2faa46ca98e4409d8ff9e7a20fd4759d7c9ae))
+* update deps ([a24af83](https://github.com/TheUnderScorer/musubi/commit/a24af83d8d184116195849a70c80026c1956dd9e))
+
 ## [0.10.5](https://github.com/TheUnderScorer/musubi/compare/browser-extension-link-v0.10.4...browser-extension-link-v0.10.5) (2023-08-12)
 
 
