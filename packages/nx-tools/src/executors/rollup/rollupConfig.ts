@@ -1,11 +1,8 @@
 import { RollupExecutorSchema } from './schema';
 import { ExecutorContext } from 'nx/src/config/misc-interfaces';
-import typescript from 'rollup-plugin-typescript2';
-import jsonPlugin from '@rollup/plugin-json';
+import typescript from '@rollup/plugin-typescript';
 import external from 'rollup-plugin-peer-deps-external';
 import dtsPlugin from 'rollup-plugin-dts';
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
 import * as path from 'path';
 import copy from 'rollup-plugin-copy';
 import { RollupOptions } from 'rollup';
@@ -35,9 +32,6 @@ export function buildRollupConfig(
       external({
         packageJsonPath: path.resolve(sourceRoot, 'package.json'),
       }),
-      resolve(),
-      commonjs(),
-      jsonPlugin(),
     ],
   };
 
@@ -105,10 +99,7 @@ export function buildRollupConfig(
             format: 'es',
           },
         },
-      ].map((opt) => ({
-        ...opt,
-        acornInjectPlugins: [jsx()],
-      })) as RollupOptions[];
+      ] as RollupOptions[];
     }),
   ];
 }
