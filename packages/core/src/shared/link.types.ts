@@ -9,6 +9,7 @@ export type LinkParam<T> = T | LinkFn<T>;
 
 export interface LinkFnParams {
   schema: OperationsSchema;
+  linkIndex: number;
 }
 
 export interface LinkPair<

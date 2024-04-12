@@ -6,9 +6,9 @@ export function createLinks<L, T extends LinkParam<L>>(
   links: T[],
   schema: OperationsSchema
 ) {
-  return links.map((link) => {
+  return links.map((link, index) => {
     if (typeof link === 'function') {
-      return (link as LinkFn<T>)({ schema });
+      return (link as LinkFn<T>)({ schema, linkIndex: index });
     }
 
     return link;
