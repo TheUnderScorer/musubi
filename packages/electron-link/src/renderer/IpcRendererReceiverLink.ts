@@ -44,6 +44,6 @@ export class IpcRendererReceiverLink
   ) {
     const payload = response.toJSON();
 
-    await this.ipc.send(payload);
+    this.ipc.send(payload);
   }
 }

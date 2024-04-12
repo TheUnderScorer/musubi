@@ -22,7 +22,7 @@ export class Observable<T> {
   constructor(
     observer?: (
       observer: Required<Observer<T>>
-    ) => MaybePromise<SubscriptionFn | void>
+    ) => MaybePromise<SubscriptionFn | Subscription | void>
   ) {
     void this.initObserver(observer);
   }
@@ -30,7 +30,7 @@ export class Observable<T> {
   private async initObserver(
     observer?: (
       observer: Required<Observer<T>>
-    ) => MaybePromise<SubscriptionFn | void>
+    ) => MaybePromise<SubscriptionFn | Subscription | void>
   ) {
     const onDone = await observer?.({
       next: async (value) => {
@@ -45,7 +45,11 @@ export class Observable<T> {
     });
 
     if (onDone) {
-      this.subscribers.add(new Subscription(async () => onDone?.()));
+      this.subscribers.add(
+        onDone instanceof Subscription
+          ? onDone
+          : new Subscription(async () => onDone?.())
+      );
     }
   }
 
