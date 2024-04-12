@@ -1,3 +1,12 @@
+# [0.14.0](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.13.1...electron-link-v0.14.0) (2024-04-12)
+
+
+### Features
+
+* remove rxjs ([93f750d](https://github.com/TheUnderScorer/musubi/commit/93f750d6ceb897efcd06ec67c1f65e943297ba37))
+* update @tanstack/react-query ([91f2faa](https://github.com/TheUnderScorer/musubi/commit/91f2faa46ca98e4409d8ff9e7a20fd4759d7c9ae))
+* update deps ([a24af83](https://github.com/TheUnderScorer/musubi/commit/a24af83d8d184116195849a70c80026c1956dd9e))
+
 ## [0.13.1](https://github.com/TheUnderScorer/musubi/compare/electron-link-v0.13.0...electron-link-v0.13.1) (2023-08-22)
 
 
