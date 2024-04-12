@@ -3,3 +3,4 @@
 remote-profile
 packages/examples/browser-extension-e2e/src/contexts
 node_modules
+**/dist
