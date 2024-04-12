@@ -1,3 +1,12 @@
+# [0.12.0](https://github.com/TheUnderScorer/musubi/compare/browser-extension-link-v0.11.0...browser-extension-link-v0.12.0) (2024-04-12)
+
+
+### Features
+
+* add cloneWithLinks utility ([6545051](https://github.com/TheUnderScorer/musubi/commit/6545051e500b049413dab542ee90ca0339734cc1))
+* pass link index ([3e2ce0a](https://github.com/TheUnderScorer/musubi/commit/3e2ce0ab80a95ac84d9492f707aedeceb7b8ee37))
+* when unsubscribing from receiver subscription, complete underlying observable ([d03e116](https://github.com/TheUnderScorer/musubi/commit/d03e116125c6bde2d86570af4099550a48754ba3))
+
 # [0.11.0](https://github.com/TheUnderScorer/musubi/compare/browser-extension-link-v0.10.5...browser-extension-link-v0.11.0) (2024-04-12)
 
 
