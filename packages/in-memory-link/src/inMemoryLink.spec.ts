@@ -27,10 +27,15 @@ describe('InMemoryLink', () => {
     },
   });
 
-  const links = createInMemoryLink();
+  let client: MusubiClient<typeof schema>;
+  let receiver: MusubiReceiver<typeof schema>;
 
-  const client = new MusubiClient(schema, [links.client]);
-  const receiver = new MusubiReceiver(schema, [links.receiver]);
+  beforeEach(() => {
+    const links = createInMemoryLink();
+
+    client = new MusubiClient(schema, [links.client]);
+    receiver = new MusubiReceiver(schema, [links.receiver]);
+  });
 
   it('should correctly dispose receiver subscriptions', async () => {
     const impl: OperationHandler<typeof schema.commands.testCommand> = async (
