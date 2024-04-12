@@ -12,8 +12,8 @@ importers:
         specifier: ^5.29.0
         version: 5.29.0
       '@tanstack/react-query':
-        specifier: ^5.24.8
-        version: 5.24.8(react@18.2.0)
+        specifier: ^5.29.2
+        version: 5.29.2(react@18.2.0)
       electron:
         specifier: ^29.3.0
         version: 29.3.0
@@ -6459,20 +6459,16 @@ packages:
     dependencies:
       defer-to-connect: 2.0.1
 
-  /@tanstack/query-core@5.24.8:
-    resolution: {integrity: sha512-yH7KnfXMf10p1U5GffTQzFi2Miiw6WJZImGYGdV7eqa5ZbKO8qVx9lOA9SfhIaJXomrMp1Yz5w/CBhVM3yWeTA==}
-    dev: false
-
   /@tanstack/query-core@5.29.0:
     resolution: {integrity: sha512-WgPTRs58hm9CMzEr5jpISe8HXa3qKQ8CxewdYZeVnA54JrPY9B1CZiwsCoLpLkf0dGRZq+LcX5OiJb0bEsOFww==}
     dev: false
 
-  /@tanstack/react-query@5.24.8(react@18.2.0):
-    resolution: {integrity: sha512-jB3JS9SzDmBySk9VVOTPt/0ixWEb3K3dy9IExlVl/1NouY3N7HzAqG/1d4m6E9eFfKJoLvA/hBksaLu0lw627A==}
+  /@tanstack/react-query@5.29.2(react@18.2.0):
+    resolution: {integrity: sha512-nyuWILR4u7H5moLGSiifLh8kIqQDLNOHGuSz0rcp+J75fNc8aQLyr5+I2JCHU3n+nJrTTW1ssgAD8HiKD7IFBQ==}
     peerDependencies:
       react: ^18.0.0
     dependencies:
-      '@tanstack/query-core': 5.24.8
+      '@tanstack/query-core': 5.29.0
       react: 18.2.0
     dev: false
 
