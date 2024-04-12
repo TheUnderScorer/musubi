@@ -14,7 +14,7 @@ describe('createLinks', () => {
 
     const links = createLinks([firstLink, secondLink], schema);
 
-    expect(secondLink).toHaveBeenCalledWith({ schema });
+    expect(secondLink).toHaveBeenCalledWith({ schema, linkIndex: 1 });
     expect(secondLink).toHaveBeenCalledTimes(1);
     expect(links).toEqual([
       {},
