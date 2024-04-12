@@ -2,8 +2,8 @@ import path from 'path';
 import { test as pwTest } from '@playwright/test';
 import { BrowserContext, chromium } from 'playwright';
 import config from '../playwright.config';
-import { wait } from 'nx-cloud/lib/utilities/waiter';
 import fs from 'fs-extra';
+import { wait } from '@musubi/core';
 
 const contextsPath = path.resolve(__dirname, 'contexts');
 
