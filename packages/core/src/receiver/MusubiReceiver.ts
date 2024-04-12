@@ -32,6 +32,12 @@ export class MusubiReceiver<S extends OperationsSchema, Ctx = any> {
     this.links = createLinks(links, schema);
   }
 
+  cloneWithLinks(
+    modifier: (links: ReceiverLink<Ctx>[]) => ReceiverLink<Ctx>[]
+  ) {
+    return new MusubiReceiver(this.schema, modifier(this.links));
+  }
+
   handleQuery<Name extends keyof S['queries']>(
     name: Name,
     handler: OperationHandler<S['queries'][Name], Ctx>

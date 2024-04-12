@@ -23,10 +23,14 @@ import { Observable } from '../observable/Observable';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class MusubiClient<S extends OperationsSchema, Ctx = any> {
-  private links: ClientLink<Ctx>[];
+  private readonly links: ClientLink<Ctx>[];
 
   constructor(private readonly schema: S, links: LinkParam<ClientLink<Ctx>>[]) {
     this.links = createLinks(links, schema);
+  }
+
+  cloneWithLinks(modifier: (links: ClientLink<Ctx>[]) => ClientLink<Ctx>[]) {
+    return new MusubiClient(this.schema, modifier(this.links));
   }
 
   /**
