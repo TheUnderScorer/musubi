@@ -1,5 +1,5 @@
 import { PlaywrightTestConfig } from '@playwright/test';
-import { isCI } from 'nx-cloud/lib/utilities/is-ci';
+import { isCI } from 'nx/src/utils/is-ci';
 
 const baseURL = process.env.E2E_BASE_URL || 'http://localhost:4200/';
 
