@@ -20,6 +20,9 @@ class ExpressAdapter implements MusubiServerAdapter {
     const httpMethod = method.toLowerCase() as Lowercase<MusubiHttpMethod>;
 
     return new Observable((observer) => {
+      // rollup dts plugin complains here :/
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       this.app[httpMethod](path, (req, res) => {
         const request: MusubiHttpRequest = {
           method,
