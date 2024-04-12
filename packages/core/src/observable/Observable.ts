@@ -83,6 +83,19 @@ export class Observable<T> {
     return subscription;
   }
 
+  /**
+   * Creates a new observable that emits the same values as this observable, but separated from the parent.
+   *
+   * When using in receiver that returns observable, it is recommended to always call this first, so that when the receiver subscription is disposed, the root observable is not touched.
+   * */
+  lift() {
+    const observable = this.map((value) => value);
+
+    observable.parent = undefined;
+
+    return observable;
+  }
+
   filter(predicate: (value: T) => boolean) {
     const observable = new Observable<T>();
     observable.parent = this;

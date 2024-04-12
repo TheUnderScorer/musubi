@@ -101,10 +101,18 @@ describe('MusubiReceiver', () => {
   });
 
   it('should support multiple async links', async () => {
+    const onUnsub = jest.fn();
+
     const receiver = new MusubiReceiver(schema, [
       {
         receiveRequest: (name, next) => {
           const obs = next(name);
+
+          const sub = obs.subscribe(() => {
+            // no-op
+          });
+
+          sub.add(onUnsub);
 
           return obs.map(async (req) => {
             await wait(500);
@@ -123,7 +131,7 @@ describe('MusubiReceiver', () => {
       receiverLink,
     ]);
 
-    receiver.handleCommand('createUser', async (payload, ctx) => {
+    const sub = receiver.handleCommand('createUser', async (payload, ctx) => {
       expect(ctx.didWait).toBeTruthy();
 
       return {
@@ -137,6 +145,10 @@ describe('MusubiReceiver', () => {
     const result = await client.command('createUser', { name: 'test' });
 
     expect(result).toBeTruthy();
+
+    await sub.unsubscribe();
+
+    expect(onUnsub).toHaveBeenCalledTimes(1);
   });
 
   describe('Operation Builder', () => {

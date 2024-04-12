@@ -96,6 +96,7 @@ class AwsLambdaAdapter<Format extends LambdaApiFormat>
     method: MusubiHttpMethod
   ): Observable<ObserverPathResult> {
     return this.newRequest$
+      .lift()
       .filter(
         ({ request }) => request.path === path && request.method === method
       )

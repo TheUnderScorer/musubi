@@ -144,8 +144,11 @@ export class MusubiReceiver<S extends OperationsSchema, Ctx = any> {
       }
     }
 
-    return chain.exec(name).subscribe(async (request) => {
-      if (request.kind === kind) {
+    const observable = chain.exec(name);
+
+    return observable
+      .filter((req) => req.kind === kind)
+      .subscribe(async (request) => {
         let response: OperationResponse<Result, OperationRequest<Payload, Ctx>>;
 
         try {
@@ -196,7 +199,9 @@ export class MusubiReceiver<S extends OperationsSchema, Ctx = any> {
         }
 
         await this.sendResponse(response);
-      }
-    });
+      })
+      .add(async () => {
+        await observable.completeAll();
+      });
   }
 }

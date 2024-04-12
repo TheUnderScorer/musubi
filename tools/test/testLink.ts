@@ -24,7 +24,7 @@ export function createTestLink() {
   const newEvent = new Observable<OperationResponse>();
 
   receiverLink.receiveRequest.mockImplementation((name: OperationName) => {
-    return newRequest.filter((req) => req.name === name);
+    return newRequest.lift().filter((req) => req.name === name);
   });
 
   receiverLink.sendResponse.mockImplementation(
@@ -39,16 +39,19 @@ export function createTestLink() {
 
   clientLink.subscribeToEvent.mockImplementation(
     (request: OperationRequest) => {
-      return newEvent.filter((res) => res.operationName === request.name);
+      return newEvent
+        .lift()
+        .filter((res) => res.operationName === request.name);
     }
   );
 
   clientLink.sendRequest.mockImplementation((request) => {
     return new Promise((resolve) => {
       const sub = newResponse
+        .lift()
         .filter((res) => res.request?.id === request.id)
-        .subscribe((response) => {
-          sub.unsubscribe();
+        .subscribe(async (response) => {
+          await sub.unsubscribe();
 
           resolve(response);
         });

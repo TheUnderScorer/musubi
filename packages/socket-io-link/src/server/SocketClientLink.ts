@@ -65,6 +65,7 @@ export class SocketClientLink implements ClientLink<SocketServerContext> {
     >
   > {
     return this.packet$
+      .lift()
       .map((data) => ({
         ...data,
         payload: OperationResponse.schema.safeParse(data.payload),

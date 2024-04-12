@@ -22,8 +22,10 @@ export class InMemoryReceiverLink<Ctx = unknown> implements ReceiverLink<Ctx> {
   }
 
   receiveRequest(name: OperationName) {
-    return this.handlers.operation.filter(
-      (req) => req.name === name
-    ) as Observable<OperationRequest<unknown, Ctx>>;
+    return this.handlers.operation
+      .lift()
+      .filter((req) => req.name === name) as Observable<
+      OperationRequest<unknown, Ctx>
+    >;
   }
 }

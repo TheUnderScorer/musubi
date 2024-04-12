@@ -15,6 +15,8 @@ export class Subscription {
 
   add(subscription: SubscriptionFn) {
     this.subscriptions.add(subscription);
+
+    return this;
   }
 
   async unsubscribe() {
@@ -27,5 +29,6 @@ export class Subscription {
     }
 
     this._isUnsubscribed = true;
+    this.subscriptions.clear();
   }
 }

@@ -6,6 +6,7 @@ import {
   event,
   OperationHandler,
   query,
+  wait,
 } from '@musubi/core';
 import { createInMemoryLink } from './link';
 
@@ -30,6 +31,45 @@ describe('InMemoryLink', () => {
 
   const client = new MusubiClient(schema, [links.client]);
   const receiver = new MusubiReceiver(schema, [links.receiver]);
+
+  it('should correctly dispose receiver subscriptions', async () => {
+    const impl: OperationHandler<typeof schema.commands.testCommand> = async (
+      payload
+    ) => {
+      return payload;
+    };
+    const handler = jest.fn(impl);
+
+    const sub = receiver.handleCommand('testCommand', handler);
+
+    let result = await client.command('testCommand', {
+      test: 'test',
+    });
+
+    expect(result).toEqual({ test: 'test' });
+
+    await sub.unsubscribe();
+
+    const promise = Promise.race([
+      client.command('testCommand', {
+        test: 'test',
+      }),
+      wait(1000).then(() => {
+        throw new Error('Timeout');
+      }),
+    ]);
+
+    await expect(promise).rejects.toThrow('Timeout');
+
+    // Restore handler
+    receiver.handleCommand('testCommand', handler);
+
+    result = await client.command('testCommand', {
+      test: 'test',
+    });
+
+    expect(result).toEqual({ test: 'test' });
+  });
 
   it('should send and receive commands', async () => {
     const impl: OperationHandler<typeof schema.commands.testCommand> = async (

@@ -11,9 +11,9 @@ export class InMemoryClientLink<Ctx = any> implements ClientLink<Ctx> {
   constructor(readonly handlers: Handlers) {}
 
   subscribeToEvent<Payload>(request: OperationRequest<unknown, Ctx>) {
-    return this.handlers.event.filter(
-      (event) => event.operationName === request.name
-    ) as Observable<
+    return this.handlers.event
+      .lift()
+      .filter((event) => event.operationName === request.name) as Observable<
       OperationResponse<Payload, OperationRequest<unknown, Ctx>, Ctx>
     >;
   }

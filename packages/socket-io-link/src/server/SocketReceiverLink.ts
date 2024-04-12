@@ -24,6 +24,7 @@ export class SocketReceiverLink implements ReceiverLink<SocketServerContext> {
     name: OperationName
   ): Observable<OperationRequest<unknown, SocketServerContext>> {
     return this.packet$
+      .lift()
       .map((v) => ({
         ...v,
         payload: OperationRequest.schema.safeParse(v.payload),
