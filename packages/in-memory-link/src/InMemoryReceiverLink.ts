@@ -8,7 +8,8 @@ import {
 } from '@musubi/core';
 import { Handlers } from './handlers';
 
-export class InMemoryReceiverLink<Ctx = unknown> implements ReceiverLink<Ctx> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export class InMemoryReceiverLink<Ctx = any> implements ReceiverLink<Ctx> {
   constructor(readonly handlers: Handlers) {}
 
   async sendResponse<Payload, Result>(
