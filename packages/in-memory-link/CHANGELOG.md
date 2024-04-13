@@ -1,3 +1,11 @@
+## [0.14.1](https://github.com/TheUnderScorer/musubi/compare/in-memory-link-v0.14.0...in-memory-link-v0.14.1) (2024-04-13)
+
+
+### Bug Fixes
+
+* loosen ctx requirement ([1303ebe](https://github.com/TheUnderScorer/musubi/commit/1303ebe6d7400a609d66c929ddc2159bebcfb3d8))
+* remove unnecessary handlers ([e3d1143](https://github.com/TheUnderScorer/musubi/commit/e3d114309045d0af79094ac7143cfa99d46d3970))
+
 # [0.14.0](https://github.com/TheUnderScorer/musubi/compare/in-memory-link-v0.13.0...in-memory-link-v0.14.0) (2024-04-12)
 
 
